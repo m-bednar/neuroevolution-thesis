@@ -2,33 +2,6 @@ package main
 
 import "fmt"
 
-type Microbe struct{}
-
-type NeuronProcessor interface {
-	ProcessNeuron(microbe Microbe) float32
-}
-
-type Neuron struct {
-	inputs []Synapse
-}
-
-type Synapse struct {
-	weight float32
-	source NeuronProcessor
-}
-
-func (synapse *Synapse) GetValue(microbe Microbe) float32 {
-	return synapse.source.ProcessNeuron(microbe) * synapse.weight
-}
-
-func (neuron *Neuron) GetSynapticSum(microbe Microbe) float32 {
-	var value float32 = 0
-	for _, synapse := range neuron.inputs {
-		value += synapse.GetValue(microbe)
-	}
-	return value
-}
-
 type MoveXNeuron struct {
 	Neuron
 }
