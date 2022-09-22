@@ -9,10 +9,6 @@ type MoveXNeuron struct {
 	Neuron
 }
 
-func Sigmoid(input float64) float64 {
-	return 1.0 / (1.0 + math.Exp(-input))
-}
-
 func (neuron *MoveXNeuron) ProcessNeuron(microbe Microbe) float64 {
 	neuron.GetSynapticSum(microbe)
 	// move
@@ -83,8 +79,8 @@ func main() {
 	var a int8 = 127
 	var b int8 = -128
 
-	var x = Sigmoid(1.0 * ToSynapticWeight(a))
-	var y = Sigmoid(1.0 * ToSynapticWeight(b))
+	var x = math.Tanh(1.0 * ToSynapticWeight(a))
+	var y = math.Tanh(1.0 * ToSynapticWeight(b))
 
 	fmt.Println(x)
 	fmt.Println(y)
