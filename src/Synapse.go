@@ -1,10 +1,10 @@
 package main
 
 type Synapse struct {
-	weight float32
+	weight float64
 	source NeuronProcessor
 }
 
-func (synapse *Synapse) GetValue(microbe Microbe) float32 {
+func (synapse *Synapse) GetValue(microbe Microbe) float64 {
 	return synapse.source.ProcessNeuron(microbe) * synapse.weight
 }

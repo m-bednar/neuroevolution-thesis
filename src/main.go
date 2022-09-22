@@ -1,34 +1,31 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 type MoveXNeuron struct {
 	Neuron
 }
 
-func (neuron *MoveXNeuron) ProcessNeuron(microbe Microbe) float32 {
+func Sigmoid(input float64) float64 {
+	return 1.0 / (1.0 + math.Exp(-input))
+}
+
+func (neuron *MoveXNeuron) ProcessNeuron(microbe Microbe) float64 {
 	neuron.GetSynapticSum(microbe)
 	// move
 	return 0
 }
 
 /*
-func Signum(input float32) float32 {
-	if input > 0.0 {
-		return 1.0
-	}
-	if input < 0.0 {
-		return -1.0
-	}
-	return 0.0
-}
-
 const BRAIN_SIZE = 8
 
 type InputNeuronId int8
 type OutputNeuronId int8
 
-type NeuronProcess func() float32
+type NeuronProcess func() float64
 
 type Neuron struct {
 	name    string
@@ -41,7 +38,7 @@ type Point struct {
 }
 
 type Synapse struct {
-	weight float32
+	weight float64
 	input  *Neuron
 	output *Neuron
 }
@@ -62,6 +59,18 @@ func main() {
 }
 */
 
+/*
+Conversion from signed 8-bit to float
+char a = 0b10000000;
+char b = 0b01111111;
+(a + 0.5f) / 32.0f  =  -3.984375
+(b + 0.5f) / 32.0f  =   3.984375
+*/
+
+func ToSynapticWeight(encoded int8) float64 {
+	return (float64(encoded) + 0.5) / 16.0
+}
+
 func main() {
 	var microbe = Microbe{}
 	var neuron = MoveXNeuron{
@@ -70,4 +79,13 @@ func main() {
 		},
 	}
 	fmt.Println(neuron.ProcessNeuron(microbe))
+
+	var a int8 = 127
+	var b int8 = -128
+
+	var x = Sigmoid(1.0 * ToSynapticWeight(a))
+	var y = Sigmoid(1.0 * ToSynapticWeight(b))
+
+	fmt.Println(x)
+	fmt.Println(y)
 }
