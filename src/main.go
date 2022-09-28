@@ -67,21 +67,32 @@ func ToSynapticWeight(encoded int8) float64 {
 	return (float64(encoded) + 0.5) / 16.0
 }
 
+func ComputeNeuronOutputValue(sum float64, weight float64) float64 {
+	return math.Tanh(sum * weight * 0.5)
+}
+
 func main() {
+	/*
 	var microbe = Microbe{}
-	var neuron = MoveXNeuron{
-		Neuron{
-			inputs: []Synapse{},
-		},
-	}
+	var neuron = MoveXNeuron{}
 	fmt.Println(neuron.ProcessNeuron(microbe))
 
-	var a int8 = 127
-	var b int8 = -128
+	for i := int8(-128); i < int8(127); i++ {
+		var w = ToSynapticWeight(i)
+		var x = ComputeNeuronOutputValue(1.0, w)
+		fmt.Print(i, x)
+	}
 
-	var x = math.Tanh(1.0 * ToSynapticWeight(a))
-	var y = math.Tanh(1.0 * ToSynapticWeight(b))
+	fmt.Println()
+	Render()
+	*/
 
-	fmt.Println(x)
-	fmt.Println(y)
+	dict := make(map[int]int)
+
+	for i := 0; i < 1000; i++ {
+		x := int(MutateWeight(0))
+		dict[x]++
+	}
+
+	fmt.Println(dict)
 }
