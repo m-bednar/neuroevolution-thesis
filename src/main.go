@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 /*
 Conversion from signed 8-bit to float
@@ -15,5 +17,6 @@ func ToSynapticWeight(encoded int8) float64 {
 }
 
 func main() {
-	fmt.Println("Hello world");
+	var microbe = NewMicrobe(10, 20, 4, 4, 5, 5, Genome{})
+	fmt.Println(microbe)
 }
