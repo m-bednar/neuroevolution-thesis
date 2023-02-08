@@ -1,3 +1,5 @@
 package main
 
-type Genome struct{}
+type Genome struct {
+	weights []float64
+}

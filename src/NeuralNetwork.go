@@ -1,15 +1,16 @@
 package main
 
+const (
+	N_LAYERS  = 3
+	N_OUTPUTS = 3
+	N_INPUTS  = 3
+)
+
 type NeuralNetwork struct {
-	in      uint8
-	out     uint8
-	width   uint8
-	depth   uint8
-	weights []int8
+	layerWidth uint
+	weights    []float64
 }
 
-func NewNeuralNetwork(in uint8, out uint8, width uint8, depth uint8, genome Genome) NeuralNetwork {
-	var n = in*width + out*width + (depth-1)*(width*width)
-	var weights = make([]int8, n)
-	return NeuralNetwork{in, out, width, depth, weights}
+func ComputeNumberOfWeights(width uint) uint {
+	return (N_INPUTS * width) + (N_OUTPUTS * width) + ((width * width) * N_LAYERS)
 }
