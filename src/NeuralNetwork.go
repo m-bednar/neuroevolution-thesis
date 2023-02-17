@@ -7,8 +7,7 @@ const (
 )
 
 type NeuralNetwork struct {
-	layerWidth uint
-	weights    []float64
+	weights []float64
 }
 
 func ComputeNumberOfWeights(width uint) uint {
