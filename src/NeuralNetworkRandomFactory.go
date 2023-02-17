@@ -6,15 +6,14 @@ import (
 )
 
 type NeuralNetworkRandomFactory struct {
-	layerWidth uint
 	generator  rand.Rand
 }
 
-func NewNeuralNetworkRandomizedFactory(layerWidth uint) NeuralNetworkRandomFactory {
+func NewNeuralNetworkRandomizedFactory() NeuralNetworkRandomFactory {
 	var seed = time.Now().UnixNano()
 	var source = rand.NewSource(seed)
 	var generator = rand.New(source)
-	return NeuralNetworkRandomFactory{layerWidth, *generator}
+	return NeuralNetworkRandomFactory{*generator}
 }
 
 func (factory *NeuralNetworkRandomFactory) GenerateFloat(min float64, max float64) float64 {
@@ -24,7 +23,7 @@ func (factory *NeuralNetworkRandomFactory) GenerateFloat(min float64, max float6
 }
 
 func (factory *NeuralNetworkRandomFactory) Make() NeuralNetwork {
-	var size = ComputeNumberOfWeights(factory.layerWidth)
+	var size = ComputeNumberOfWeights()
 	var weights = make([]float64, size)
 	for i := uint(0); i < size; i++ {
 		weights[i] = factory.GenerateFloat(MIN_RAND_WEIGHT, MAX_RAND_WEIGHT)
