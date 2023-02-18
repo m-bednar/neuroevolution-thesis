@@ -17,8 +17,8 @@ type NeuralNetworkRandomFactory struct {
 func NewNeuralNetworkRandomFactory() NeuralNetworkRandomFactory {
 	var seed = time.Now().UnixNano()
 	var source = rand.NewSource(seed)
-	var generator = rand.New(source)
-	return NeuralNetworkRandomFactory{*generator}
+	var generator = *rand.New(source)
+	return NeuralNetworkRandomFactory{generator}
 }
 
 func (factory *NeuralNetworkRandomFactory) GenerateFloat(min float64, max float64) float64 {

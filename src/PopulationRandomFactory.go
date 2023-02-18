@@ -6,7 +6,10 @@ type PopulationRandomFactory struct {
 }
 
 func NewPopulationRandomFactory(positionGenerator PositionGenerator, neuralNetworkFactory NeuralNetworkRandomFactory) PopulationRandomFactory {
-	return PopulationRandomFactory{positionGenerator, neuralNetworkFactory}
+	return PopulationRandomFactory{
+		positionGenerator:    positionGenerator,
+		neuralNetworkFactory: neuralNetworkFactory,
+	}
 }
 
 func (factory *PopulationRandomFactory) Make(size int) []Microbe {

@@ -1,17 +1,33 @@
 package main
 
+import "math/rand"
+
 type PopulationReproductiveFactory struct {
 	positionGenerator    PositionGenerator
-	neuralNetworkFactory NeuralNetworkReproductiveFactory
+	neuralNetworkFactory NeuralNetworkReproductionFactory
 }
 
-func NewPopulationReproductiveFactory(positionGenerator PositionGenerator, neuralNetworkFactory NeuralNetworkReproductiveFactory) PopulationReproductiveFactory {
-	return PopulationReproductiveFactory{positionGenerator, neuralNetworkFactory}
+func NewPopulationReproductiveFactory(positionGenerator PositionGenerator, neuralNetworkFactory NeuralNetworkReproductionFactory) PopulationReproductiveFactory {
+	return PopulationReproductiveFactory{
+		positionGenerator:    positionGenerator,
+		neuralNetworkFactory: neuralNetworkFactory,
+	}
 }
 
-func (factory *PopulationReproductiveFactory) Make(oldPopulation []Microbe) []Microbe {
-	var size = len(oldPopulation)
-	var newPopulation = make([]Microbe, size)
-	copy(newPopulation, oldPopulation) // TODO
-	return newPopulation
+func SelectParentRandomly(parents []Microbe) *Microbe {
+	var i = rand.Intn(len(parents))
+	return &parents[i]
+}
+
+func (factory *PopulationReproductiveFactory) Make(selected []Microbe, size int) []Microbe {
+	var population = make([]Microbe, size)
+	for i := 0; i < size; i++ {
+		var parent1 = SelectParentRandomly(selected)
+		var parent2 = SelectParentRandomly(selected)
+		population[i] = Microbe{
+			position:      factory.positionGenerator.Make(),
+			neuralNetwork: factory.neuralNetworkFactory.Make(parent1, parent2),
+		}
+	}
+	return population
 }

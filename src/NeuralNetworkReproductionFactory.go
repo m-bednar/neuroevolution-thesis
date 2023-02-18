@@ -1,9 +1,9 @@
 package main
 
-type NeuralNetworkReproductiveFactory struct{}
+type NeuralNetworkReproductionFactory struct{}
 
-func NewNeuralNetworkReproductiveFactory() NeuralNetworkReproductiveFactory {
-	return NeuralNetworkReproductiveFactory{}
+func NewNeuralNetworkReproductionFactory() NeuralNetworkReproductionFactory {
+	return NeuralNetworkReproductionFactory{}
 }
 
 func Recombine(weights1 []float64, weights2 []float64) []float64 {
@@ -15,7 +15,7 @@ func Recombine(weights1 []float64, weights2 []float64) []float64 {
 	return result
 }
 
-func (factory *NeuralNetworkReproductiveFactory) Make(parent1 *Microbe, parent2 *Microbe) NeuralNetwork {
+func (factory *NeuralNetworkReproductionFactory) Make(parent1 *Microbe, parent2 *Microbe) NeuralNetwork {
 	var nn1 = parent1.neuralNetwork
 	var nn2 = parent2.neuralNetwork
 	var weights = Recombine(nn1.weights, nn2.weights)
