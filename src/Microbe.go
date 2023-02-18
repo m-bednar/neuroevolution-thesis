@@ -13,5 +13,6 @@ func NewMicrobe(position Position, neuralNetwork NeuralNetwork) Microbe {
 
 func (microbe *Microbe) Process(inputs []float64) {
 	var outputs = microbe.neuralNetwork.Process(inputs)
-	fmt.Println(outputs) // TODO: Make decision based on outputs
+	fmt.Println(outputs)
+	microbe.position.Move(0, 0) // TODO: Make decision based on outputs
 }
