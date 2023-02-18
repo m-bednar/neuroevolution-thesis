@@ -1,8 +1,9 @@
 package main
 
 const (
-	LAYER_WIDTH = 6
-	N_LAYERS    = 3
+	// TODO: Change to (6, 3, 4, 6)
+	LAYER_WIDTH = 4
+	N_LAYERS    = 2
 	N_OUTPUTS   = 4
 	N_INPUTS    = 4
 )

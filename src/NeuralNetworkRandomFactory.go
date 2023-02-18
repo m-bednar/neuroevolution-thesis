@@ -5,11 +5,16 @@ import (
 	"time"
 )
 
+const (
+	MIN_RAND_WEIGHT = -2
+	MAX_RAND_WEIGHT = 2
+)
+
 type NeuralNetworkRandomFactory struct {
-	generator  rand.Rand
+	generator rand.Rand
 }
 
-func NewNeuralNetworkRandomizedFactory() NeuralNetworkRandomFactory {
+func NewNeuralNetworkRandomFactory() NeuralNetworkRandomFactory {
 	var seed = time.Now().UnixNano()
 	var source = rand.NewSource(seed)
 	var generator = rand.New(source)
@@ -28,5 +33,5 @@ func (factory *NeuralNetworkRandomFactory) Make() NeuralNetwork {
 	for i := uint(0); i < size; i++ {
 		weights[i] = factory.GenerateFloat(MIN_RAND_WEIGHT, MAX_RAND_WEIGHT)
 	}
-	return NeuralNetwork{ weights }
+	return NeuralNetwork{weights}
 }
