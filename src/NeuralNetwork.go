@@ -12,7 +12,7 @@ type NeuralNetwork struct {
 	weights []float64
 }
 
-func ComputeNumberOfWeights() uint {
+func ComputeNumberOfWeights() int {
 	return (N_INPUTS * LAYER_WIDTH) + (N_OUTPUTS * LAYER_WIDTH) + ((LAYER_WIDTH * LAYER_WIDTH) * N_LAYERS)
 }
 
@@ -45,8 +45,8 @@ func (neuralNetwork *NeuralNetwork) Activation(value float64) float64 {
 
 func (neuralNetwork *NeuralNetwork) WeightedSum(shift int, weights []float64, values []float64) float64 {
 	var sum = 0.0
-	for i := 0; i < len(values); i++ {
-		sum += values[i] * weights[shift+i]
+	for i, value := range values {
+		sum += value * weights[shift+i]
 	}
 	return sum
 }
