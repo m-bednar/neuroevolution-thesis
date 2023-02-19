@@ -6,20 +6,19 @@ import (
 )
 
 type PositionGenerator struct {
-	maxX      int
-	maxY      int
+	maxCoord  int
 	generator rand.Rand
 }
 
-func NewPositionGenerator(maxX int, maxY int) PositionGenerator {
+func NewPositionGenerator(maxCoord int) PositionGenerator {
 	var seed = time.Now().UnixNano()
 	var source = rand.NewSource(seed)
 	var generator = rand.New(source)
-	return PositionGenerator{maxX, maxY, *generator}
+	return PositionGenerator{maxCoord, *generator}
 }
 
 func (generator *PositionGenerator) Make() Position {
-	var x = generator.generator.Intn(generator.maxX)
-	var y = generator.generator.Intn(generator.maxY)
+	var x = generator.generator.Intn(generator.maxCoord)
+	var y = generator.generator.Intn(generator.maxCoord)
 	return NewPosition(x, y)
 }

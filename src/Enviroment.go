@@ -4,12 +4,16 @@ type TileType uint8
 
 const (
 	Empty TileType = iota
-	Safe
+	SafeZone
 	Wall
 )
 
+func (tile TileType) IsSafeZone() bool {
+	return tile == SafeZone
+}
+
 func (tile TileType) IsPassable() bool {
-	return tile == Empty || tile == Safe
+	return tile == Empty || tile == SafeZone
 }
 
 type Enviroment struct {
