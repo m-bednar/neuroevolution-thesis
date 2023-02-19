@@ -1,11 +1,11 @@
 package main
 
 const (
-	// TODO: Change to (6, 3, 4, 6)
 	LAYER_WIDTH = 4
 	N_LAYERS    = 2
-	N_OUTPUTS   = 4
-	N_INPUTS    = 4
+
+	N_OUTPUTS = 4
+	N_INPUTS  = 2
 )
 
 type NeuralNetwork struct {
@@ -19,18 +19,17 @@ func ComputeNumberOfWeights() int {
 func (neuralNetwork *NeuralNetwork) Process(inputs []float64) []float64 {
 	var buffer = make([]float64, LAYER_WIDTH)
 	var widths = []int{N_INPUTS, LAYER_WIDTH, LAYER_WIDTH, LAYER_WIDTH, N_OUTPUTS}
-	var shiftAcc = 0
+	var lastShift = 0
 
 	for i := 1; i < len(widths); i++ {
-		var shift = 0
 		var currWidth = widths[i]
 		var prevWidth = widths[i-1]
-
 		for n := 1; n < currWidth; n++ {
-			shift = shiftAcc + n*prevWidth
-			buffer[n] = neuralNetwork.Activation(neuralNetwork.WeightedSum(shift, neuralNetwork.weights, inputs))
+			var shift = lastShift + n*prevWidth
+			var sum = neuralNetwork.WeightedSum(shift, neuralNetwork.weights, inputs)
+			buffer[n] = neuralNetwork.Activation(sum)
 		}
-		shiftAcc = shift
+		lastShift = lastShift + (currWidth-1)*prevWidth
 	}
 
 	return buffer[0:N_OUTPUTS]

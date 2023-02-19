@@ -32,7 +32,11 @@ func Activation(outputs []float64) (int, int) {
 	}
 }
 
-func (microbe *Microbe) Process(inputs []float64) {
+func (microbe *Microbe) Process(inputs []float64) Position {
 	var outputs = microbe.neuralNetwork.Process(inputs)
-	microbe.position.Move(Activation(outputs))
+	return microbe.position.Add(Activation(outputs))
+}
+
+func (microbe *Microbe) MoveTo(position Position) {
+	microbe.position = position
 }
