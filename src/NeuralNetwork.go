@@ -1,13 +1,10 @@
 package main
 
-import "fmt"
-
 const (
 	LAYER_WIDTH = 4
 	N_LAYERS    = 1
-
-	N_OUTPUTS = 4
-	N_INPUTS  = 2
+	N_OUTPUTS   = 2
+	N_INPUTS    = 2
 )
 
 type NeuralNetwork struct {
@@ -15,48 +12,64 @@ type NeuralNetwork struct {
 }
 
 func ComputeNumberOfWeights() int {
+	// TODO: implement through GetLayersWidths()
 	return (N_INPUTS * LAYER_WIDTH) + (N_OUTPUTS * LAYER_WIDTH) + ((LAYER_WIDTH * LAYER_WIDTH) * (N_LAYERS - 1))
 }
 
-func (neuralNetwork *NeuralNetwork) Process(inputs []float64) []float64 {
-	var buffer = make([]float64, LAYER_WIDTH)
-
-	var widths = []int{N_INPUTS, LAYER_WIDTH, N_OUTPUTS}
-	var lastShift = 0
-	var values = inputs
-
-	fmt.Println("LEN:", len(neuralNetwork.weights))
-
-	for i := 1; i < len(widths); i++ {
-		var currWidth = widths[i]
-		var prevWidth = widths[i-1]
-		for n := 0; n < currWidth; n++ {
-			var shift = lastShift + n*prevWidth
-			var sum = neuralNetwork.WeightedSum(shift, values)
-			buffer[n] = neuralNetwork.Activation(sum)
-		}
-		values = make([]float64, currWidth)
-		copy(values, buffer[lastShift:lastShift+currWidth])
-		lastShift = lastShift + (currWidth-1)*prevWidth
-	}
-
-	return buffer[0:N_OUTPUTS]
+func GetLayersWidths() []int {
+	// TODO Make automatic
+	return []int{N_INPUTS, LAYER_WIDTH, N_OUTPUTS}
 }
 
-func (neuralNetwork *NeuralNetwork) Activation(value float64) float64 {
+func WeightedSum(weights []float64, inputs []float64) float64 {
+	var sum = 0.0
+	for i, value := range inputs {
+		sum += value * weights[i]
+	}
+	return sum
+}
+
+func ReLU(value float64) float64 {
 	if value <= 0.0 {
 		return 0.0
 	}
 	return value
 }
 
-func (neuralNetwork *NeuralNetwork) WeightedSum(shift int, values []float64) float64 {
-	var sum = 0.0
-	fmt.Println(values)
-	for i, value := range values {
-		sum += value * neuralNetwork.weights[shift+i]
-		fmt.Print(shift+i, " ")
+func GetLayerIndexOffset(layer int) int {
+	var layersWidths = GetLayersWidths()
+	var sum = 0
+	for i := 0; i < (layer - 1); i++ {
+		sum += layersWidths[i] * layersWidths[i+1]
 	}
-	fmt.Println()
 	return sum
+}
+
+func (neuralNetwork *NeuralNetwork) Process(inputs []float64) []float64 {
+	var layersWidths = GetLayersWidths()
+	var in = inputs
+
+	// Traverse layer by layer
+	for layer := 1; layer < len(layersWidths); layer++ {
+		var currLayerWidth = layersWidths[layer]
+		var prevLayerWidth = layersWidths[layer-1]
+		var offset = GetLayerIndexOffset(layer)
+
+		// Inner value of each neuron
+		var neurons = make([]float64, currLayerWidth)
+
+		// Traverse neurons and compute it's value
+		for i := 0; i < currLayerWidth; i++ {
+			var from = offset + (i * prevLayerWidth)
+			var to = from + prevLayerWidth
+			var weights = neuralNetwork.weights[from:to]
+			var sum = WeightedSum(weights, in)
+			neurons[i] = ReLU(sum)
+		}
+
+		in = make([]float64, currLayerWidth)
+		copy(in, neurons)
+	}
+
+	return in
 }

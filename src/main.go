@@ -2,10 +2,10 @@ package main
 
 import "fmt"
 
-const POP_SIZE = 1
+const POP_SIZE = 100
 const ENV_SIZE = 15
-const STEPS = 1
-const MAX_GEN = 1
+const STEPS = 15
+const MAX_GEN = 50000
 
 func main() {
 	var positionGenerator = NewPositionGenerator(ENV_SIZE)
@@ -50,13 +50,11 @@ func main() {
 		if len(selected) == 0 {
 			population = populationRandomFactory.Make(POP_SIZE)
 		} else {
-			var random = populationRandomFactory.Make(POP_SIZE / 4)
-			var reproduced = populationReproductiveFactory.Make(selected, (POP_SIZE/4)*3)
-			population = append(random, reproduced...)
+			population = populationReproductiveFactory.Make(selected, POP_SIZE)
 		}
 
-		if i%10000 == 0 {
-			fmt.Println("SUCCESS:", float64(len(selected))/float64(POP_SIZE))
+		if i%1000 == 0 {
+			fmt.Printf("SUCCESS: %.2f%% (%d)\n", float64(len(selected))/float64(POP_SIZE), len(selected))
 		}
 	}
 
