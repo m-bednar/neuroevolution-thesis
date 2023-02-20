@@ -2,9 +2,10 @@ package main
 
 import "fmt"
 
-const POP_SIZE = 10
-const ENV_SIZE = 8
-const STEPS = 10
+const POP_SIZE = 1
+const ENV_SIZE = 15
+const STEPS = 1
+const MAX_GEN = 1
 
 func main() {
 	var positionGenerator = NewPositionGenerator(ENV_SIZE)
@@ -13,30 +14,50 @@ func main() {
 
 	var firstPopulation = populationRandomFactory.Make(POP_SIZE)
 
+	var mutator = NewMutator(0, 0.1)
 	var neuralNetworkReproductiveFactory = NewNeuralNetworkReproductionFactory()
-	var populationReproductiveFactory = NewPopulationReproductiveFactory(positionGenerator, neuralNetworkReproductiveFactory)
-
-	var reproduced = populationReproductiveFactory.Make(firstPopulation, POP_SIZE)
+	var populationReproductiveFactory = NewPopulationReproductiveFactory(positionGenerator, neuralNetworkReproductiveFactory, mutator)
 
 	var tiles = []TileType{
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		Empty, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty,
-		Empty, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty,
-		Empty, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty,
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+		SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone,
+		SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone,
+		SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone,
+		SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone,
+		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
 	}
 
 	var enviroment = NewEnviroment(tiles, ENV_SIZE)
-
 	var executor = NewExecutor(enviroment, STEPS)
-	executor.Execute(reproduced)
-
 	var evaluator = NewEvaluator(enviroment)
 	var selector = NewPopulationSelector(evaluator)
-	var selected = selector.SelectFrom(reproduced)
 
-	fmt.Println(len(selected), selected)
+	var population = firstPopulation
+
+	for i := 0; i < MAX_GEN; i++ {
+		executor.Execute(population)
+		var selected = selector.SelectFrom(population)
+
+		if len(selected) == 0 {
+			population = populationRandomFactory.Make(POP_SIZE)
+		} else {
+			var random = populationRandomFactory.Make(POP_SIZE / 4)
+			var reproduced = populationReproductiveFactory.Make(selected, (POP_SIZE/4)*3)
+			population = append(random, reproduced...)
+		}
+
+		if i%10000 == 0 {
+			fmt.Println("SUCCESS:", float64(len(selected))/float64(POP_SIZE))
+		}
+	}
+
 }

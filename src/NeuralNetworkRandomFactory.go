@@ -6,18 +6,18 @@ import (
 )
 
 const (
-	MIN_RAND_WEIGHT = -2
-	MAX_RAND_WEIGHT = 2
+	MIN_RAND_WEIGHT = -5
+	MAX_RAND_WEIGHT = 5
 )
 
 type NeuralNetworkRandomFactory struct {
-	generator rand.Rand
+	generator *rand.Rand
 }
 
 func NewNeuralNetworkRandomFactory() NeuralNetworkRandomFactory {
 	var seed = time.Now().UnixNano()
 	var source = rand.NewSource(seed)
-	var generator = *rand.New(source)
+	var generator = rand.New(source)
 	return NeuralNetworkRandomFactory{generator}
 }
 

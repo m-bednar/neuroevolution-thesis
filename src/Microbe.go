@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 type Microbe struct {
 	position      Position
 	neuralNetwork NeuralNetwork
@@ -40,6 +38,5 @@ func (microbe *Microbe) Process(inputs []float64) Position {
 }
 
 func (microbe *Microbe) MoveTo(position Position) {
-	fmt.Println(microbe.position, "->", position)
 	microbe.position = position
 }

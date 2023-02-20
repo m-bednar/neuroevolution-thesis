@@ -7,14 +7,14 @@ import (
 
 type PositionGenerator struct {
 	maxCoord  int
-	generator rand.Rand
+	generator *rand.Rand
 }
 
 func NewPositionGenerator(maxCoord int) PositionGenerator {
 	var seed = time.Now().UnixNano()
 	var source = rand.NewSource(seed)
 	var generator = rand.New(source)
-	return PositionGenerator{maxCoord, *generator}
+	return PositionGenerator{maxCoord, generator}
 }
 
 func (generator *PositionGenerator) Make() Position {
