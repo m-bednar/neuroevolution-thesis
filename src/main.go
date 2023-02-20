@@ -54,6 +54,7 @@ func main() {
 		}
 
 		if i%1000 == 0 {
+			fmt.Println(selected)
 			fmt.Printf("SUCCESS: %.2f%% (%d)\n", float64(len(selected))/float64(POP_SIZE), len(selected))
 		}
 	}
