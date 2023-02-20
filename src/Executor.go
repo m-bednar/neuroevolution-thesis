@@ -16,7 +16,8 @@ func (executor *Executor) Execute(population []Microbe) {
 }
 
 func (executor *Executor) ExecutePopulation(population []Microbe) {
-	for _, microbe := range population {
+	for i := 0; i < len(population); i++ {
+		var microbe = &population[i]
 		var inputs = executor.MakeNeuralNetworkInputs(microbe)
 		var result = microbe.Process(inputs)
 		if executor.enviroment.IsPassable(result) {
@@ -25,7 +26,7 @@ func (executor *Executor) ExecutePopulation(population []Microbe) {
 	}
 }
 
-func (executor *Executor) MakeNeuralNetworkInputs(microbe Microbe) []float64 {
+func (executor *Executor) MakeNeuralNetworkInputs(microbe *Microbe) []float64 {
 	var borderDistWest = float64(microbe.position.x) / float64(executor.enviroment.size)
 	var borderDistNorth = float64(microbe.position.y) / float64(executor.enviroment.size)
 	return []float64{borderDistWest, borderDistNorth}

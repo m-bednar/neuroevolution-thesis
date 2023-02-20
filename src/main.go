@@ -2,10 +2,10 @@ package main
 
 import "fmt"
 
-const POP_SIZE = 100
+const POP_SIZE = 200
 const ENV_SIZE = 15
-const STEPS = 15
-const MAX_GEN = 50000
+const STEPS = 20
+const MAX_GEN = 1000
 
 func main() {
 	var positionGenerator = NewPositionGenerator(ENV_SIZE)
@@ -14,15 +14,15 @@ func main() {
 
 	var firstPopulation = populationRandomFactory.Make(POP_SIZE)
 
-	var mutator = NewMutator(0, 0.1)
+	var mutator = NewMutator(1, 0.1)
 	var neuralNetworkReproductiveFactory = NewNeuralNetworkReproductionFactory()
 	var populationReproductiveFactory = NewPopulationReproductiveFactory(positionGenerator, neuralNetworkReproductiveFactory, mutator)
 
 	var tiles = []TileType{
-		SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone,
-		SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone,
-		SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone,
-		SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, SafeZone,
+		SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+		SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+		SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+		SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
 		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
 		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
 		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
@@ -53,9 +53,8 @@ func main() {
 			population = populationReproductiveFactory.Make(selected, POP_SIZE)
 		}
 
-		if i%1000 == 0 {
-			fmt.Println(selected)
-			fmt.Printf("SUCCESS: %.2f%% (%d)\n", float64(len(selected))/float64(POP_SIZE), len(selected))
+		if i%5 == 0 {
+			fmt.Printf("SUCCESS: %.2f%% (%d)\n", (float64(len(selected)) / float64(POP_SIZE) * 100.0), len(selected))
 		}
 	}
 
