@@ -16,7 +16,7 @@ func (selector *PopulationSelector) SelectFrom(population []*Microbe, percentage
 	selector.evaluator.EvaluatePopulation(population)
 
 	sort.Slice(population, func(i, j int) bool {
-		return population[i].evaluation > population[j].evaluation
+		return population[i].fitness > population[j].fitness
 	})
 
 	var selectSize = int(float64(len(population)) * percentage)

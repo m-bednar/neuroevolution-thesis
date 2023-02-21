@@ -52,7 +52,7 @@ func main() {
 		var nSuccess = evaluator.GetNumberOfMicrobesAtSafeZone(population)
 		successfulness = float64(nSuccess) / float64(POP_SIZE)
 
-		if len(selected) == 0 {
+		if nSuccess == 0 {
 			population = populationRandomFactory.Make(POP_SIZE)
 		} else {
 			population = populationReproductiveFactory.Make(selected, POP_SIZE)

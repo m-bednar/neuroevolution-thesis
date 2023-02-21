@@ -4,7 +4,7 @@ type Microbe struct {
 	position      Position
 	startPosition Position
 	neuralNetwork NeuralNetwork
-	evaluation    float64
+	fitness       float64
 }
 
 func NewMicrobe(position Position, neuralNetwork NeuralNetwork) *Microbe {
@@ -12,7 +12,7 @@ func NewMicrobe(position Position, neuralNetwork NeuralNetwork) *Microbe {
 		position:      position,
 		startPosition: position,
 		neuralNetwork: neuralNetwork,
-		evaluation:    0.0,
+		fitness:       0.0,
 	}
 }
 

@@ -18,21 +18,16 @@ func (evaluator *Evaluator) IsMicrobeAtSafeZone(microbe *Microbe) bool {
 	return evaluator.enviroment.GetTile(microbe.position).IsSafeZone()
 }
 
-func (evaluator *Evaluator) Evaluate(microbe *Microbe) {
-	var evaluation = 0.0
-	/*
-		if evaluator.DidMicrobeStartedAtSafeZone(microbe) {
-			evaluation -= 0.5
-		}*/
+func (evaluator *Evaluator) Evaluate(microbe *Microbe) float64 {
 	if evaluator.IsMicrobeAtSafeZone(microbe) {
-		evaluation += 1.0
+		return 1.0
 	}
-	microbe.evaluation = evaluation
+	return 0.0
 }
 
 func (evaluator *Evaluator) EvaluatePopulation(population []*Microbe) {
 	for i := range population {
-		evaluator.Evaluate(population[i])
+		population[i].fitness = evaluator.Evaluate(population[i])
 	}
 }
 
