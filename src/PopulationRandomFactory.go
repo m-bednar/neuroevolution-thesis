@@ -12,8 +12,8 @@ func NewPopulationRandomFactory(positionGenerator PositionGenerator, neuralNetwo
 	}
 }
 
-func (factory *PopulationRandomFactory) Make(size int) []Microbe {
-	var population = make([]Microbe, size)
+func (factory *PopulationRandomFactory) Make(size int) []*Microbe {
+	var population = make([]*Microbe, size)
 	for i := 0; i < size; i++ {
 		var position = factory.positionGenerator.Make()
 		var neuralNetwork = factory.neuralNetworkFactory.Make()

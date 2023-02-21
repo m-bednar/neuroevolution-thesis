@@ -21,15 +21,14 @@ func SelectParentRandomly(parents []*Microbe) *Microbe {
 	return parents[i]
 }
 
-func (factory *PopulationReproductiveFactory) Make(selected []*Microbe, size int) []Microbe {
-	var population = make([]Microbe, size)
+func (factory *PopulationReproductiveFactory) Make(selected []*Microbe, size int) []*Microbe {
+	var population = make([]*Microbe, size)
 	for i := 0; i < size; i++ {
 		var parent1 = SelectParentRandomly(selected)
 		var parent2 = SelectParentRandomly(selected)
-		population[i] = Microbe{
-			position:      factory.positionGenerator.Make(),
-			neuralNetwork: factory.neuralNetworkFactory.Make(parent1, parent2),
-		}
+		var position = factory.positionGenerator.Make()
+		var neuralNetwork = factory.neuralNetworkFactory.Make(parent1, parent2)
+		population[i] = NewMicrobe(position, neuralNetwork)
 	}
 	return population
 }

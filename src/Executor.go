@@ -9,15 +9,15 @@ func NewExecutor(enviroment Enviroment, steps int) Executor {
 	return Executor{enviroment, steps}
 }
 
-func (executor *Executor) Execute(population []Microbe) {
+func (executor *Executor) Execute(population []*Microbe) {
 	for i := 0; i < executor.steps; i++ {
 		executor.ExecutePopulation(population)
 	}
 }
 
-func (executor *Executor) ExecutePopulation(population []Microbe) {
+func (executor *Executor) ExecutePopulation(population []*Microbe) {
 	for i := 0; i < len(population); i++ {
-		var microbe = &population[i]
+		var microbe = population[i]
 		var inputs = executor.MakeNeuralNetworkInputs(microbe)
 		var result = microbe.Process(inputs)
 		if executor.enviroment.IsPassable(result) {

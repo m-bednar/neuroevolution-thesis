@@ -2,13 +2,17 @@ package main
 
 type Microbe struct {
 	position      Position
+	startPosition Position
 	neuralNetwork NeuralNetwork
+	evaluation    float64
 }
 
-func NewMicrobe(position Position, neuralNetwork NeuralNetwork) Microbe {
-	return Microbe{
+func NewMicrobe(position Position, neuralNetwork NeuralNetwork) *Microbe {
+	return &Microbe{
 		position:      position,
+		startPosition: position,
 		neuralNetwork: neuralNetwork,
+		evaluation:    0.0,
 	}
 }
 

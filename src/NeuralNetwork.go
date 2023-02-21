@@ -1,7 +1,7 @@
 package main
 
 const (
-	LAYER_WIDTH = 8
+	LAYER_WIDTH = 6
 	N_LAYERS    = 2
 	N_OUTPUTS   = 4
 	N_INPUTS    = 2

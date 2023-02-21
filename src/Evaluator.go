@@ -10,9 +10,38 @@ func NewEvaluator(enviroment Enviroment) Evaluator {
 	}
 }
 
-func (evaluator *Evaluator) Evaluate(microbe Microbe) float64 {
-	if evaluator.enviroment.GetTile(microbe.position).IsSafeZone() {
-		return 1.0
+func (evaluator *Evaluator) DidMicrobeStartedAtSafeZone(microbe *Microbe) bool {
+	return evaluator.enviroment.GetTile(microbe.startPosition).IsSafeZone()
+}
+
+func (evaluator *Evaluator) IsMicrobeAtSafeZone(microbe *Microbe) bool {
+	return evaluator.enviroment.GetTile(microbe.position).IsSafeZone()
+}
+
+func (evaluator *Evaluator) Evaluate(microbe *Microbe) {
+	var evaluation = 0.0
+	/*
+		if evaluator.DidMicrobeStartedAtSafeZone(microbe) {
+			evaluation -= 0.5
+		}*/
+	if evaluator.IsMicrobeAtSafeZone(microbe) {
+		evaluation += 1.0
 	}
-	return 0.0
+	microbe.evaluation = evaluation
+}
+
+func (evaluator *Evaluator) EvaluatePopulation(population []*Microbe) {
+	for i := range population {
+		evaluator.Evaluate(population[i])
+	}
+}
+
+func (evaluator *Evaluator) GetNumberOfMicrobesAtSafeZone(population []*Microbe) int {
+	var count = 0
+	for i := range population {
+		if evaluator.IsMicrobeAtSafeZone(population[i]) {
+			count++
+		}
+	}
+	return count
 }

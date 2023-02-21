@@ -1,11 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
-const POP_SIZE = 200
+const POP_SIZE = 150
 const ENV_SIZE = 15
-const STEPS = 20
-const MAX_GEN = 1000
+const STEPS = ENV_SIZE * 2
 
 func main() {
 	var positionGenerator = NewPositionGenerator(ENV_SIZE)
@@ -14,7 +15,7 @@ func main() {
 
 	var firstPopulation = populationRandomFactory.Make(POP_SIZE)
 
-	var mutator = NewMutator(1, 0.1)
+	var mutator = NewMutator(0, 0.2)
 	var neuralNetworkReproductiveFactory = NewNeuralNetworkReproductionFactory()
 	var populationReproductiveFactory = NewPopulationReproductiveFactory(positionGenerator, neuralNetworkReproductiveFactory, mutator)
 
@@ -42,10 +43,14 @@ func main() {
 	var selector = NewPopulationSelector(evaluator)
 
 	var population = firstPopulation
+	var successfulness = 0.0
 
-	for i := 0; i < MAX_GEN; i++ {
+	for successfulness < 0.99 {
 		executor.Execute(population)
-		var selected = selector.SelectFrom(population)
+
+		var selected = selector.SelectFrom(population, 0.4)
+		var nSuccess = evaluator.GetNumberOfMicrobesAtSafeZone(population)
+		successfulness = float64(nSuccess) / float64(POP_SIZE)
 
 		if len(selected) == 0 {
 			population = populationRandomFactory.Make(POP_SIZE)
@@ -53,9 +58,7 @@ func main() {
 			population = populationReproductiveFactory.Make(selected, POP_SIZE)
 		}
 
-		if i%5 == 0 {
-			fmt.Printf("SUCCESS: %.2f%% (%d)\n", (float64(len(selected)) / float64(POP_SIZE) * 100.0), len(selected))
-		}
-	}
+		fmt.Printf("%.2f%% (%d)\n", successfulness*100.0, nSuccess)
 
+	}
 }
