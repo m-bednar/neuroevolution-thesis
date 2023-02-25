@@ -3,8 +3,8 @@ package main
 import "math/rand"
 
 const (
-	MIN_RAND_WEIGHT = -4
-	MAX_RAND_WEIGHT = 4
+	MIN_RAND_WEIGHT = -5
+	MAX_RAND_WEIGHT = 5
 )
 
 type NeuralNetworkRandomFactory struct {
