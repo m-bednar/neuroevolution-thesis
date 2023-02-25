@@ -9,7 +9,7 @@ func NewTaskExecutor(enviroment Enviroment, steps int) TaskExecutor {
 	return TaskExecutor{enviroment, steps}
 }
 
-func (executor *TaskExecutor) Execute(population []*Microbe) {
+func (executor *TaskExecutor) ExecuteTask(population []*Microbe) {
 	for i := 0; i < executor.steps; i++ {
 		executor.ExecuteStep(population)
 	}

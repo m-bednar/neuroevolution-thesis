@@ -8,7 +8,7 @@ import (
 const POP_SIZE = 200
 const ENV_SIZE = 15
 const STEPS = ENV_SIZE * 2
-const MIN_SUCCESSFULNESS = 0.99
+const MIN_SUCCESSFULNESS = 1.0
 const SELECTION_COEF = 1.45
 
 func main() {
@@ -50,7 +50,7 @@ func MainLoop(executor TaskExecutor, selector PopulationSelector, populationRand
 	var successfulness = 0.0
 
 	for successfulness < MIN_SUCCESSFULNESS {
-		executor.Execute(population)
+		executor.ExecuteTask(population)
 
 		var selected = selector.SelectFrom(population)
 		successfulness = float64(len(selected)) / float64(POP_SIZE)
