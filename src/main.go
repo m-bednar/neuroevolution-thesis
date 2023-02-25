@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
 const POP_SIZE = 200
 const ENV_SIZE = 15
 const STEPS = ENV_SIZE * 2
 const MIN_SUCCESSFULNESS = 0.99
+const SELECTION_COEF = 1.45
 
 func main() {
 	var positionGenerator = NewPositionGenerator(ENV_SIZE)
@@ -43,6 +45,7 @@ func main() {
 }
 
 func MainLoop(executor TaskExecutor, selector PopulationSelector, populationRandomFactory PopulationRandomFactory, populationReproductiveFactory PopulationReproductiveFactory) {
+	var generation = 0
 	var population = populationRandomFactory.Make(POP_SIZE)
 	var successfulness = 0.0
 
@@ -52,12 +55,11 @@ func MainLoop(executor TaskExecutor, selector PopulationSelector, populationRand
 		var selected = selector.SelectFrom(population)
 		successfulness = float64(len(selected)) / float64(POP_SIZE)
 
-		if len(selected) == 0 {
-			population = populationRandomFactory.Make(POP_SIZE)
-		} else {
-			population = populationReproductiveFactory.Make(selected, POP_SIZE)
-		}
+		var n = int(math.Min(float64(len(selected))*SELECTION_COEF, POP_SIZE))
+		population = populationReproductiveFactory.Make(selected, n)
+		population = append(population, populationRandomFactory.Make(POP_SIZE-n)...)
 
-		fmt.Printf("%.2f%% (%d)\n", successfulness*100.0, len(selected))
+		fmt.Printf("%5d: %.2f%% (%d)\n", generation, successfulness*100.0, len(selected))
+		generation++
 	}
 }
