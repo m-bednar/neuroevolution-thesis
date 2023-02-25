@@ -2,8 +2,8 @@ package main
 
 type NeuralNetworkReproductionFactory struct{}
 
-func NewNeuralNetworkReproductionFactory() NeuralNetworkReproductionFactory {
-	return NeuralNetworkReproductionFactory{}
+func NewNeuralNetworkReproductionFactory() *NeuralNetworkReproductionFactory {
+	return &NeuralNetworkReproductionFactory{}
 }
 
 func Recombine(weights1 []float64, weights2 []float64) []float64 {

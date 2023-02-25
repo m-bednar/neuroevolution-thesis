@@ -1,11 +1,11 @@
 package main
 
 type PopulationSelector struct {
-	enviroment Enviroment
+	enviroment *Enviroment
 }
 
-func NewPopulationSelector(enviroment Enviroment) PopulationSelector {
-	return PopulationSelector{enviroment}
+func NewPopulationSelector(enviroment *Enviroment) *PopulationSelector {
+	return &PopulationSelector{enviroment}
 }
 
 func (selector *PopulationSelector) IsMicrobeInsideSafeZone(microbe *Microbe) bool {

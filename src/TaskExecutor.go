@@ -1,12 +1,12 @@
 package main
 
 type TaskExecutor struct {
-	enviroment Enviroment
+	enviroment *Enviroment
 	steps      int
 }
 
-func NewTaskExecutor(enviroment Enviroment, steps int) TaskExecutor {
-	return TaskExecutor{enviroment, steps}
+func NewTaskExecutor(enviroment *Enviroment, steps int) *TaskExecutor {
+	return &TaskExecutor{enviroment, steps}
 }
 
 func (executor *TaskExecutor) ExecuteTask(population []*Microbe) {

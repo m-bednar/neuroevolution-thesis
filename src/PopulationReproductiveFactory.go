@@ -3,14 +3,14 @@ package main
 import "math/rand"
 
 type PopulationReproductiveFactory struct {
-	positionGenerator    PositionGenerator
-	neuralNetworkFactory NeuralNetworkReproductionFactory
-	mutator              Mutator
+	positionGenerator    *PositionGenerator
+	neuralNetworkFactory *NeuralNetworkReproductionFactory
+	mutator              *Mutator
 	rng                  *rand.Rand
 }
 
-func NewPopulationReproductiveFactory(positionGenerator PositionGenerator, neuralNetworkFactory NeuralNetworkReproductionFactory, mutator Mutator) PopulationReproductiveFactory {
-	return PopulationReproductiveFactory{
+func NewPopulationReproductiveFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NeuralNetworkReproductionFactory, mutator *Mutator) *PopulationReproductiveFactory {
+	return &PopulationReproductiveFactory{
 		positionGenerator:    positionGenerator,
 		neuralNetworkFactory: neuralNetworkFactory,
 		mutator:              mutator,

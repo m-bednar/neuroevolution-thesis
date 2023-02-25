@@ -44,7 +44,7 @@ func main() {
 	MainLoop(executor, selector, populationRandomFactory, populationReproductiveFactory)
 }
 
-func MainLoop(executor TaskExecutor, selector PopulationSelector, populationRandomFactory PopulationRandomFactory, populationReproductiveFactory PopulationReproductiveFactory) {
+func MainLoop(executor *TaskExecutor, selector *PopulationSelector, populationRandomFactory *PopulationRandomFactory, populationReproductiveFactory *PopulationReproductiveFactory) {
 	var generation = 0
 	var population = populationRandomFactory.Make(POP_SIZE)
 	var successfulness = 0.0

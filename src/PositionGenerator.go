@@ -7,9 +7,9 @@ type PositionGenerator struct {
 	rng      *rand.Rand
 }
 
-func NewPositionGenerator(maxCoord int) PositionGenerator {
+func NewPositionGenerator(maxCoord int) *PositionGenerator {
 	var rng = NewUnixTimeRng()
-	return PositionGenerator{maxCoord, rng}
+	return &PositionGenerator{maxCoord, rng}
 }
 
 func (generator *PositionGenerator) Make() Position {

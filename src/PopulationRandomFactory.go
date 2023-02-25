@@ -1,12 +1,12 @@
 package main
 
 type PopulationRandomFactory struct {
-	positionGenerator    PositionGenerator
-	neuralNetworkFactory NeuralNetworkRandomFactory
+	positionGenerator    *PositionGenerator
+	neuralNetworkFactory *NeuralNetworkRandomFactory
 }
 
-func NewPopulationRandomFactory(positionGenerator PositionGenerator, neuralNetworkFactory NeuralNetworkRandomFactory) PopulationRandomFactory {
-	return PopulationRandomFactory{
+func NewPopulationRandomFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NeuralNetworkRandomFactory) *PopulationRandomFactory {
+	return &PopulationRandomFactory{
 		positionGenerator:    positionGenerator,
 		neuralNetworkFactory: neuralNetworkFactory,
 	}

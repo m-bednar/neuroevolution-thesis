@@ -11,9 +11,9 @@ type NeuralNetworkRandomFactory struct {
 	rng *rand.Rand
 }
 
-func NewNeuralNetworkRandomFactory() NeuralNetworkRandomFactory {
+func NewNeuralNetworkRandomFactory() *NeuralNetworkRandomFactory {
 	var rng = NewUnixTimeRng()
-	return NeuralNetworkRandomFactory{rng}
+	return &NeuralNetworkRandomFactory{rng}
 }
 
 func (factory *NeuralNetworkRandomFactory) GenerateFloat(min float64, max float64) float64 {

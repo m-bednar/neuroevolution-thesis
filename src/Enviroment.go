@@ -21,8 +21,8 @@ type Enviroment struct {
 	size  int
 }
 
-func NewEnviroment(tiles []TileType, size int) Enviroment {
-	return Enviroment{tiles, size}
+func NewEnviroment(tiles []TileType, size int) *Enviroment {
+	return &Enviroment{tiles, size}
 }
 
 func (enviroment *Enviroment) IsPassable(position Position) bool {

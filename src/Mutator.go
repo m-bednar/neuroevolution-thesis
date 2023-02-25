@@ -8,9 +8,9 @@ type Mutator struct {
 	occurrence float64 // 0.0 - 1.0
 }
 
-func NewMutator(strength float64, occurrence float64) Mutator {
+func NewMutator(strength float64, occurrence float64) *Mutator {
 	var rng = NewUnixTimeRng()
-	return Mutator{rng, strength, occurrence}
+	return &Mutator{rng, strength, occurrence}
 }
 
 func (mutator *Mutator) Mutate(microbe *Microbe) {
