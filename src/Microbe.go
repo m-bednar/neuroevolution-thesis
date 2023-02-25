@@ -29,11 +29,7 @@ func Sign(value float64) int {
 func Activation(outputs []float64) (int, int) {
 	var moveX = outputs[0] - outputs[1]
 	var moveY = outputs[2] - outputs[3]
-	if moveX > moveY {
-		return Sign(moveX), 0
-	} else {
-		return 0, Sign(moveY)
-	}
+	return Sign(moveX), Sign(moveY)
 }
 
 func (microbe *Microbe) Process(inputs []float64) Position {
