@@ -3,14 +3,12 @@ package main
 type Microbe struct {
 	position      Position
 	neuralNetwork NeuralNetwork
-	fitness       float64
 }
 
 func NewMicrobe(position Position, neuralNetwork NeuralNetwork) *Microbe {
 	return &Microbe{
 		position:      position,
 		neuralNetwork: neuralNetwork,
-		fitness:       0.0,
 	}
 }
 

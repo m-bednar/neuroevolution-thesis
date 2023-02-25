@@ -14,12 +14,10 @@ func (selector *PopulationSelector) IsMicrobeInsideSafeZone(microbe *Microbe) bo
 
 func (selector *PopulationSelector) SelectFrom(population []*Microbe) []*Microbe {
 	var selected = make([]*Microbe, 0, len(population))
-
 	for _, microbe := range population {
 		if selector.IsMicrobeInsideSafeZone(microbe) {
 			selected = append(selected, microbe)
 		}
 	}
-
 	return selected
 }
