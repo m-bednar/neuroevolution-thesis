@@ -6,6 +6,7 @@ type PopulationReproductiveFactory struct {
 	positionGenerator    PositionGenerator
 	neuralNetworkFactory NeuralNetworkReproductionFactory
 	mutator              Mutator
+	rng                  *rand.Rand
 }
 
 func NewPopulationReproductiveFactory(positionGenerator PositionGenerator, neuralNetworkFactory NeuralNetworkReproductionFactory, mutator Mutator) PopulationReproductiveFactory {
@@ -13,19 +14,20 @@ func NewPopulationReproductiveFactory(positionGenerator PositionGenerator, neura
 		positionGenerator:    positionGenerator,
 		neuralNetworkFactory: neuralNetworkFactory,
 		mutator:              mutator,
+		rng:                  NewUnixTimeRng(),
 	}
 }
 
-func SelectParentRandomly(parents []*Microbe) *Microbe {
-	var i = rand.Intn(len(parents))
+func (factory *PopulationReproductiveFactory) SelectParentRandomly(parents []*Microbe) *Microbe {
+	var i = factory.rng.Intn(len(parents))
 	return parents[i]
 }
 
-func (factory *PopulationReproductiveFactory) Make(selected []*Microbe, size int) []*Microbe {
-	var population = make([]*Microbe, size)
-	for i := 0; i < size; i++ {
-		var parent1 = SelectParentRandomly(selected)
-		var parent2 = SelectParentRandomly(selected)
+func (factory *PopulationReproductiveFactory) Make(selected []*Microbe, count int) []*Microbe {
+	var population = make([]*Microbe, count)
+	for i := 0; i < count; i++ {
+		var parent1 = factory.SelectParentRandomly(selected)
+		var parent2 = factory.SelectParentRandomly(selected)
 		var position = factory.positionGenerator.Make()
 		var neuralNetwork = factory.neuralNetworkFactory.Make(parent1, parent2)
 		population[i] = NewMicrobe(position, neuralNetwork)

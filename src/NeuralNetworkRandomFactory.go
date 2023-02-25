@@ -1,9 +1,6 @@
 package main
 
-import (
-	"math/rand"
-	"time"
-)
+import "math/rand"
 
 const (
 	MIN_RAND_WEIGHT = -4
@@ -15,9 +12,7 @@ type NeuralNetworkRandomFactory struct {
 }
 
 func NewNeuralNetworkRandomFactory() NeuralNetworkRandomFactory {
-	var seed = time.Now().UnixNano()
-	var source = rand.NewSource(seed)
-	var rng = rand.New(source)
+	var rng = NewUnixTimeRng()
 	return NeuralNetworkRandomFactory{rng}
 }
 

@@ -1,9 +1,6 @@
 package main
 
-import (
-	"math/rand"
-	"time"
-)
+import "math/rand"
 
 type Mutator struct {
 	rng        *rand.Rand
@@ -12,9 +9,7 @@ type Mutator struct {
 }
 
 func NewMutator(strength float64, occurrence float64) Mutator {
-	var seed = time.Now().UnixNano()
-	var source = rand.NewSource(seed)
-	var rng = rand.New(source)
+	var rng = NewUnixTimeRng()
 	return Mutator{rng, strength, occurrence}
 }
 

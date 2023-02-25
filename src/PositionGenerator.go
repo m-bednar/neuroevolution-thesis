@@ -1,9 +1,6 @@
 package main
 
-import (
-	"math/rand"
-	"time"
-)
+import "math/rand"
 
 type PositionGenerator struct {
 	maxCoord int
@@ -11,9 +8,7 @@ type PositionGenerator struct {
 }
 
 func NewPositionGenerator(maxCoord int) PositionGenerator {
-	var seed = time.Now().UnixNano()
-	var source = rand.NewSource(seed)
-	var rng = rand.New(source)
+	var rng = NewUnixTimeRng()
 	return PositionGenerator{maxCoord, rng}
 }
 

@@ -1,26 +1,25 @@
 package main
 
-import (
-	"sort"
-)
-
 type PopulationSelector struct {
-	evaluator Evaluator
+	enviroment Enviroment
 }
 
-func NewPopulationSelector(evaluator Evaluator) PopulationSelector {
-	return PopulationSelector{evaluator}
+func NewPopulationSelector(enviroment Enviroment) PopulationSelector {
+	return PopulationSelector{enviroment}
 }
 
-func (selector *PopulationSelector) SelectFrom(population []*Microbe, percentage float64) []*Microbe {
-	selector.evaluator.EvaluatePopulation(population)
+func (selector *PopulationSelector) IsMicrobeInsideSafeZone(microbe *Microbe) bool {
+	return selector.enviroment.GetTile(microbe.position).IsSafeZone()
+}
 
-	sort.Slice(population, func(i, j int) bool {
-		return population[i].fitness > population[j].fitness
-	})
+func (selector *PopulationSelector) SelectFrom(population []*Microbe) []*Microbe {
+	var selected = make([]*Microbe, 0, len(population))
 
-	var selectSize = int(float64(len(population)) * percentage)
-	var selected = population[:selectSize]
+	for _, microbe := range population {
+		if selector.IsMicrobeInsideSafeZone(microbe) {
+			selected = append(selected, microbe)
+		}
+	}
 
 	return selected
 }
