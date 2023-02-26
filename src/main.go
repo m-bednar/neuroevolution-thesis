@@ -2,66 +2,59 @@ package main
 
 import (
 	"fmt"
-	"math"
 )
 
 const POP_SIZE = 200
 const ENV_SIZE = 15
 const STEPS = ENV_SIZE * 2
-const MIN_SUCCESSFULNESS = 0.99
-const SELECTION_COEF = 1.45
+
+var tiles = []TileType{
+	SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+	SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+	SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+	SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+}
 
 func main() {
+	var enviroment = NewEnviroment(tiles, ENV_SIZE)
 	var positionGenerator = NewPositionGenerator(ENV_SIZE)
 	var neuralNetworkRandomFactory = NewNeuralNetworkRandomFactory()
 	var populationRandomFactory = NewPopulationRandomFactory(positionGenerator, neuralNetworkRandomFactory)
 
-	var mutator = NewMutator(1, 0.1)
+	var mutator = NewMutator(0, 0.0)
+	var selector = NewPopulationSelector(enviroment)
 	var neuralNetworkReproductiveFactory = NewNeuralNetworkReproductionFactory()
-	var populationReproductiveFactory = NewPopulationReproductiveFactory(positionGenerator, neuralNetworkReproductiveFactory, mutator)
+	var populationReproductiveFactory = NewPopulationReproductiveFactory(positionGenerator, neuralNetworkReproductiveFactory, mutator, selector)
 
-	var tiles = []TileType{
-		SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-		Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-	}
-
-	var enviroment = NewEnviroment(tiles, ENV_SIZE)
 	var evaluator = NewFitnessEvaluator(enviroment)
 	var executor = NewTaskExecutor(enviroment, evaluator, STEPS)
-	var selector = NewPopulationSelector(enviroment)
+
 	MainLoop(executor, selector, populationRandomFactory, populationReproductiveFactory)
 }
 
 func MainLoop(executor *TaskExecutor, selector *PopulationSelector, populationRandomFactory *PopulationRandomFactory, populationReproductiveFactory *PopulationReproductiveFactory) {
 	var generation = 0
 	var population = populationRandomFactory.Make(POP_SIZE)
-	var successfulness = 0.0
+	var safe = 0
 
-	for successfulness < MIN_SUCCESSFULNESS {
+	for safe < POP_SIZE {
 		executor.ExecuteTask(population)
 
-		var selected = selector.SelectFrom(population)
-		successfulness = float64(len(selected)) / float64(POP_SIZE)
+		safe = selector.CountMicrobesInSafeZone(population)
+		population = populationReproductiveFactory.Make(population, POP_SIZE)
 
-		var n = int(math.Min(float64(len(selected))*SELECTION_COEF, POP_SIZE))
-		population = populationReproductiveFactory.Make(selected, n)
-		population = append(population, populationRandomFactory.Make(POP_SIZE-n)...)
-
-		fmt.Printf("%5d: %.2f%% (%d)\n", generation, successfulness*100.0, len(selected))
-		fmt.Printf("%3.2f %3.2f %3.2f\n", selected[0].fitness, selected[1].fitness, selected[2].fitness)
+		fmt.Printf("%5d: %3d/%d\n", generation, safe, POP_SIZE)
 		generation++
 	}
 }

@@ -10,6 +10,7 @@ func NewMicrobe(position Position, neuralNetwork NeuralNetwork) *Microbe {
 	return &Microbe{
 		position:      position,
 		neuralNetwork: neuralNetwork,
+		fitness:       0.0,
 	}
 }
 

@@ -1,36 +1,40 @@
 package main
 
-import "math/rand"
+import (
+	"math/rand"
+)
+
+const TOURNAMENT_SIZE = 20
 
 type PopulationReproductiveFactory struct {
 	positionGenerator    *PositionGenerator
 	neuralNetworkFactory *NeuralNetworkReproductionFactory
 	mutator              *Mutator
+	selector             *PopulationSelector
 	rng                  *rand.Rand
 }
 
-func NewPopulationReproductiveFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NeuralNetworkReproductionFactory, mutator *Mutator) *PopulationReproductiveFactory {
+func NewPopulationReproductiveFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NeuralNetworkReproductionFactory, mutator *Mutator, selector *PopulationSelector) *PopulationReproductiveFactory {
 	return &PopulationReproductiveFactory{
 		positionGenerator:    positionGenerator,
 		neuralNetworkFactory: neuralNetworkFactory,
 		mutator:              mutator,
+		selector:             selector,
 		rng:                  NewUnixTimeRng(),
 	}
 }
 
-func (factory *PopulationReproductiveFactory) SelectParentRandomly(parents []*Microbe) *Microbe {
-	var i = factory.rng.Intn(len(parents))
-	return parents[i]
-}
-
-func (factory *PopulationReproductiveFactory) Make(selected []*Microbe, count int) []*Microbe {
-	var population = make([]*Microbe, count)
+func (factory *PopulationReproductiveFactory) Make(population []*Microbe, count int) []*Microbe {
+	var new = make([]*Microbe, count)
 	for i := 0; i < count; i++ {
-		var parent1 = factory.SelectParentRandomly(selected)
-		var parent2 = factory.SelectParentRandomly(selected)
+		var parent1 = factory.selector.SelectOneByTournament(population, TOURNAMENT_SIZE)
+		var parent2 = factory.selector.SelectOneByTournament(population, TOURNAMENT_SIZE)
+		// fmt.Printf("%2.2f + %2.2f\n", parent1.fitness, parent2.fitness)
 		var position = factory.positionGenerator.Make()
 		var neuralNetwork = factory.neuralNetworkFactory.Make(parent1, parent2)
-		population[i] = NewMicrobe(position, neuralNetwork)
+		var reproduced = NewMicrobe(position, neuralNetwork)
+		factory.mutator.Mutate(reproduced)
+		new[i] = reproduced
 	}
-	return population
+	return new
 }
