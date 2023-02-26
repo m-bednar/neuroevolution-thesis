@@ -2,10 +2,10 @@ package main
 
 type PopulationRandomFactory struct {
 	positionGenerator    *PositionGenerator
-	neuralNetworkFactory *NeuralNetworkRandomFactory
+	neuralNetworkFactory *NNRandomFactory
 }
 
-func NewPopulationRandomFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NeuralNetworkRandomFactory) *PopulationRandomFactory {
+func NewPopulationRandomFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NNRandomFactory) *PopulationRandomFactory {
 	return &PopulationRandomFactory{
 		positionGenerator:    positionGenerator,
 		neuralNetworkFactory: neuralNetworkFactory,

@@ -2,22 +2,22 @@ package main
 
 import "math/rand"
 
-type NeuralNetworkRandomFactory struct {
+type NNRandomFactory struct {
 	rng *rand.Rand
 }
 
-func NewNeuralNetworkRandomFactory() *NeuralNetworkRandomFactory {
+func NewNNRandomFactory() *NNRandomFactory {
 	var rng = NewUnixTimeRng()
-	return &NeuralNetworkRandomFactory{rng}
+	return &NNRandomFactory{rng}
 }
 
-func (factory *NeuralNetworkRandomFactory) GenerateFloat(min float64, max float64) float64 {
+func (factory *NNRandomFactory) GenerateFloat(min float64, max float64) float64 {
 	var rand = factory.rng.Float64()
 	var size = max - min
 	return (rand * size) + min
 }
 
-func (factory *NeuralNetworkRandomFactory) Make() NeuralNetwork {
+func (factory *NNRandomFactory) Make() NeuralNetwork {
 	var size = ComputeNumberOfWeights()
 	var weights = make([]float64, size)
 	for i := 0; i < size; i++ {

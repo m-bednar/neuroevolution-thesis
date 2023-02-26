@@ -29,11 +29,11 @@ var tiles = []TileType{
 func main() {
 	var enviroment = NewEnviroment(tiles, ENV_SIZE)
 	var positionGenerator = NewPositionGenerator(ENV_SIZE)
-	var neuralNetworkRandomFactory = NewNeuralNetworkRandomFactory()
+	var neuralNetworkRandomFactory = NewNNRandomFactory()
 	var populationRandomFactory = NewPopulationRandomFactory(positionGenerator, neuralNetworkRandomFactory)
 	var mutator = NewMutator(0.25)
 	var selector = NewSelector(enviroment)
-	var neuralNetworkReproductiveFactory = NewNeuralNetworkReproductionFactory()
+	var neuralNetworkReproductiveFactory = NewNNReproductionFactory()
 	var populationReproductiveFactory = NewPopulationReproductiveFactory(positionGenerator, neuralNetworkReproductiveFactory, mutator, selector)
 	var evaluator = NewFitnessEvaluator(enviroment)
 	var executor = NewTaskExecutor(enviroment, evaluator, STEPS)

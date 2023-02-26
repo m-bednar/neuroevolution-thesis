@@ -8,13 +8,13 @@ const TOURNAMENT_SIZE = 4
 
 type PopulationReproductiveFactory struct {
 	positionGenerator    *PositionGenerator
-	neuralNetworkFactory *NeuralNetworkReproductionFactory
+	neuralNetworkFactory *NNReproductionFactory
 	mutator              *Mutator
 	selector             *Selector
 	rng                  *rand.Rand
 }
 
-func NewPopulationReproductiveFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NeuralNetworkReproductionFactory, mutator *Mutator, selector *Selector) *PopulationReproductiveFactory {
+func NewPopulationReproductiveFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NNReproductionFactory, mutator *Mutator, selector *Selector) *PopulationReproductiveFactory {
 	return &PopulationReproductiveFactory{
 		positionGenerator:    positionGenerator,
 		neuralNetworkFactory: neuralNetworkFactory,
