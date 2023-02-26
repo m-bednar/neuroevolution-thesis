@@ -39,7 +39,8 @@ func main() {
 	}
 
 	var enviroment = NewEnviroment(tiles, ENV_SIZE)
-	var executor = NewTaskExecutor(enviroment, STEPS)
+	var evaluator = NewFitnessEvaluator(enviroment)
+	var executor = NewTaskExecutor(enviroment, evaluator, STEPS)
 	var selector = NewPopulationSelector(enviroment)
 	MainLoop(executor, selector, populationRandomFactory, populationReproductiveFactory)
 }
@@ -60,6 +61,7 @@ func MainLoop(executor *TaskExecutor, selector *PopulationSelector, populationRa
 		population = append(population, populationRandomFactory.Make(POP_SIZE-n)...)
 
 		fmt.Printf("%5d: %.2f%% (%d)\n", generation, successfulness*100.0, len(selected))
+		fmt.Printf("%3.2f %3.2f %3.2f\n", selected[0].fitness, selected[1].fitness, selected[2].fitness)
 		generation++
 	}
 }

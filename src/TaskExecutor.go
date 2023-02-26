@@ -2,11 +2,12 @@ package main
 
 type TaskExecutor struct {
 	enviroment *Enviroment
+	evaluator  *FitnessEvaluator
 	steps      int
 }
 
-func NewTaskExecutor(enviroment *Enviroment, steps int) *TaskExecutor {
-	return &TaskExecutor{enviroment, steps}
+func NewTaskExecutor(enviroment *Enviroment, evaluator *FitnessEvaluator, steps int) *TaskExecutor {
+	return &TaskExecutor{enviroment, evaluator, steps}
 }
 
 func (executor *TaskExecutor) ExecuteTask(population []*Microbe) {
@@ -20,6 +21,7 @@ func (executor *TaskExecutor) ExecuteStep(population []*Microbe) {
 		var inputs = executor.MakeNeuralNetworkInputs(microbe)
 		var result = microbe.Process(inputs)
 		if executor.enviroment.IsPassable(result) {
+			microbe.fitness += executor.evaluator.EvaluateMove(microbe.position, result)
 			microbe.MoveTo(result)
 		}
 	}
