@@ -69,11 +69,11 @@ func (neuralNetwork *NeuralNetwork) Process(inputs []float64) []float64 {
 
 	// Traverse layer by layer
 	for layer := 1; layer < len(widths); layer++ {
-		var currentWidth = widths[layer]
 		var previousWidth = widths[layer-1]
+		var currentWidth = widths[layer]
 		var offset = GetLayerIndexOffset(layer)
 
-		// Inner value of each neuron
+		// Values of each neuron
 		var neurons = make([]float64, currentWidth)
 
 		// Traverse neurons and compute it's value
