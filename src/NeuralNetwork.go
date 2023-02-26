@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 const (
 	LAYER_WIDTH  = 6
 	N_LAYERS     = 2
@@ -12,13 +14,13 @@ type NeuralNetwork struct {
 	weights []float64
 }
 
+func ClampWeight(weight float64) float64 {
+	return math.Max(-WEIGHT_LIMIT, math.Min(WEIGHT_LIMIT, weight))
+}
+
 func ClampWeights(weights []float64) {
 	for i, weight := range weights {
-		if weight > WEIGHT_LIMIT {
-			weights[i] = WEIGHT_LIMIT
-		} else if weight < -WEIGHT_LIMIT {
-			weights[i] = -WEIGHT_LIMIT
-		}
+		weights[i] = ClampWeight(weight)
 	}
 }
 

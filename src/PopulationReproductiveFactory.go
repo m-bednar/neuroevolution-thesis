@@ -10,11 +10,11 @@ type PopulationReproductiveFactory struct {
 	positionGenerator    *PositionGenerator
 	neuralNetworkFactory *NeuralNetworkReproductionFactory
 	mutator              *Mutator
-	selector             *PopulationSelector
+	selector             *Selector
 	rng                  *rand.Rand
 }
 
-func NewPopulationReproductiveFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NeuralNetworkReproductionFactory, mutator *Mutator, selector *PopulationSelector) *PopulationReproductiveFactory {
+func NewPopulationReproductiveFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NeuralNetworkReproductionFactory, mutator *Mutator, selector *Selector) *PopulationReproductiveFactory {
 	return &PopulationReproductiveFactory{
 		positionGenerator:    positionGenerator,
 		neuralNetworkFactory: neuralNetworkFactory,

@@ -31,8 +31,8 @@ func main() {
 	var positionGenerator = NewPositionGenerator(ENV_SIZE)
 	var neuralNetworkRandomFactory = NewNeuralNetworkRandomFactory()
 	var populationRandomFactory = NewPopulationRandomFactory(positionGenerator, neuralNetworkRandomFactory)
-	var mutator = NewMutator(0, 0.0)
-	var selector = NewPopulationSelector(enviroment)
+	var mutator = NewMutator(0.25)
+	var selector = NewSelector(enviroment)
 	var neuralNetworkReproductiveFactory = NewNeuralNetworkReproductionFactory()
 	var populationReproductiveFactory = NewPopulationReproductiveFactory(positionGenerator, neuralNetworkReproductiveFactory, mutator, selector)
 	var evaluator = NewFitnessEvaluator(enviroment)
@@ -41,7 +41,7 @@ func main() {
 	MainLoop(executor, selector, populationRandomFactory, populationReproductiveFactory)
 }
 
-func MainLoop(executor *TaskExecutor, selector *PopulationSelector, populationRandomFactory *PopulationRandomFactory, populationReproductiveFactory *PopulationReproductiveFactory) {
+func MainLoop(executor *TaskExecutor, selector *Selector, populationRandomFactory *PopulationRandomFactory, populationReproductiveFactory *PopulationReproductiveFactory) {
 	var population = populationRandomFactory.Make(POP_SIZE)
 	var generation = 1
 	var saved = 0

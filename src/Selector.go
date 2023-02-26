@@ -2,23 +2,23 @@ package main
 
 import "math/rand"
 
-type PopulationSelector struct {
+type Selector struct {
 	enviroment *Enviroment
 	rng        *rand.Rand
 }
 
-func NewPopulationSelector(enviroment *Enviroment) *PopulationSelector {
-	return &PopulationSelector{
+func NewSelector(enviroment *Enviroment) *Selector {
+	return &Selector{
 		enviroment: enviroment,
 		rng:        NewUnixTimeRng(),
 	}
 }
 
-func (selector *PopulationSelector) IsMicrobeInsideSafeZone(microbe *Microbe) bool {
+func (selector *Selector) IsMicrobeInsideSafeZone(microbe *Microbe) bool {
 	return selector.enviroment.GetTile(microbe.position).IsSafe()
 }
 
-func (selector *PopulationSelector) CountMicrobesInSafeZone(population []*Microbe) int {
+func (selector *Selector) CountMicrobesInSafeZone(population []*Microbe) int {
 	var count = 0
 	for _, microbe := range population {
 		if selector.IsMicrobeInsideSafeZone(microbe) {
@@ -28,7 +28,7 @@ func (selector *PopulationSelector) CountMicrobesInSafeZone(population []*Microb
 	return count
 }
 
-func (selector *PopulationSelector) GetAverageFitness(population []*Microbe) float64 {
+func (selector *Selector) GetAverageFitness(population []*Microbe) float64 {
 	var sum = 0.0
 	for _, microbe := range population {
 		sum += microbe.fitness
@@ -36,13 +36,13 @@ func (selector *PopulationSelector) GetAverageFitness(population []*Microbe) flo
 	return sum / float64(len(population))
 }
 
-func (selector *PopulationSelector) SelectOneRandomly(population []*Microbe) *Microbe {
+func (selector *Selector) SelectOneRandomly(population []*Microbe) *Microbe {
 	var max = len(population)
 	var rnd = selector.rng.Intn(max)
 	return population[rnd]
 }
 
-func (selector *PopulationSelector) SelectOneWithHighestFitness(population []*Microbe) *Microbe {
+func (selector *Selector) SelectOneWithHighestFitness(population []*Microbe) *Microbe {
 	var highest = population[0]
 	for _, microbe := range population {
 		if microbe.fitness > highest.fitness {
@@ -52,7 +52,7 @@ func (selector *PopulationSelector) SelectOneWithHighestFitness(population []*Mi
 	return highest
 }
 
-func (selector *PopulationSelector) SelectOneByTournament(population []*Microbe, tournamentSize int) *Microbe {
+func (selector *Selector) SelectOneByTournament(population []*Microbe, tournamentSize int) *Microbe {
 	var selected = make([]*Microbe, tournamentSize)
 	for i := 0; i < tournamentSize; i++ {
 		selected[i] = selector.SelectOneRandomly(population)
