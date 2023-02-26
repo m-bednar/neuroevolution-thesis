@@ -1,7 +1,7 @@
 package main
 
 const (
-	LAYER_WIDTH = 4
+	LAYER_WIDTH = 6
 	N_LAYERS    = 2
 	N_OUTPUTS   = 4
 	N_INPUTS    = 2
@@ -46,30 +46,30 @@ func GetLayerIndexOffset(layer int) int {
 }
 
 func (neuralNetwork *NeuralNetwork) Process(inputs []float64) []float64 {
-	var layersWidths = GetLayersWidths()
-	var in = inputs
+	var widths = GetLayersWidths()
+	var buffer = inputs
 
 	// Traverse layer by layer
-	for layer := 1; layer < len(layersWidths); layer++ {
-		var currLayerWidth = layersWidths[layer]
-		var prevLayerWidth = layersWidths[layer-1]
+	for layer := 1; layer < len(widths); layer++ {
+		var currentWidth = widths[layer]
+		var previousWidth = widths[layer-1]
 		var offset = GetLayerIndexOffset(layer)
 
 		// Inner value of each neuron
-		var neurons = make([]float64, currLayerWidth)
+		var neurons = make([]float64, currentWidth)
 
 		// Traverse neurons and compute it's value
-		for i := 0; i < currLayerWidth; i++ {
-			var from = offset + (i * prevLayerWidth)
-			var to = from + prevLayerWidth
+		for i := 0; i < currentWidth; i++ {
+			var from = offset + (i * previousWidth)
+			var to = from + previousWidth
 			var weights = neuralNetwork.weights[from:to]
-			var sum = WeightedSum(weights, in)
+			var sum = WeightedSum(weights, buffer)
 			neurons[i] = ReLU(sum)
 		}
 
-		in = make([]float64, currLayerWidth)
-		copy(in, neurons)
+		buffer = make([]float64, currentWidth)
+		copy(buffer, neurons)
 	}
 
-	return in
+	return buffer
 }

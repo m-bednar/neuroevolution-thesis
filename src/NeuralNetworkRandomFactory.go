@@ -2,10 +2,7 @@ package main
 
 import "math/rand"
 
-const (
-	MIN_RAND_WEIGHT = -5
-	MAX_RAND_WEIGHT = 5
-)
+const RAND_WEIGHT = 4
 
 type NeuralNetworkRandomFactory struct {
 	rng *rand.Rand
@@ -26,7 +23,7 @@ func (factory *NeuralNetworkRandomFactory) Make() NeuralNetwork {
 	var size = ComputeNumberOfWeights()
 	var weights = make([]float64, size)
 	for i := 0; i < size; i++ {
-		weights[i] = factory.GenerateFloat(MIN_RAND_WEIGHT, MAX_RAND_WEIGHT)
+		weights[i] = factory.GenerateFloat(-RAND_WEIGHT, RAND_WEIGHT)
 	}
 	return NeuralNetwork{weights}
 }

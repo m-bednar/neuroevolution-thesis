@@ -31,12 +31,10 @@ func main() {
 	var positionGenerator = NewPositionGenerator(ENV_SIZE)
 	var neuralNetworkRandomFactory = NewNeuralNetworkRandomFactory()
 	var populationRandomFactory = NewPopulationRandomFactory(positionGenerator, neuralNetworkRandomFactory)
-
 	var mutator = NewMutator(0, 0.0)
 	var selector = NewPopulationSelector(enviroment)
 	var neuralNetworkReproductiveFactory = NewNeuralNetworkReproductionFactory()
 	var populationReproductiveFactory = NewPopulationReproductiveFactory(positionGenerator, neuralNetworkReproductiveFactory, mutator, selector)
-
 	var evaluator = NewFitnessEvaluator(enviroment)
 	var executor = NewTaskExecutor(enviroment, evaluator, STEPS)
 
@@ -44,17 +42,18 @@ func main() {
 }
 
 func MainLoop(executor *TaskExecutor, selector *PopulationSelector, populationRandomFactory *PopulationRandomFactory, populationReproductiveFactory *PopulationReproductiveFactory) {
-	var generation = 0
 	var population = populationRandomFactory.Make(POP_SIZE)
-	var safe = 0
+	var generation = 1
+	var saved = 0
 
-	for safe < POP_SIZE {
+	for saved < POP_SIZE {
 		executor.ExecuteTask(population)
 
-		safe = selector.CountMicrobesInSafeZone(population)
-		population = populationReproductiveFactory.Make(population, POP_SIZE)
+		saved = selector.CountMicrobesInSafeZone(population)
+		var averageFitness = selector.GetAverageFitness(population)
+		fmt.Printf("%5d.  |  %3d/%d  |  %2.2f\n", generation, saved, POP_SIZE, averageFitness)
 
-		fmt.Printf("%5d: %3d/%d\n", generation, safe, POP_SIZE)
+		population = populationReproductiveFactory.Make(population, POP_SIZE)
 		generation++
 	}
 }

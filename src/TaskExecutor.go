@@ -14,6 +14,10 @@ func (executor *TaskExecutor) ExecuteTask(population []*Microbe) {
 	for i := 0; i < executor.steps; i++ {
 		executor.ExecuteStep(population)
 	}
+	for _, microbe := range population {
+		microbe.fitness += executor.evaluator.GetFinalEvaluation(microbe)
+		// microbe.Print()
+	}
 }
 
 func (executor *TaskExecutor) ExecuteStep(population []*Microbe) {
