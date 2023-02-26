@@ -15,7 +15,7 @@ func NewPopulationSelector(enviroment *Enviroment) *PopulationSelector {
 }
 
 func (selector *PopulationSelector) IsMicrobeInsideSafeZone(microbe *Microbe) bool {
-	return selector.enviroment.GetTile(microbe.position).IsSafeZone()
+	return selector.enviroment.GetTile(microbe.position).IsSafe()
 }
 
 func (selector *PopulationSelector) CountMicrobesInSafeZone(population []*Microbe) int {

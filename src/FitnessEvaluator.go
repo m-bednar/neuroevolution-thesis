@@ -1,10 +1,10 @@
 package main
 
 const NO_MOVE_EVALUATION = 0.0
-const NON_PASSABLE_PENALTY = -0.5
-const UNNECESSARY_MOVE_PENALTY = -0.25
-const SAFEZONE_FINAL_REWARD = 2.5
-const MOVE_EVALUATION_FITNESS_COEF = 1.5
+const NON_PASSABLE_PENALTY = -0.3
+const UNNECESSARY_MOVE_PENALTY = -0.15
+const SAFEZONE_FINAL_REWARD = 3.0
+const MOVE_EVALUATION_FITNESS_COEF = 1.0
 
 type FitnessEvaluator struct {
 	enviroment *Enviroment
@@ -21,7 +21,7 @@ func (evaluator *FitnessEvaluator) FindClosestSafeTile(position Position) Positi
 	for x := 0; x < evaluator.enviroment.size; x++ {
 		for y := 0; y < evaluator.enviroment.size; y++ {
 			var selected = NewPosition(x, y)
-			if evaluator.enviroment.GetTile(selected).IsSafeZone() {
+			if evaluator.enviroment.GetTile(selected).IsSafe() {
 				if position.DistanceTo(selected) < position.DistanceTo(closest) {
 					closest = selected
 				}
@@ -38,7 +38,7 @@ func (evaluator *FitnessEvaluator) EvaluateMove(origin Position, next Position) 
 	if !evaluator.enviroment.IsPassable(next) {
 		return NON_PASSABLE_PENALTY
 	}
-	if evaluator.enviroment.GetTile(origin).IsSafeZone() && evaluator.enviroment.GetTile(next).IsSafeZone() {
+	if evaluator.enviroment.GetTile(origin).IsSafe() && evaluator.enviroment.GetTile(next).IsSafe() {
 		return UNNECESSARY_MOVE_PENALTY
 	}
 
@@ -49,7 +49,7 @@ func (evaluator *FitnessEvaluator) EvaluateMove(origin Position, next Position) 
 }
 
 func (evaluator *FitnessEvaluator) GetFinalEvaluation(microbe *Microbe) float64 {
-	if evaluator.enviroment.GetTile(microbe.position).IsSafeZone() {
+	if evaluator.enviroment.GetTile(microbe.position).IsSafe() {
 		return SAFEZONE_FINAL_REWARD
 	}
 	return 0

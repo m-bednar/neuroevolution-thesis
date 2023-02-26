@@ -9,21 +9,21 @@ const ENV_SIZE = 15
 const STEPS = ENV_SIZE * 2
 
 var tiles = []TileType{
-	SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-	SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-	SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-	SafeZone, SafeZone, SafeZone, SafeZone, SafeZone, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
-	Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty,
+	Safe, Safe, Safe, Safe, None, None, None, None, None, None, None, None, None, None, None,
+	Safe, Safe, Safe, Safe, None, None, None, None, None, None, None, None, None, None, None,
+	Safe, Safe, Safe, Safe, None, None, None, None, None, None, None, None, None, None, None,
+	Safe, Safe, Safe, Safe, None, None, None, None, None, None, None, None, None, None, None,
+	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
 }
 
 func main() {
