@@ -4,10 +4,10 @@ import "math"
 
 const (
 	LAYER_WIDTH  = 6
-	N_LAYERS     = 2
+	N_LAYERS     = 1
 	N_OUTPUTS    = 4
 	N_INPUTS     = 2
-	WEIGHT_LIMIT = 5.0
+	WEIGHT_LIMIT = 4.0
 )
 
 type NeuralNetwork struct {
@@ -36,7 +36,7 @@ func ComputeNumberOfWeights() int {
 
 func GetLayersWidths() []int {
 	// TODO Make automatic
-	return []int{N_INPUTS, LAYER_WIDTH, LAYER_WIDTH, N_OUTPUTS}
+	return []int{N_INPUTS, LAYER_WIDTH, N_OUTPUTS}
 }
 
 func WeightedSum(weights []float64, inputs []float64) float64 {
