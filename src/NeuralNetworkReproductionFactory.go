@@ -19,5 +19,5 @@ func (factory *NeuralNetworkReproductionFactory) Make(parent1 *Microbe, parent2 
 	var nn1 = parent1.neuralNetwork
 	var nn2 = parent2.neuralNetwork
 	var weights = Recombine(nn1.weights, nn2.weights)
-	return NeuralNetwork{weights}
+	return NewNeuralNetwork(weights)
 }

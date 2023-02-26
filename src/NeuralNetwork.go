@@ -1,14 +1,30 @@
 package main
 
 const (
-	LAYER_WIDTH = 6
-	N_LAYERS    = 2
-	N_OUTPUTS   = 4
-	N_INPUTS    = 2
+	LAYER_WIDTH  = 6
+	N_LAYERS     = 2
+	N_OUTPUTS    = 4
+	N_INPUTS     = 2
+	WEIGHT_LIMIT = 5.0
 )
 
 type NeuralNetwork struct {
 	weights []float64
+}
+
+func ClampWeights(weights []float64) {
+	for i, weight := range weights {
+		if weight > WEIGHT_LIMIT {
+			weights[i] = WEIGHT_LIMIT
+		} else if weight < -WEIGHT_LIMIT {
+			weights[i] = -WEIGHT_LIMIT
+		}
+	}
+}
+
+func NewNeuralNetwork(weights []float64) NeuralNetwork {
+	ClampWeights(weights)
+	return NeuralNetwork{weights}
 }
 
 func ComputeNumberOfWeights() int {

@@ -2,8 +2,6 @@ package main
 
 import "math/rand"
 
-const RAND_WEIGHT = 4
-
 type NeuralNetworkRandomFactory struct {
 	rng *rand.Rand
 }
@@ -23,7 +21,7 @@ func (factory *NeuralNetworkRandomFactory) Make() NeuralNetwork {
 	var size = ComputeNumberOfWeights()
 	var weights = make([]float64, size)
 	for i := 0; i < size; i++ {
-		weights[i] = factory.GenerateFloat(-RAND_WEIGHT, RAND_WEIGHT)
+		weights[i] = factory.GenerateFloat(-WEIGHT_LIMIT, WEIGHT_LIMIT)
 	}
-	return NeuralNetwork{weights}
+	return NewNeuralNetwork(weights)
 }
