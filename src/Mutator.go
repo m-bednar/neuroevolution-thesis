@@ -15,10 +15,16 @@ func NewMutator(strength float64) *Mutator {
 	return &Mutator{rng, strength}
 }
 
-func (mutator *Mutator) Mutate(microbe *Microbe) {
+func (mutator *Mutator) MutateMicrobe(microbe *Microbe) {
 	var nn = microbe.neuralNetwork
 	for i, weight := range nn.weights {
 		nn.weights[i] = ClampWeight(weight + mutator.GenerateMutationWeight())
+	}
+}
+
+func (mutator *Mutator) MutatePopulation(population Population) {
+	for i := range population {
+		mutator.MutateMicrobe(population[i])
 	}
 }
 

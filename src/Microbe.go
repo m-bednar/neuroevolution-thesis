@@ -4,6 +4,8 @@ import "fmt"
 
 const MOVE_TRESHOLD = 0.1
 
+type Population []*Microbe
+
 type Microbe struct {
 	position      Position
 	neuralNetwork NeuralNetwork

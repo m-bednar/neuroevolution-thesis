@@ -27,25 +27,24 @@ var tiles = []TileType{
 }
 
 func main() {
+	// Setup
 	var enviroment = NewEnviroment(tiles, ENV_SIZE)
 	var positionGenerator = NewPositionGenerator(ENV_SIZE)
-	var neuralNetworkRandomFactory = NewNNRandomFactory()
-	var populationRandomFactory = NewPopulationRandomFactory(positionGenerator, neuralNetworkRandomFactory)
+	var nnRandomFactory = NewNNRandomFactory()
+	var nnReproductiveFactory = NewNNReproductionFactory()
+
+	var populationRandomFactory = NewPopulationRandomFactory(positionGenerator, nnRandomFactory)
 	var mutator = NewMutator(0.25)
-	var selector = NewSelector(enviroment)
-	var neuralNetworkReproductiveFactory = NewNNReproductionFactory()
-	var populationReproductiveFactory = NewPopulationReproductiveFactory(positionGenerator, neuralNetworkReproductiveFactory, mutator, selector)
+	var population Population = populationRandomFactory.Make(POP_SIZE)
+	var selector = NewSelector(&population, enviroment)
+	var populationReproductiveFactory = NewPopulationReproductiveFactory(positionGenerator, nnReproductiveFactory, selector)
+
 	var evaluator = NewFitnessEvaluator(enviroment)
 	var executor = NewTaskExecutor(enviroment, evaluator, STEPS)
 
-	MainLoop(executor, selector, populationRandomFactory, populationReproductiveFactory)
-}
-
-func MainLoop(executor *TaskExecutor, selector *Selector, populationRandomFactory *PopulationRandomFactory, populationReproductiveFactory *PopulationReproductiveFactory) {
-	var population = populationRandomFactory.Make(POP_SIZE)
+	// Main loop
 	var generation = 1
 	var saved = 0
-
 	for saved < POP_SIZE {
 		executor.ExecuteTask(population)
 
@@ -54,6 +53,8 @@ func MainLoop(executor *TaskExecutor, selector *Selector, populationRandomFactor
 		fmt.Printf("%5d.  |  %3d/%d  |  %2.2f\n", generation, saved, POP_SIZE, averageFitness)
 
 		population = populationReproductiveFactory.Make(population, POP_SIZE)
+		mutator.MutatePopulation(population)
+
 		generation++
 	}
 }
