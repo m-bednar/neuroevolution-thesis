@@ -47,18 +47,20 @@ func main() {
 }
 
 func MainLoop(population []*Microbe, populationFactory *PopulationReproductiveFactory, executor *TaskExecutor, selector *Selector, mutator *Mutator) {
-	var generation = 1
 	var saved = 0
+	var fitness = 0.0
+	var generation = 1
 	for saved < POP_SIZE {
 		executor.ExecuteTask(population)
 
+		// Print stats
 		saved = selector.CountMicrobesInSafeZone(population)
-		var averageFitness = selector.GetAverageFitness(population)
-		fmt.Printf("%5d.  |  %3d/%d  |  %2.2f\n", generation, saved, POP_SIZE, averageFitness)
+		fitness = selector.GetAverageFitness(population)
+		fmt.Printf("%5d.  |  %3d/%d  |  %2.2f\n", generation, saved, POP_SIZE, fitness)
 
+		// Create new genration
 		population = populationFactory.Make(population, POP_SIZE)
 		mutator.MutatePopulation(population)
-
 		generation++
 	}
 }
