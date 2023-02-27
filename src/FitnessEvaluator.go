@@ -1,10 +1,9 @@
 package main
 
-const NO_MOVE_EVALUATION = 0.0
-const NON_PASSABLE_PENALTY = -0.3
-const UNNECESSARY_MOVE_PENALTY = -0.15
-const SAFEZONE_FINAL_REWARD = 2.0
-const MOVE_EVALUATION_FITNESS_COEF = 0.8
+const NON_PASSABLE_PENALTY = 0.0
+const UNNECESSARY_MOVE_PENALTY = 0.0
+const SAFEZONE_FINAL_REWARD = 1.0
+const MOVE_EVALUATION_FITNESS_COEF = 0.0
 
 type FitnessEvaluator struct {
 	enviroment *Enviroment
@@ -32,9 +31,6 @@ func (evaluator *FitnessEvaluator) FindClosestSafeTile(position Position) Positi
 }
 
 func (evaluator *FitnessEvaluator) EvaluateMove(origin Position, next Position) float64 {
-	if origin == next {
-		return NO_MOVE_EVALUATION
-	}
 	if !evaluator.enviroment.IsPassable(next) {
 		return NON_PASSABLE_PENALTY
 	}
