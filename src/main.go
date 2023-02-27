@@ -29,18 +29,24 @@ var tiles = []TileType{
 func main() {
 	// Setup
 	var enviroment = NewEnviroment(tiles, ENV_SIZE)
-	var positionGenerator = NewPositionGenerator(ENV_SIZE)
-	var nnRandomFactory = NewNNRandomFactory()
-	var nnReproductiveFactory = NewNNReproductionFactory()
 	var evaluator = NewFitnessEvaluator(enviroment)
 	var executor = NewTaskExecutor(enviroment, evaluator, STEPS)
-
-	var mutator = NewMutator(0.25)
 	var selector = NewSelector(enviroment)
-	var population = NewPopulationRandomFactory(positionGenerator, nnRandomFactory).Make(POP_SIZE)
-	var populationFactory = NewPopulationReproductiveFactory(positionGenerator, nnReproductiveFactory, selector)
+	var mutator = NewMutator(0.25)
+
+	// Factories and generators
+	var positionGenerator = NewPositionGenerator(enviroment)
+	var nnRandomFactory = NewNNRandomFactory()
+	var nnReproductiveFactory = NewNNReproductionFactory()
+	var populationRepFactory = NewPopulationReproductiveFactory(positionGenerator, nnReproductiveFactory, selector)
+	var populationRndFactory = NewPopulationRandomFactory(positionGenerator, nnRandomFactory)
 
 	// Main loop
+	var firstPopulation = populationRndFactory.Make(POP_SIZE)
+	MainLoop(firstPopulation, populationRepFactory, executor, selector, mutator)
+}
+
+func MainLoop(population []*Microbe, populationFactory *PopulationReproductiveFactory, executor *TaskExecutor, selector *Selector, mutator *Mutator) {
 	var generation = 1
 	var saved = 0
 	for saved < POP_SIZE {

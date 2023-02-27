@@ -3,17 +3,17 @@ package main
 import "math/rand"
 
 type PositionGenerator struct {
-	maxCoord int
-	rng      *rand.Rand
+	enviroment *Enviroment
+	rng        *rand.Rand
 }
 
-func NewPositionGenerator(maxCoord int) *PositionGenerator {
+func NewPositionGenerator(enviroment *Enviroment) *PositionGenerator {
 	var rng = NewUnixTimeRng()
-	return &PositionGenerator{maxCoord, rng}
+	return &PositionGenerator{enviroment, rng}
 }
 
 func (generator *PositionGenerator) Make() Position {
-	var x = generator.rng.Intn(generator.maxCoord)
-	var y = generator.rng.Intn(generator.maxCoord)
+	var x = generator.rng.Intn(generator.enviroment.size)
+	var y = generator.rng.Intn(generator.enviroment.size)
 	return NewPosition(x, y)
 }
