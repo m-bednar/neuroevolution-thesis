@@ -14,10 +14,6 @@ type NeuralNetwork struct {
 	weights []float64
 }
 
-type NNFactory interface {
-	Make() NeuralNetwork
-}
-
 func ClampWeight(weight float64) float64 {
 	return math.Max(-WEIGHT_LIMIT, math.Min(WEIGHT_LIMIT, weight))
 }

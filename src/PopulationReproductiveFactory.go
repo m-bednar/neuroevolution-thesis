@@ -29,8 +29,7 @@ func (factory *PopulationReproductiveFactory) Make(population []*Microbe, count 
 		var parent2 = factory.selector.SelectOneByTournament(population, TOURNAMENT_SIZE)
 		var position = factory.positionGenerator.Make()
 		var neuralNetwork = factory.neuralNetworkFactory.Make(parent1, parent2)
-		var reproduced = NewMicrobe(position, neuralNetwork)
-		new[i] = reproduced
+		new[i] = NewMicrobe(position, neuralNetwork)
 	}
 	return new
 }

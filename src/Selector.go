@@ -3,14 +3,12 @@ package main
 import "math/rand"
 
 type Selector struct {
-	population *Population
 	enviroment *Enviroment
 	rng        *rand.Rand
 }
 
-func NewSelector(population *Population, enviroment *Enviroment) *Selector {
+func NewSelector(enviroment *Enviroment) *Selector {
 	return &Selector{
-		population: population,
 		enviroment: enviroment,
 		rng:        NewUnixTimeRng(),
 	}

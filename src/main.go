@@ -32,15 +32,13 @@ func main() {
 	var positionGenerator = NewPositionGenerator(ENV_SIZE)
 	var nnRandomFactory = NewNNRandomFactory()
 	var nnReproductiveFactory = NewNNReproductionFactory()
-
-	var populationRandomFactory = NewPopulationRandomFactory(positionGenerator, nnRandomFactory)
-	var mutator = NewMutator(0.25)
-	var population Population = populationRandomFactory.Make(POP_SIZE)
-	var selector = NewSelector(&population, enviroment)
-	var populationReproductiveFactory = NewPopulationReproductiveFactory(positionGenerator, nnReproductiveFactory, selector)
-
 	var evaluator = NewFitnessEvaluator(enviroment)
 	var executor = NewTaskExecutor(enviroment, evaluator, STEPS)
+
+	var mutator = NewMutator(0.25)
+	var selector = NewSelector(enviroment)
+	var population = NewPopulationRandomFactory(positionGenerator, nnRandomFactory).Make(POP_SIZE)
+	var populationFactory = NewPopulationReproductiveFactory(positionGenerator, nnReproductiveFactory, selector)
 
 	// Main loop
 	var generation = 1
@@ -52,7 +50,7 @@ func main() {
 		var averageFitness = selector.GetAverageFitness(population)
 		fmt.Printf("%5d.  |  %3d/%d  |  %2.2f\n", generation, saved, POP_SIZE, averageFitness)
 
-		population = populationReproductiveFactory.Make(population, POP_SIZE)
+		population = populationFactory.Make(population, POP_SIZE)
 		mutator.MutatePopulation(population)
 
 		generation++
