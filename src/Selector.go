@@ -3,37 +3,13 @@ package main
 import "math/rand"
 
 type Selector struct {
-	enviroment *Enviroment
-	rng        *rand.Rand
+	rng *rand.Rand
 }
 
-func NewSelector(enviroment *Enviroment) *Selector {
+func NewSelector() *Selector {
 	return &Selector{
-		enviroment: enviroment,
-		rng:        NewUnixTimeRng(),
+		rng: NewUnixTimeRng(),
 	}
-}
-
-func (selector *Selector) IsMicrobeInsideSafeZone(microbe *Microbe) bool {
-	return selector.enviroment.GetTile(microbe.position).IsSafe()
-}
-
-func (selector *Selector) CountMicrobesInSafeZone(population Population) int {
-	var count = 0
-	for _, microbe := range population {
-		if selector.IsMicrobeInsideSafeZone(microbe) {
-			count++
-		}
-	}
-	return count
-}
-
-func (selector *Selector) GetAverageFitness(population Population) float64 {
-	var sum = 0.0
-	for _, microbe := range population {
-		sum += microbe.fitness
-	}
-	return sum / float64(len(population))
 }
 
 func (selector *Selector) SelectOneRandomly(population Population) *Microbe {
