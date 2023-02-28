@@ -2,6 +2,8 @@ package main
 
 import "math/rand"
 
+const TOURNAMENT_SIZE = 4
+
 type Selector struct {
 	rng *rand.Rand
 }
@@ -28,9 +30,9 @@ func (selector *Selector) SelectOneWithHighestFitness(population Population) *Mi
 	return highest
 }
 
-func (selector *Selector) SelectOneByTournament(population Population, tournamentSize int) *Microbe {
-	var selected = make([]*Microbe, tournamentSize)
-	for i := 0; i < tournamentSize; i++ {
+func (selector *Selector) SelectOneByTournament(population Population) *Microbe {
+	var selected = make([]*Microbe, TOURNAMENT_SIZE)
+	for i := 0; i < TOURNAMENT_SIZE; i++ {
 		selected[i] = selector.SelectOneRandomly(population)
 	}
 	return selector.SelectOneWithHighestFitness(selected)

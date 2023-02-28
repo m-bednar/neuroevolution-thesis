@@ -4,8 +4,6 @@ import (
 	"math/rand"
 )
 
-const TOURNAMENT_SIZE = 4
-
 type PopulationReproductiveFactory struct {
 	positionGenerator    *PositionGenerator
 	neuralNetworkFactory *NNReproductionFactory
@@ -25,8 +23,8 @@ func NewPopulationReproductiveFactory(positionGenerator *PositionGenerator, neur
 func (factory *PopulationReproductiveFactory) Make(population []*Microbe, count int) []*Microbe {
 	var new = make([]*Microbe, count)
 	for i := 0; i < count; i++ {
-		var parent1 = factory.selector.SelectOneByTournament(population, TOURNAMENT_SIZE)
-		var parent2 = factory.selector.SelectOneByTournament(population, TOURNAMENT_SIZE)
+		var parent1 = factory.selector.SelectOneByTournament(population)
+		var parent2 = factory.selector.SelectOneByTournament(population)
 		var position = factory.positionGenerator.Make()
 		var neuralNetwork = factory.neuralNetworkFactory.Make(parent1, parent2)
 		new[i] = NewMicrobe(position, neuralNetwork)
