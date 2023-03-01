@@ -14,13 +14,13 @@ func NewSelector() *Selector {
 	}
 }
 
-func (selector *Selector) SelectOneRandomly(population Population) *Microbe {
+func (selector *Selector) SelectOneRandomly(population []*Microbe) *Microbe {
 	var max = len(population)
 	var rnd = selector.rng.Intn(max)
 	return population[rnd]
 }
 
-func (selector *Selector) SelectOneWithHighestFitness(population Population) *Microbe {
+func (selector *Selector) SelectOneWithHighestFitness(population []*Microbe) *Microbe {
 	var highest = population[0]
 	for _, microbe := range population {
 		if microbe.fitness > highest.fitness {
@@ -30,7 +30,7 @@ func (selector *Selector) SelectOneWithHighestFitness(population Population) *Mi
 	return highest
 }
 
-func (selector *Selector) SelectOneByTournament(population Population) *Microbe {
+func (selector *Selector) SelectOneByTournament(population []*Microbe) *Microbe {
 	var selected = make([]*Microbe, TOURNAMENT_SIZE)
 	for i := 0; i < TOURNAMENT_SIZE; i++ {
 		selected[i] = selector.SelectOneRandomly(population)

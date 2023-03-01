@@ -7,6 +7,7 @@ import (
 const POP_SIZE = 200
 const ENV_SIZE = 15
 const STEPS = ENV_SIZE * 2
+const MUTATION_STRENGTH = 0.25
 
 // TODO: Read from given file
 var tiles = []TileType{
@@ -33,7 +34,7 @@ func main() {
 	var evaluator = NewFitnessEvaluator(enviroment)
 	var executor = NewTaskExecutor(enviroment, evaluator, STEPS)
 	var stats = NewStatsGatherer(enviroment)
-	var mutator = NewMutator(NewGaussMutationStrategy(0.25))
+	var mutator = NewMutator(NewGaussMutationStrategy(MUTATION_STRENGTH))
 	var selector = NewSelector()
 
 	// Factories and generators

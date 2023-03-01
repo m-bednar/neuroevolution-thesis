@@ -12,7 +12,7 @@ func NewMutator(strategy MutationStrategy) *Mutator {
 	return &Mutator{strategy}
 }
 
-func (mutator *Mutator) MutatePopulation(population Population) {
+func (mutator *Mutator) MutatePopulation(population []*Microbe) {
 	for i := range population {
 		mutator.strategy.Mutate(population[i])
 	}

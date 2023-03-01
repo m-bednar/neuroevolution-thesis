@@ -2,9 +2,14 @@ package main
 
 import "fmt"
 
-const MOVE_TRESHOLD = 0.1
-
-type Population []*Microbe
+const (
+	INITIAL_FITNESS         = 0.0
+	MOVE_TRESHOLD           = 0.1
+	MOVE_EAST_NEURON_INDEX  = 0
+	MOVE_WEST_NEURON_INDEX  = 1
+	MOVE_SOUTH_NEURON_INDEX = 2
+	MOVE_NORTH_NEURON_INDEX = 3
+)
 
 type Microbe struct {
 	position      Position
@@ -16,29 +21,30 @@ func NewMicrobe(position Position, neuralNetwork NeuralNetwork) *Microbe {
 	return &Microbe{
 		position:      position,
 		neuralNetwork: neuralNetwork,
-		fitness:       0.0,
+		fitness:       INITIAL_FITNESS,
 	}
 }
 
-func TresholdedSign(value float64, treshold float64) int {
-	if value >= treshold {
+func TresholdedSign(value float64) int {
+	if value >= MOVE_TRESHOLD {
 		return 1
 	}
-	if value <= -treshold {
+	if value <= -MOVE_TRESHOLD {
 		return -1
 	}
 	return 0
 }
 
 func Activation(outputs []float64) (int, int) {
-	var moveX = TresholdedSign(outputs[0]-outputs[1], MOVE_TRESHOLD)
-	var moveY = TresholdedSign(outputs[2]-outputs[3], MOVE_TRESHOLD)
-	return moveX, moveY
+	var moveX = outputs[MOVE_EAST_NEURON_INDEX] - outputs[MOVE_WEST_NEURON_INDEX]
+	var moveY = outputs[MOVE_SOUTH_NEURON_INDEX] - outputs[MOVE_NORTH_NEURON_INDEX]
+	return TresholdedSign(moveX), TresholdedSign(moveY)
 }
 
 func (microbe *Microbe) Process(inputs []float64) Position {
 	var outputs = microbe.neuralNetwork.Process(inputs)
-	var proposed = microbe.position.Add(Activation(outputs))
+	var moveX, moveY = Activation(outputs)
+	var proposed = microbe.position.Add(moveX, moveY)
 	return proposed
 }
 

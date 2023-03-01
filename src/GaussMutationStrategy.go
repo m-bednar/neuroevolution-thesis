@@ -4,7 +4,7 @@ import "math/rand"
 
 type GaussMutationStrategy struct {
 	rng      *rand.Rand
-	strength float64 // 0.0 - 1.0
+	strength float64
 }
 
 func NewGaussMutationStrategy(strength float64) *GaussMutationStrategy {
