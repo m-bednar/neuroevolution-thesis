@@ -4,15 +4,15 @@ import (
 	"math/rand"
 )
 
-type PopulationReproductiveFactory struct {
+type PopulationReproductionFactory struct {
 	positionGenerator    *PositionGenerator
 	neuralNetworkFactory *NNReproductionFactory
 	selector             *Selector
 	rng                  *rand.Rand
 }
 
-func NewPopulationReproductiveFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NNReproductionFactory, selector *Selector) *PopulationReproductiveFactory {
-	return &PopulationReproductiveFactory{
+func NewPopulationReproductionFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NNReproductionFactory, selector *Selector) *PopulationReproductionFactory {
+	return &PopulationReproductionFactory{
 		positionGenerator:    positionGenerator,
 		neuralNetworkFactory: neuralNetworkFactory,
 		selector:             selector,
@@ -20,7 +20,7 @@ func NewPopulationReproductiveFactory(positionGenerator *PositionGenerator, neur
 	}
 }
 
-func (factory *PopulationReproductiveFactory) Make(population []*Microbe, count int) []*Microbe {
+func (factory *PopulationReproductionFactory) Make(population []*Microbe, count int) []*Microbe {
 	var new = make([]*Microbe, count)
 	for i := 0; i < count; i++ {
 		var parent1 = factory.selector.SelectOneByTournament(population)

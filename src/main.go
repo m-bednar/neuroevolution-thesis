@@ -39,8 +39,8 @@ func main() {
 	// Factories and generators
 	var positionGenerator = NewPositionGenerator(enviroment)
 	var nnRandomFactory = NewNNRandomFactory()
-	var nnReproductiveFactory = NewNNReproductionFactory()
-	var populationRepFactory = NewPopulationReproductiveFactory(positionGenerator, nnReproductiveFactory, selector)
+	var nnReproductionFactory = NewNNReproductionFactory(NewArithmeticCrossoverStrategy())
+	var populationRepFactory = NewPopulationReproductionFactory(positionGenerator, nnReproductionFactory, selector)
 	var populationRndFactory = NewPopulationRandomFactory(positionGenerator, nnRandomFactory)
 
 	// Main loop
@@ -48,7 +48,7 @@ func main() {
 	MainLoop(firstPopulation, populationRepFactory, executor, stats, mutator)
 }
 
-func MainLoop(population []*Microbe, populationFactory *PopulationReproductiveFactory, executor *TaskExecutor, stats *StatsGatherer, mutator *Mutator) {
+func MainLoop(population []*Microbe, populationFactory *PopulationReproductionFactory, executor *TaskExecutor, stats *StatsGatherer, mutator *Mutator) {
 	var saved = 0
 	var fitness = 0.0
 	var generation = 1
