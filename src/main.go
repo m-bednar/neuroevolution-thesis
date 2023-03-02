@@ -8,12 +8,12 @@ const POP_SIZE = 400
 const ENV_SIZE = 15
 const STEPS = ENV_SIZE * 2
 const MUTATION_STRENGTH = 0.1
-const PRINT_EVERY_NTH_GEN = 20
+const PRINT_EVERY_NTH_GEN = 10
 
 // TODO: Read from given file
 var tiles = []TileType{
+	None, Safe, Safe, Safe, None, None, None, None, None, None, None, None, None, None, None,
 	None, None, Safe, None, None, None, None, None, None, None, None, None, None, None, None,
-	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
 	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
 	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
 	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,

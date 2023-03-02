@@ -5,9 +5,9 @@ import "math"
 const (
 	LAYER_WIDTH  = 8
 	N_LAYERS     = 2
-	N_OUTPUTS    = 4
+	N_OUTPUTS    = 5
 	N_INPUTS     = 2
-	WEIGHT_LIMIT = 12.0
+	WEIGHT_LIMIT = 4.0
 )
 
 type NeuralNetwork struct {

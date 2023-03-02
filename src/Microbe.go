@@ -1,15 +1,21 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 const (
 	INITIAL_FITNESS         = 0.0
-	MOVE_TRESHOLD           = 0.1
 	MOVE_EAST_NEURON_INDEX  = 0
 	MOVE_WEST_NEURON_INDEX  = 1
 	MOVE_SOUTH_NEURON_INDEX = 2
 	MOVE_NORTH_NEURON_INDEX = 3
+	NO_ACTION_INDEX         = 4
 )
+
+// TODO: Move to more suitable location
+var rng = NewUnixTimeRng()
 
 type Microbe struct {
 	position      Position
@@ -25,27 +31,70 @@ func NewMicrobe(position Position, neuralNetwork NeuralNetwork) *Microbe {
 	}
 }
 
-func TresholdedSign(value float64) int {
-	if value >= MOVE_TRESHOLD {
-		return 1
+func GetSliceMaxValue(values []float64) float64 {
+	var max = -math.MaxFloat64
+	for _, value := range values {
+		max = math.Max(max, value)
 	}
-	if value <= -MOVE_TRESHOLD {
-		return -1
+	return max
+}
+
+func SoftMax(values []float64) []float64 {
+	var max = GetSliceMaxValue(values)
+
+	var sum = 0.0
+	var result = make([]float64, len(values))
+	for i, value := range values {
+		var x = math.Exp(value - max)
+		result[i] = x
+		sum += x
 	}
-	return 0
+
+	if sum == 0 {
+		sum = math.SmallestNonzeroFloat64
+	}
+	for i, value := range result {
+		result[i] = value / sum
+	}
+
+	return result
+}
+
+func ProbabilitySelect(probabilities []float64) int {
+	var rnd = rng.Float64()
+	for i, probability := range probabilities {
+		if rnd <= probability {
+			return i
+		}
+		rnd -= probability
+	}
+	panic("Probability selection was done on slice with <1 sum")
 }
 
 func Activation(outputs []float64) (int, int) {
-	var moveX = outputs[MOVE_EAST_NEURON_INDEX] - outputs[MOVE_WEST_NEURON_INDEX]
-	var moveY = outputs[MOVE_SOUTH_NEURON_INDEX] - outputs[MOVE_NORTH_NEURON_INDEX]
-	return TresholdedSign(moveX), TresholdedSign(moveY)
+	var probabilities = SoftMax(outputs)
+	var actionIndex = ProbabilitySelect(probabilities)
+
+	switch actionIndex {
+	case MOVE_EAST_NEURON_INDEX:
+		return 1, 0
+	case MOVE_WEST_NEURON_INDEX:
+		return -1, 0
+	case MOVE_SOUTH_NEURON_INDEX:
+		return 0, 1
+	case MOVE_NORTH_NEURON_INDEX:
+		return 0, -1
+	case NO_ACTION_INDEX:
+		return 0, 0
+	}
+
+	panic("No programmed action was selected")
 }
 
 func (microbe *Microbe) Process(inputs []float64) Position {
 	var outputs = microbe.neuralNetwork.Process(inputs)
 	var moveX, moveY = Activation(outputs)
-	var proposed = microbe.position.Add(moveX, moveY)
-	return proposed
+	return microbe.position.Add(moveX, moveY)
 }
 
 func (microbe *Microbe) MoveTo(position Position) {
