@@ -2,7 +2,7 @@ package main
 
 import "math/rand"
 
-const TOURNAMENT_SIZE = 4
+const TOURNAMENT_SIZE = 6
 
 type Selector struct {
 	rng *rand.Rand

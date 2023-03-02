@@ -1,9 +1,9 @@
 package main
 
-const NON_PASSABLE_PENALTY = 0.0
-const UNNECESSARY_MOVE_PENALTY = 0.0
-const SAFEZONE_FINAL_REWARD = 1.0
-const MOVE_EVALUATION_FITNESS_COEF = 0.0
+const NON_PASSABLE_PENALTY = -0.1
+const UNSAFE_MOVE_PENALTY = -0.2
+const SAFEZONE_FINAL_REWARD = 5.0
+const MOVE_EVALUATION_FITNESS_COEF = 0.5
 
 type FitnessEvaluator struct {
 	enviroment *Enviroment
@@ -34,8 +34,8 @@ func (evaluator *FitnessEvaluator) EvaluateMove(origin Position, next Position) 
 	if !evaluator.enviroment.IsPassable(next) {
 		return NON_PASSABLE_PENALTY
 	}
-	if evaluator.enviroment.GetTile(origin).IsSafe() && evaluator.enviroment.GetTile(next).IsSafe() {
-		return UNNECESSARY_MOVE_PENALTY
+	if evaluator.enviroment.GetTile(origin).IsSafe() && !evaluator.enviroment.GetTile(next).IsSafe() {
+		return UNSAFE_MOVE_PENALTY
 	}
 
 	var closestTileOrigin = evaluator.FindClosestSafeTile(origin)
