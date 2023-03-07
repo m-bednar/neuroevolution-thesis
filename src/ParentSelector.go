@@ -2,15 +2,15 @@ package main
 
 import "math/rand"
 
-const TOURNAMENT_SIZE = 6
-
 type ParentSelector struct {
-	rng *rand.Rand
+	tournamentSize int
+	rng            *rand.Rand
 }
 
-func NewParentSelector() *ParentSelector {
+func NewParentSelector(tournamentSize int) *ParentSelector {
 	return &ParentSelector{
-		rng: NewUnixTimeRng(),
+		tournamentSize: tournamentSize,
+		rng:            NewUnixTimeRng(),
 	}
 }
 
@@ -31,8 +31,8 @@ func (selector *ParentSelector) SelectOneWithHighestFitness(population []*Microb
 }
 
 func (selector *ParentSelector) SelectOneByTournament(population []*Microbe) *Microbe {
-	var selected = make([]*Microbe, TOURNAMENT_SIZE)
-	for i := 0; i < TOURNAMENT_SIZE; i++ {
+	var selected = make([]*Microbe, selector.tournamentSize)
+	for i := 0; i < selector.tournamentSize; i++ {
 		selected[i] = selector.SelectOneRandomly(population)
 	}
 	return selector.SelectOneWithHighestFitness(selected)

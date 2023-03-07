@@ -1,9 +1,5 @@
 package main
 
-import (
-	"fmt"
-)
-
 const PRINT_EVERY_NTH_GEN = 10
 
 func main() {
@@ -15,7 +11,7 @@ func main() {
 	var evaluator = NewFitnessEvaluator(enviroment)
 	var actionSelector = NewActionSelector()
 	var executor = NewTaskExecutor(enviroment, evaluator, actionSelector, arguments.steps)
-	var selector = NewParentSelector()
+	var selector = NewParentSelector(arguments.tournamentSize)
 	var stats = NewStatsGatherer(enviroment, selector)
 	var mutator = NewMutator(NewGaussMutationStrategy(arguments.mutationStrength))
 
@@ -29,21 +25,24 @@ func main() {
 
 	// Main loop
 	var population = firstPopulation
-	var saved = 0
-	var averageFitness = 0.0
-	var highestFitness = 0.0
 	var generation = 1
 	for {
 		// Execute task
 		executor.ExecuteTask(population)
 
-		// Print stats
-		if (generation%PRINT_EVERY_NTH_GEN == 0) || saved == arguments.popSize {
-			saved = stats.CountMicrobesInSafeZone(population)
-			averageFitness = stats.GetAverageFitness(population)
-			highestFitness = stats.GetHighestFitness(population)
-			fmt.Printf("%5d.  |  %3d/%d  |  %2.2f |  %2.2f\n", generation, saved, arguments.popSize, averageFitness, highestFitness)
+		// TODO: Output generation status (eg. hash values of microbes)
+
+		var safe = stats.CountMicrobesInSafeZone(population)
+		var successRate = float64(safe) / float64(arguments.popSize)
+
+		if successRate >= arguments.minSuccessRate {
+			break
 		}
+		if generation >= arguments.maxGenerations {
+			break
+		}
+
+		// TODO: Output generation stats (eg. avg/max fitness, success rate)
 
 		// Create new generation
 		population = populationRepFactory.Make(population, arguments.popSize)
