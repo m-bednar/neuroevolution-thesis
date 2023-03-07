@@ -10,28 +10,12 @@ const STEPS = ENV_SIZE * 2
 const MUTATION_STRENGTH = 0.2
 const PRINT_EVERY_NTH_GEN = 10
 
-// TODO: Read from given file
-var tiles = []TileType{
-	None, Safe, Safe, Safe, None, None, None, None, None, None, None, None, None, None, None,
-	None, None, Safe, None, None, None, None, None, None, None, None, None, None, None, None,
-	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-	None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-}
-
 func main() {
+	var arguments = ParseProgramArguments()
+	var tiles = ReadEnviromentFile(arguments.enviromentFile)
+
 	// Setup
-	var enviroment = NewEnviroment(tiles, ENV_SIZE)
+	var enviroment = NewEnviroment(tiles)
 	var evaluator = NewFitnessEvaluator(enviroment)
 	var actionSelector = NewActionSelector()
 	var executor = NewTaskExecutor(enviroment, evaluator, actionSelector, STEPS)

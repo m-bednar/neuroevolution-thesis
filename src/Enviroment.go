@@ -1,5 +1,10 @@
 package main
 
+import (
+	"log"
+	"math"
+)
+
 type TileType uint8
 
 const (
@@ -20,8 +25,20 @@ type Enviroment struct {
 	size  int
 }
 
-func NewEnviroment(tiles []TileType, size int) *Enviroment {
-	return &Enviroment{tiles, size}
+func NewEnviroment(tiles []TileType) *Enviroment {
+	return &Enviroment{
+		tiles: tiles,
+		size:  ComputeEnviromentSize(tiles),
+	}
+}
+
+func ComputeEnviromentSize(tiles []TileType) int {
+	var count = float64(len(tiles))
+	var squared = math.Sqrt(count)
+	if squared != math.Trunc(squared) {
+		log.Fatal("Enviroment size must be NxN tiles.")
+	}
+	return int(squared)
 }
 
 func (enviroment *Enviroment) IsPassable(position Position) bool {
