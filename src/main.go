@@ -30,7 +30,7 @@ func main() {
 		// Execute task
 		executor.ExecuteTask(population)
 
-		// TODO: Output generation status (eg. hash values of microbes)
+		OutputPopulationStatus(population)
 
 		var safe = stats.CountMicrobesInSafeZone(population)
 		var successRate = float64(safe) / float64(arguments.popSize)

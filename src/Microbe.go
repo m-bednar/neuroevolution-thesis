@@ -36,3 +36,8 @@ func (microbe *Microbe) MoveTo(position Position) {
 func (microbe *Microbe) Print() {
 	fmt.Printf("position: (%2d, %2d) fitness: %2.3f\n", microbe.position.x, microbe.position.y, microbe.fitness)
 }
+
+func (microbe *Microbe) GetRGBHexCode() (byte, byte, byte) {
+	// TODO: output hex-code
+	return 0, 0, 0
+}
