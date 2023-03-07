@@ -27,22 +27,20 @@ func main() {
 	var population = firstPopulation
 	var generation = 1
 	for {
-		// Execute task
+		OutputPopulationStatus(population)
+
 		executor.ExecuteTask(population)
 
-		OutputPopulationStatus(population)
+		OutputGenerationStats(population, stats)
 
 		var safe = stats.CountMicrobesInSafeZone(population)
 		var successRate = float64(safe) / float64(arguments.popSize)
-
 		if successRate >= arguments.minSuccessRate {
 			break
 		}
 		if generation >= arguments.maxGenerations {
 			break
 		}
-
-		// TODO: Output generation stats (eg. avg/max fitness, success rate)
 
 		// Create new generation
 		population = populationRepFactory.Make(population, arguments.popSize)
