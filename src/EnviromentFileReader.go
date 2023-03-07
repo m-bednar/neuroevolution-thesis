@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"unicode"
 )
 
 func ReadEnviromentFile(filename string) []TileType {
@@ -28,8 +29,8 @@ func ReadTiles(reader *bufio.Reader) []TileType {
 			log.Fatal(err)
 		}
 
-		// Ignore newline characters
-		if b == '\n' || b == '\r' {
+		// Ignore non-digits
+		if !unicode.IsDigit(rune(b)) {
 			continue
 		}
 
