@@ -21,7 +21,7 @@ func (factory *NNRandomFactory) Make() NeuralNetwork {
 	var size = ComputeNumberOfWeights()
 	var weights = make([]float64, size)
 	for i := 0; i < size; i++ {
-		weights[i] = factory.GenerateFloat(-WEIGHT_LIMIT, WEIGHT_LIMIT)
+		weights[i] = factory.GenerateFloat(-NN_WEIGHT_LIMIT, NN_WEIGHT_LIMIT)
 	}
 	return NewNeuralNetwork(weights)
 }

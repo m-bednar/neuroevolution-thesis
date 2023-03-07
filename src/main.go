@@ -7,7 +7,7 @@ import (
 const POP_SIZE = 400
 const ENV_SIZE = 15
 const STEPS = ENV_SIZE * 2
-const MUTATION_STRENGTH = 0.1
+const MUTATION_STRENGTH = 0.2
 const PRINT_EVERY_NTH_GEN = 10
 
 // TODO: Read from given file
@@ -33,8 +33,9 @@ func main() {
 	// Setup
 	var enviroment = NewEnviroment(tiles, ENV_SIZE)
 	var evaluator = NewFitnessEvaluator(enviroment)
-	var executor = NewTaskExecutor(enviroment, evaluator, STEPS)
-	var selector = NewSelector()
+	var actionSelector = NewActionSelector()
+	var executor = NewTaskExecutor(enviroment, evaluator, actionSelector, STEPS)
+	var selector = NewParentSelector()
 	var stats = NewStatsGatherer(enviroment, selector)
 	var mutator = NewMutator(NewGaussMutationStrategy(MUTATION_STRENGTH))
 

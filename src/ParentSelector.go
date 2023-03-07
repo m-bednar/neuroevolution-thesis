@@ -4,23 +4,23 @@ import "math/rand"
 
 const TOURNAMENT_SIZE = 6
 
-type Selector struct {
+type ParentSelector struct {
 	rng *rand.Rand
 }
 
-func NewSelector() *Selector {
-	return &Selector{
+func NewParentSelector() *ParentSelector {
+	return &ParentSelector{
 		rng: NewUnixTimeRng(),
 	}
 }
 
-func (selector *Selector) SelectOneRandomly(population []*Microbe) *Microbe {
+func (selector *ParentSelector) SelectOneRandomly(population []*Microbe) *Microbe {
 	var max = len(population)
 	var rnd = selector.rng.Intn(max)
 	return population[rnd]
 }
 
-func (selector *Selector) SelectOneWithHighestFitness(population []*Microbe) *Microbe {
+func (selector *ParentSelector) SelectOneWithHighestFitness(population []*Microbe) *Microbe {
 	var highest = population[0]
 	for _, microbe := range population {
 		if microbe.fitness > highest.fitness {
@@ -30,7 +30,7 @@ func (selector *Selector) SelectOneWithHighestFitness(population []*Microbe) *Mi
 	return highest
 }
 
-func (selector *Selector) SelectOneByTournament(population []*Microbe) *Microbe {
+func (selector *ParentSelector) SelectOneByTournament(population []*Microbe) *Microbe {
 	var selected = make([]*Microbe, TOURNAMENT_SIZE)
 	for i := 0; i < TOURNAMENT_SIZE; i++ {
 		selected[i] = selector.SelectOneRandomly(population)

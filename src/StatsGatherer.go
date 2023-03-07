@@ -2,10 +2,10 @@ package main
 
 type StatsGatherer struct {
 	enviroment *Enviroment
-	selector   *Selector
+	selector   *ParentSelector
 }
 
-func NewStatsGatherer(enviroment *Enviroment, selector *Selector) *StatsGatherer {
+func NewStatsGatherer(enviroment *Enviroment, selector *ParentSelector) *StatsGatherer {
 	return &StatsGatherer{enviroment, selector}
 }
 

@@ -3,11 +3,11 @@ package main
 import "math"
 
 const (
-	LAYER_WIDTH  = 8
-	N_LAYERS     = 2
-	N_OUTPUTS    = 5
-	N_INPUTS     = 2
-	WEIGHT_LIMIT = 4.0
+	NN_LAYER_WIDTH  = 8
+	NN_NUM_LAYERS   = 2
+	NN_NUM_OUTPUTS  = 5
+	NN_NUM_INPUTS   = 2
+	NN_WEIGHT_LIMIT = 6.0
 )
 
 type NeuralNetwork struct {
@@ -15,7 +15,7 @@ type NeuralNetwork struct {
 }
 
 func ClampWeight(weight float64) float64 {
-	return math.Max(-WEIGHT_LIMIT, math.Min(WEIGHT_LIMIT, weight))
+	return math.Max(-NN_WEIGHT_LIMIT, math.Min(NN_WEIGHT_LIMIT, weight))
 }
 
 func ClampWeights(weights []float64) {
@@ -31,12 +31,12 @@ func NewNeuralNetwork(weights []float64) NeuralNetwork {
 
 func ComputeNumberOfWeights() int {
 	// TODO: implement through GetLayersWidths()
-	return (N_INPUTS * LAYER_WIDTH) + (N_OUTPUTS * LAYER_WIDTH) + ((LAYER_WIDTH * LAYER_WIDTH) * (N_LAYERS - 1))
+	return (NN_NUM_INPUTS * NN_LAYER_WIDTH) + (NN_NUM_OUTPUTS * NN_LAYER_WIDTH) + ((NN_LAYER_WIDTH * NN_LAYER_WIDTH) * (NN_NUM_LAYERS - 1))
 }
 
 func GetLayersWidths() []int {
 	// TODO Make automatic
-	return []int{N_INPUTS, LAYER_WIDTH, LAYER_WIDTH, N_OUTPUTS}
+	return []int{NN_NUM_INPUTS, NN_LAYER_WIDTH, NN_LAYER_WIDTH, NN_NUM_OUTPUTS}
 }
 
 func WeightedSum(weights []float64, inputs []float64) float64 {

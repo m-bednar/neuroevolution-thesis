@@ -7,11 +7,11 @@ import (
 type PopulationReproductionFactory struct {
 	positionGenerator    *PositionGenerator
 	neuralNetworkFactory *NNReproductionFactory
-	selector             *Selector
+	selector             *ParentSelector
 	rng                  *rand.Rand
 }
 
-func NewPopulationReproductionFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NNReproductionFactory, selector *Selector) *PopulationReproductionFactory {
+func NewPopulationReproductionFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NNReproductionFactory, selector *ParentSelector) *PopulationReproductionFactory {
 	return &PopulationReproductionFactory{
 		positionGenerator:    positionGenerator,
 		neuralNetworkFactory: neuralNetworkFactory,

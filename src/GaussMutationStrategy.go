@@ -13,7 +13,7 @@ func NewGaussMutationStrategy(strength float64) *GaussMutationStrategy {
 }
 
 func (strategy *GaussMutationStrategy) MutateWeight(weight float64) float64 {
-	var mutation = strategy.rng.NormFloat64() * (WEIGHT_LIMIT / 2) * strategy.strength
+	var mutation = strategy.rng.NormFloat64() * (NN_WEIGHT_LIMIT / 2) * strategy.strength
 	return weight + mutation
 }
 
