@@ -4,15 +4,17 @@ import (
 	"math/rand"
 )
 
-type PopulationReproductionFactory struct {
+type PopulationFactory struct {
+	populationSize       int
 	positionGenerator    *PositionGenerator
 	neuralNetworkFactory *NeuralNetworkFactory
 	selector             *ParentSelector
 	rng                  *rand.Rand
 }
 
-func NewPopulationReproductionFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NeuralNetworkFactory, selector *ParentSelector) *PopulationReproductionFactory {
-	return &PopulationReproductionFactory{
+func NewPopulationFactory(populationSize int, positionGenerator *PositionGenerator, neuralNetworkFactory *NeuralNetworkFactory, selector *ParentSelector) *PopulationFactory {
+	return &PopulationFactory{
+		populationSize:       populationSize,
 		positionGenerator:    positionGenerator,
 		neuralNetworkFactory: neuralNetworkFactory,
 		selector:             selector,
@@ -20,9 +22,9 @@ func NewPopulationReproductionFactory(positionGenerator *PositionGenerator, neur
 	}
 }
 
-func (factory *PopulationReproductionFactory) ReproduceFrom(population []*Microbe, count int) []*Microbe {
-	var new = make([]*Microbe, count)
-	for i := 0; i < count; i++ {
+func (factory *PopulationFactory) ReproduceFrom(population []*Microbe) []*Microbe {
+	var new = make([]*Microbe, factory.populationSize)
+	for i := 0; i < factory.populationSize; i++ {
 		var parent1 = factory.selector.SelectOneByTournament(population)
 		var parent2 = factory.selector.SelectOneByTournament(population)
 		var position = factory.positionGenerator.Make()
@@ -32,9 +34,9 @@ func (factory *PopulationReproductionFactory) ReproduceFrom(population []*Microb
 	return new
 }
 
-func (factory *PopulationReproductionFactory) MakeRandom(size int) []*Microbe {
-	var population = make([]*Microbe, size)
-	for i := 0; i < size; i++ {
+func (factory *PopulationFactory) MakeRandom() []*Microbe {
+	var population = make([]*Microbe, factory.populationSize)
+	for i := 0; i < factory.populationSize; i++ {
 		var position = factory.positionGenerator.Make()
 		var neuralNetwork = factory.neuralNetworkFactory.MakeRandom()
 		population[i] = NewMicrobe(position, neuralNetwork)

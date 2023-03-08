@@ -44,7 +44,7 @@ func (capturer *VideoCapturer) CaptureScene(generation int, population []*Microb
 	capturer.writter.AddFrame(buffer.Bytes())
 }
 
-func (capturer *VideoCapturer) SaveAndClose() {
+func (capturer *VideoCapturer) SaveVideo() {
 	var err = capturer.writter.Close()
 	if err != nil {
 		log.Fatal(err)

@@ -9,39 +9,35 @@ func main() {
 	// Setup
 	var enviroment = NewEnviroment(tiles)
 	var evaluator = NewFitnessEvaluator(enviroment)
-	var actionSelector = NewActionSelector()
 	var renderer = NewRenderer(enviroment)
 	var capturer = NewVideoCapturer(arguments.videoOutputPath, renderer)
+	var actionSelector = NewActionSelector()
+	var parentSelector = NewParentSelector(arguments.tournamentSize)
 	var executor = NewTaskExecutor(enviroment, capturer, evaluator, actionSelector, arguments.steps)
-	var selector = NewParentSelector(arguments.tournamentSize)
-	var stats = NewStatsGatherer(enviroment, selector)
+	var stats = NewStatsGatherer(enviroment, parentSelector)
+	var terminator = NewExecutionTerminator(stats, arguments)
 	var mutator = NewMutator(NewGaussMutationStrategy(arguments.mutationStrength))
 
 	// Factories and generators
 	var positionGenerator = NewPositionGenerator(enviroment)
 	var neuralNetworkFactory = NewNeuralNetworkFactory(NewArithmeticCrossoverStrategy())
-	var populationFactory = NewPopulationReproductionFactory(positionGenerator, neuralNetworkFactory, selector)
+	var populationFactory = NewPopulationFactory(arguments.popSize, positionGenerator, neuralNetworkFactory, parentSelector)
 
-	// Main loop
-	var population = populationFactory.MakeRandom(arguments.popSize)
+	Loop(populationFactory, executor, terminator, mutator)
+	capturer.SaveVideo()
+}
+
+func Loop(populationFactory *PopulationFactory, executor *TaskExecutor, terminator *ExecutionTerminator, mutator *Mutator) {
+	var population = populationFactory.MakeRandom()
 	var generation = 0
 	for {
 		executor.ExecuteTask(generation, population)
-		// fmt.Println(generation)
-
-		var successRate = stats.GetSuccessRate(population)
-		if successRate >= arguments.minSuccessRate {
-			break
-		}
-		if generation >= arguments.maxGenerations {
-			break
+		if terminator.ShouldTerminate(generation, population) {
+			return
 		}
 
-		// Create new generation
-		population = populationFactory.ReproduceFrom(population, arguments.popSize)
+		population = populationFactory.ReproduceFrom(population)
 		mutator.MutatePopulation(population)
 		generation++
 	}
-
-	capturer.SaveAndClose()
 }
