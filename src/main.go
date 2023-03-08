@@ -10,7 +10,9 @@ func main() {
 	var enviroment = NewEnviroment(tiles)
 	var evaluator = NewFitnessEvaluator(enviroment)
 	var actionSelector = NewActionSelector()
-	var executor = NewTaskExecutor(enviroment, evaluator, actionSelector, arguments.steps)
+	var renderer = NewRenderer(enviroment)
+	var capturer = NewVideoCapturer("out.avi", renderer)
+	var executor = NewTaskExecutor(enviroment, capturer, evaluator, actionSelector, arguments.steps)
 	var selector = NewParentSelector(arguments.tournamentSize)
 	var stats = NewStatsGatherer(enviroment, selector)
 	var mutator = NewMutator(NewGaussMutationStrategy(arguments.mutationStrength))
@@ -27,11 +29,7 @@ func main() {
 	var population = firstPopulation
 	var generation = 1
 	for {
-		OutputPopulationStatus(population)
-
 		executor.ExecuteTask(population)
-
-		OutputGenerationStats(population, stats)
 
 		var safe = stats.CountMicrobesInSafeZone(population)
 		var successRate = float64(safe) / float64(arguments.popSize)
@@ -47,4 +45,6 @@ func main() {
 		mutator.MutatePopulation(population)
 		generation++
 	}
+
+	capturer.SaveAndClose()
 }
