@@ -19,10 +19,9 @@ func main() {
 
 	// Factories and generators
 	var positionGenerator = NewPositionGenerator(enviroment)
-	var nnRandomFactory = NewNNRandomFactory()
-	var nnReproductionFactory = NewNNReproductionFactory(NewArithmeticCrossoverStrategy())
-	var populationRepFactory = NewPopulationReproductionFactory(positionGenerator, nnReproductionFactory, selector)
-	var populationRndFactory = NewPopulationRandomFactory(positionGenerator, nnRandomFactory)
+	var neuralNetworkFactory = NewNeuralNetworkFactory(NewArithmeticCrossoverStrategy())
+	var populationRepFactory = NewPopulationReproductionFactory(positionGenerator, neuralNetworkFactory, selector)
+	var populationRndFactory = NewPopulationRandomFactory(positionGenerator, neuralNetworkFactory)
 	var firstPopulation = populationRndFactory.Make(arguments.popSize)
 
 	// Main loop

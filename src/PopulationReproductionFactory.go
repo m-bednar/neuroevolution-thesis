@@ -6,12 +6,12 @@ import (
 
 type PopulationReproductionFactory struct {
 	positionGenerator    *PositionGenerator
-	neuralNetworkFactory *NNReproductionFactory
+	neuralNetworkFactory *NeuralNetworkFactory
 	selector             *ParentSelector
 	rng                  *rand.Rand
 }
 
-func NewPopulationReproductionFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NNReproductionFactory, selector *ParentSelector) *PopulationReproductionFactory {
+func NewPopulationReproductionFactory(positionGenerator *PositionGenerator, neuralNetworkFactory *NeuralNetworkFactory, selector *ParentSelector) *PopulationReproductionFactory {
 	return &PopulationReproductionFactory{
 		positionGenerator:    positionGenerator,
 		neuralNetworkFactory: neuralNetworkFactory,
@@ -26,7 +26,7 @@ func (factory *PopulationReproductionFactory) Make(population []*Microbe, count 
 		var parent1 = factory.selector.SelectOneByTournament(population)
 		var parent2 = factory.selector.SelectOneByTournament(population)
 		var position = factory.positionGenerator.Make()
-		var neuralNetwork = factory.neuralNetworkFactory.Make(parent1, parent2)
+		var neuralNetwork = factory.neuralNetworkFactory.Reproduce(parent1, parent2)
 		new[i] = NewMicrobe(position, neuralNetwork)
 	}
 	return new
