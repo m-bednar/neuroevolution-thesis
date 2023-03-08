@@ -29,7 +29,7 @@ func main() {
 	var population = firstPopulation
 	var generation = 1
 	for {
-		executor.ExecuteTask(population)
+		executor.ExecuteTask(generation, population)
 
 		var safe = stats.CountMicrobesInSafeZone(population)
 		var successRate = float64(safe) / float64(arguments.popSize)

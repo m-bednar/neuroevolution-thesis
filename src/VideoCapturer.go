@@ -10,7 +10,7 @@ import (
 
 const (
 	FPS          = 15
-	JPEG_QUALITY = 85
+	JPEG_QUALITY = 90
 )
 
 type VideoCapturer struct {
@@ -32,9 +32,9 @@ func NewVideoCapturer(filename string, renderer *Renderer) *VideoCapturer {
 	}
 }
 
-func (capturer *VideoCapturer) CaptureScene(population []*Microbe) {
+func (capturer *VideoCapturer) CaptureScene(generation int, population []*Microbe) {
 	var opts = jpeg.Options{Quality: JPEG_QUALITY}
-	var img = capturer.renderer.RenderScene(population)
+	var img = capturer.renderer.RenderScene(generation, population)
 	var buffer = bytes.NewBuffer([]byte{})
 	var err = jpeg.Encode(buffer, img, &opts)
 

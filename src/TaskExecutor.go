@@ -12,10 +12,10 @@ func NewTaskExecutor(enviroment *Enviroment, capturer *VideoCapturer, evaluator 
 	return &TaskExecutor{enviroment, capturer, evaluator, selector, steps}
 }
 
-func (executor *TaskExecutor) ExecuteTask(population []*Microbe) {
+func (executor *TaskExecutor) ExecuteTask(generation int, population []*Microbe) {
 	for i := 0; i < executor.steps; i++ {
 		executor.ExecuteStep(population)
-		executor.capturer.CaptureScene(population)
+		executor.capturer.CaptureScene(generation, population)
 	}
 	for _, microbe := range population {
 		microbe.fitness += executor.evaluator.GetFinalEvaluation(microbe)
