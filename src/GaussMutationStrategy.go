@@ -17,9 +17,8 @@ func (strategy *GaussMutationStrategy) MutateWeight(weight float64) float64 {
 	return weight + mutation
 }
 
-func (strategy *GaussMutationStrategy) Mutate(microbe *Microbe) {
-	var nn = microbe.neuralNetwork
-	for i, weight := range nn.weights {
-		nn.weights[i] = ClampWeight(strategy.MutateWeight(weight))
+func (strategy *GaussMutationStrategy) Mutate(weights []float64) {
+	for i, weight := range weights {
+		weights[i] = ClampWeight(strategy.MutateWeight(weight))
 	}
 }

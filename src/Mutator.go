@@ -5,7 +5,7 @@ type Mutator struct {
 }
 
 type MutationStrategy interface {
-	Mutate(microbe *Microbe)
+	Mutate(weights []float64)
 }
 
 func NewMutator(strategy MutationStrategy) *Mutator {
@@ -14,6 +14,6 @@ func NewMutator(strategy MutationStrategy) *Mutator {
 
 func (mutator *Mutator) MutatePopulation(population []*Microbe) {
 	for i := range population {
-		mutator.strategy.Mutate(population[i])
+		mutator.strategy.Mutate(population[i].neuralNetwork.weights)
 	}
 }
