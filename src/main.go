@@ -20,12 +20,10 @@ func main() {
 	// Factories and generators
 	var positionGenerator = NewPositionGenerator(enviroment)
 	var neuralNetworkFactory = NewNeuralNetworkFactory(NewArithmeticCrossoverStrategy())
-	var populationRepFactory = NewPopulationReproductionFactory(positionGenerator, neuralNetworkFactory, selector)
-	var populationRndFactory = NewPopulationRandomFactory(positionGenerator, neuralNetworkFactory)
-	var firstPopulation = populationRndFactory.Make(arguments.popSize)
+	var populationFactory = NewPopulationReproductionFactory(positionGenerator, neuralNetworkFactory, selector)
 
 	// Main loop
-	var population = firstPopulation
+	var population = populationFactory.MakeRandom(arguments.popSize)
 	var generation = 1
 	for {
 		executor.ExecuteTask(generation, population)
@@ -40,7 +38,7 @@ func main() {
 		}
 
 		// Create new generation
-		population = populationRepFactory.Make(population, arguments.popSize)
+		population = populationFactory.ReproduceFrom(population, arguments.popSize)
 		mutator.MutatePopulation(population)
 		generation++
 	}

@@ -20,7 +20,7 @@ func NewPopulationReproductionFactory(positionGenerator *PositionGenerator, neur
 	}
 }
 
-func (factory *PopulationReproductionFactory) Make(population []*Microbe, count int) []*Microbe {
+func (factory *PopulationReproductionFactory) ReproduceFrom(population []*Microbe, count int) []*Microbe {
 	var new = make([]*Microbe, count)
 	for i := 0; i < count; i++ {
 		var parent1 = factory.selector.SelectOneByTournament(population)
@@ -30,4 +30,14 @@ func (factory *PopulationReproductionFactory) Make(population []*Microbe, count 
 		new[i] = NewMicrobe(position, neuralNetwork)
 	}
 	return new
+}
+
+func (factory *PopulationReproductionFactory) MakeRandom(size int) []*Microbe {
+	var population = make([]*Microbe, size)
+	for i := 0; i < size; i++ {
+		var position = factory.positionGenerator.Make()
+		var neuralNetwork = factory.neuralNetworkFactory.MakeRandom()
+		population[i] = NewMicrobe(position, neuralNetwork)
+	}
+	return population
 }
