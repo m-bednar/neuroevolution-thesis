@@ -11,7 +11,7 @@ func main() {
 	var evaluator = NewFitnessEvaluator(enviroment)
 	var actionSelector = NewActionSelector()
 	var renderer = NewRenderer(enviroment)
-	var capturer = NewVideoCapturer("out.avi", renderer)
+	var capturer = NewVideoCapturer(arguments.videoOutputPath, renderer)
 	var executor = NewTaskExecutor(enviroment, capturer, evaluator, actionSelector, arguments.steps)
 	var selector = NewParentSelector(arguments.tournamentSize)
 	var stats = NewStatsGatherer(enviroment, selector)
@@ -24,12 +24,12 @@ func main() {
 
 	// Main loop
 	var population = populationFactory.MakeRandom(arguments.popSize)
-	var generation = 1
+	var generation = 0
 	for {
 		executor.ExecuteTask(generation, population)
+		// fmt.Println(generation)
 
-		var safe = stats.CountMicrobesInSafeZone(population)
-		var successRate = float64(safe) / float64(arguments.popSize)
+		var successRate = stats.GetSuccessRate(population)
 		if successRate >= arguments.minSuccessRate {
 			break
 		}

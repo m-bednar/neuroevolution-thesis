@@ -35,3 +35,7 @@ func (gatherer *StatsGatherer) GetHighestFitness(population []*Microbe) float64 
 	var microbe = gatherer.selector.SelectOneWithHighestFitness(population)
 	return microbe.fitness
 }
+
+func (gatherer *StatsGatherer) GetSuccessRate(population []*Microbe) float64 {
+	return float64(gatherer.CountMicrobesInSafeZone(population)) / float64(len(population))
+}
