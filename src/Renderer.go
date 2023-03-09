@@ -60,6 +60,11 @@ func NewRenderer(enviroment *Enviroment) *Renderer {
 	}
 }
 
+func (renderer *Renderer) ClearScene() {
+	renderer.context.SetFillColor(color.White)
+	renderer.context.Clear()
+}
+
 func (renderer *Renderer) DrawCircle(x float64, y float64) {
 	const halfSize = TILE_DISPLAY_SIZE / 2
 	const radius = halfSize - 1
@@ -93,6 +98,10 @@ func (renderer *Renderer) DrawGrid() {
 	renderer.context.Stroke()
 }
 
+func (renderer *Renderer) DrawTiles() {
+	// TODO
+}
+
 func (renderer *Renderer) DrawPopulation(population []*Microbe) {
 	renderer.context.SetFillColor(MICROBE_COLOR)
 	renderer.context.SetLineWidth(0)
@@ -109,12 +118,10 @@ func (renderer *Renderer) DrawGenerationNumber(generation int) {
 }
 
 func (renderer *Renderer) RenderScene(generation int, population []*Microbe) *image.RGBA {
-	renderer.context.SetFillColor(color.White)
-	renderer.context.Clear()
-
+	renderer.ClearScene()
 	renderer.DrawGrid()
+	renderer.DrawTiles()
 	renderer.DrawPopulation(population)
 	renderer.DrawGenerationNumber(generation)
-
 	return renderer.image // TODO: Return &bytes.Buffer{} instead
 }
