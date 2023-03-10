@@ -14,7 +14,7 @@ min success rate 	float		-mins
 steps				int			-steps
 mutation strength	float		-mutstr
 tournament size		int			-tsize
-video output        string      -vout
+output directory    string      -out
 */
 
 type ProgramArguments struct {
@@ -25,7 +25,7 @@ type ProgramArguments struct {
 	steps            int
 	mutationStrength float64
 	tournamentSize   int
-	videoOutputPath  string
+	outputPath       string
 }
 
 func ParseProgramArguments() *ProgramArguments {
@@ -38,7 +38,7 @@ func ParseProgramArguments() *ProgramArguments {
 	flag.IntVar(&arguments.steps, "steps", 0, "Number of steps of each microbe in every generation simulation.")
 	flag.Float64Var(&arguments.mutationStrength, "mutstr", 0.0, "Gauss mutation strenght. (0.1 = 10%, 1 = 100%, etc.)")
 	flag.IntVar(&arguments.tournamentSize, "tsize", 0, "Number of microbes from whom parent is selected in tournament.")
-	flag.StringVar(&arguments.videoOutputPath, "vout", "", "Path for the video output.")
+	flag.StringVar(&arguments.outputPath, "out", "", "Path of output directory.")
 	flag.Parse()
 
 	if arguments.enviromentFile == "" {
@@ -65,8 +65,8 @@ func ParseProgramArguments() *ProgramArguments {
 	if arguments.tournamentSize > arguments.popSize {
 		log.Fatal("Tournament size cannot be more than population size")
 	}
-	if arguments.videoOutputPath == "" {
-		log.Fatal("Video output path not set.")
+	if arguments.outputPath == "" {
+		log.Fatal("Output path not set.")
 	}
 
 	return &arguments

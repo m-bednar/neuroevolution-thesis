@@ -10,13 +10,14 @@ func main() {
 	var enviroment = NewEnviroment(tiles)
 	var evaluator = NewFitnessEvaluator(enviroment)
 	var renderer = NewRenderer(enviroment)
-	var capturer = NewVideoCapturer(arguments.videoOutputPath, renderer)
 	var actionSelector = NewActionSelector()
 	var parentSelector = NewParentSelector(arguments.tournamentSize)
-	var executor = NewTaskExecutor(enviroment, capturer, evaluator, actionSelector, arguments.steps)
 	var stats = NewStatsGatherer(enviroment, parentSelector)
 	var terminator = NewExecutionTerminator(stats, arguments)
 	var mutator = NewMutator(NewGaussMutationStrategy(arguments.mutationStrength))
+
+	var outputter = NewOutputter(arguments.outputPath, renderer)
+	var executor = NewTaskExecutor(enviroment, outputter, evaluator, actionSelector, arguments.steps)
 
 	// Factories and generators
 	var positionGenerator = NewPositionGenerator(enviroment)
@@ -24,7 +25,7 @@ func main() {
 	var populationFactory = NewPopulationFactory(arguments.popSize, positionGenerator, neuralNetworkFactory, parentSelector)
 
 	Loop(populationFactory, executor, terminator, mutator)
-	capturer.SaveVideo()
+	outputter.SaveAll()
 }
 
 func Loop(populationFactory *PopulationFactory, executor *TaskExecutor, terminator *ExecutionTerminator, mutator *Mutator) {

@@ -4,20 +4,20 @@ import "fmt"
 
 type TaskExecutor struct {
 	enviroment *Enviroment
-	capturer   *VideoCapturer
+	outputter  *Outputter
 	evaluator  *FitnessEvaluator
 	selector   *ActionSelector
 	steps      int
 }
 
-func NewTaskExecutor(enviroment *Enviroment, capturer *VideoCapturer, evaluator *FitnessEvaluator, selector *ActionSelector, steps int) *TaskExecutor {
-	return &TaskExecutor{enviroment, capturer, evaluator, selector, steps}
+func NewTaskExecutor(enviroment *Enviroment, outputter *Outputter, evaluator *FitnessEvaluator, selector *ActionSelector, steps int) *TaskExecutor {
+	return &TaskExecutor{enviroment, outputter, evaluator, selector, steps}
 }
 
 func (executor *TaskExecutor) ExecuteTask(generation int, population []*Microbe) {
 	for i := 0; i < executor.steps; i++ {
 		executor.ExecuteStep(population)
-		executor.capturer.CaptureScene(generation, population)
+		executor.outputter.CaptureStep(generation, population)
 	}
 	for _, microbe := range population {
 		microbe.fitness += executor.evaluator.GetFinalEvaluation(microbe)
