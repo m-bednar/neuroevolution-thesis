@@ -10,7 +10,9 @@ const VIDEO_FILE_NAME = "video.avi"
 const OUTPUT_DIRECTORY_PERMISSIONS = 0770
 
 type Outputter struct {
-	videoCapturer *VideoCapturer
+	collector  *DataCollector
+	chartMaker *ChartMaker
+	videoMaker *VideoMaker
 }
 
 func CreateOutputPath(outputPath string) {
@@ -20,18 +22,16 @@ func CreateOutputPath(outputPath string) {
 	}
 }
 
-func NewOutputter(outputPath string, renderer *Renderer) *Outputter {
+func NewOutputter(outputPath string, collector *DataCollector, renderer *Renderer) *Outputter {
 	CreateOutputPath(outputPath)
 	var videoPath = path.Join(outputPath, VIDEO_FILE_NAME)
 	return &Outputter{
-		videoCapturer: NewVideoCapturer(videoPath, renderer),
+		collector:  collector,
+		chartMaker: NewChartMaker(),
+		videoMaker: NewVideoMaker(videoPath, renderer),
 	}
 }
 
-func (outputter *Outputter) CaptureStep(generation int, population []*Microbe) {
-	outputter.videoCapturer.CaptureScene(generation, population)
-}
-
 func (outputter *Outputter) SaveAll() {
-	outputter.videoCapturer.SaveVideo()
+	outputter.videoMaker.SaveVideo()
 }

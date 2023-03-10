@@ -13,12 +13,12 @@ func main() {
 	var actionSelector = NewActionSelector()
 	var parentSelector = NewParentSelector(arguments.tournamentSize)
 	var gatherer = NewStatsGatherer(enviroment, parentSelector)
-	var collector = NewStatsCollector(gatherer)
+	var collector = NewDataCollector(gatherer, arguments.maxGenerations)
 	var terminator = NewExecutionTerminator(gatherer, arguments)
 	var mutator = NewMutator(NewGaussMutationStrategy(arguments.mutationStrength))
 
-	var outputter = NewOutputter(arguments.outputPath, renderer)
-	var executor = NewTaskExecutor(enviroment, outputter, evaluator, actionSelector, arguments.steps)
+	var outputter = NewOutputter(arguments.outputPath, collector, renderer)
+	var executor = NewTaskExecutor(enviroment, outputter, collector, evaluator, actionSelector, arguments.steps)
 
 	// Factories and generators
 	var positionGenerator = NewPositionGenerator(enviroment)
@@ -30,12 +30,12 @@ func main() {
 	MakeChart(collector)
 }
 
-func Loop(populationFactory *PopulationFactory, executor *TaskExecutor, terminator *ExecutionTerminator, collector *StatsCollector, mutator *Mutator) {
+func Loop(populationFactory *PopulationFactory, executor *TaskExecutor, terminator *ExecutionTerminator, collector *DataCollector, mutator *Mutator) {
 	var population = populationFactory.MakeRandom()
 	var generation = 0
 	for {
 		executor.ExecuteTask(generation, population)
-		collector.Collect(population)
+		collector.CollectStats(generation, population)
 		if terminator.ShouldTerminate(generation, population) {
 			return
 		}

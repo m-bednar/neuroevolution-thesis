@@ -13,12 +13,12 @@ const (
 	JPEG_QUALITY = 95
 )
 
-type VideoCapturer struct {
+type VideoMaker struct {
 	renderer *Renderer
 	writter  mjpeg.AviWriter
 }
 
-func NewVideoCapturer(filename string, renderer *Renderer) *VideoCapturer {
+func NewVideoMaker(filename string, renderer *Renderer) *VideoMaker {
 	var size = int32(renderer.imageSize)
 	var writter, err = mjpeg.New(filename, size, size, FPS)
 
@@ -26,15 +26,19 @@ func NewVideoCapturer(filename string, renderer *Renderer) *VideoCapturer {
 		log.Fatal(err)
 	}
 
-	return &VideoCapturer{
+	return &VideoMaker{
 		renderer: renderer,
 		writter:  writter,
 	}
 }
 
-func (capturer *VideoCapturer) CaptureScene(generation int, population []*Microbe) {
+func (maker *VideoMaker) MakeVideo(collector *DataCollector) {
+	// TODO
+}
+
+func (maker *VideoMaker) CaptureScene(generation int, population []*Microbe) {
 	var opts = jpeg.Options{Quality: JPEG_QUALITY}
-	var img = capturer.renderer.RenderScene(generation, population)
+	var img = maker.renderer.RenderScene(generation, population)
 
 	var buffer = bytes.NewBuffer([]byte{})
 	var err = jpeg.Encode(buffer, img, &opts)
@@ -42,11 +46,11 @@ func (capturer *VideoCapturer) CaptureScene(generation int, population []*Microb
 	if err != nil {
 		log.Fatal(err)
 	}
-	capturer.writter.AddFrame(buffer.Bytes())
+	maker.writter.AddFrame(buffer.Bytes())
 }
 
-func (capturer *VideoCapturer) SaveVideo() {
-	var err = capturer.writter.Close()
+func (maker *VideoMaker) SaveVideo() {
+	var err = maker.writter.Close()
 	if err != nil {
 		log.Fatal(err)
 	}

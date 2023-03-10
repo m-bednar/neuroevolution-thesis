@@ -9,6 +9,12 @@ import (
 
 const PERCENTAGE_TICKS = 10
 
+type ChartMaker struct{}
+
+func NewChartMaker() *ChartMaker {
+	return &ChartMaker{}
+}
+
 func GenerateContinuousRange(x int) []float64 {
 	var r = make([]float64, x)
 	for i := 0; i < x; i++ {
@@ -38,10 +44,8 @@ func CreatePercentageTicks() []chart.Tick {
 	return ticks
 }
 
-func MakeChart(collector *StatsCollector) {
-
-	var survivability = collector.survivability
-
+func MakeChart(collector *DataCollector) {
+	var survivability = collector.stats.survivability
 	var graph = chart.Chart{
 		Background: chart.Style{
 			Padding: chart.Box{Top: 20, Left: 20},
@@ -65,7 +69,7 @@ func MakeChart(collector *StatsCollector) {
 		chart.Legend(&graph),
 	}
 
-	var file, _ = os.Create("chart.png")
+	var file, _ = os.Create("output/chart.png")
 	var err = graph.Render(chart.PNG, file)
 
 	if err != nil {
@@ -73,5 +77,4 @@ func MakeChart(collector *StatsCollector) {
 	}
 
 	file.Close()
-
 }
