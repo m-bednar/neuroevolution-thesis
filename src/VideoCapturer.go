@@ -10,7 +10,7 @@ import (
 
 const (
 	FPS          = 15
-	JPEG_QUALITY = 90
+	JPEG_QUALITY = 95
 )
 
 type VideoCapturer struct {
