@@ -36,7 +36,7 @@ func (capturer *VideoCapturer) CaptureScene(generation int, population []*Microb
 	var opts = jpeg.Options{Quality: JPEG_QUALITY}
 	var img = capturer.renderer.RenderScene(generation, population)
 
-	var buffer = bytes.NewBuffer([]byte{}) // FIXME: img.Pix, no encoding
+	var buffer = bytes.NewBuffer([]byte{})
 	var err = jpeg.Encode(buffer, img, &opts)
 
 	if err != nil {
