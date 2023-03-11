@@ -40,7 +40,7 @@ func (maker *VideoMaker) MakeVideoToFile(filename string, collector *DataCollect
 
 	for i, sample := range collector.samples {
 		maker.AddGenerationSampleFrame(writter, i, sample)
-		fmt.Println(i)
+		fmt.Printf("Processing %d/%d\n", i, len(collector.samples)-1)
 	}
 
 	if err := writter.Close(); err != nil {

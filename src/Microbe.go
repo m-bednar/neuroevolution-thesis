@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 const (
 	INITIAL_FITNESS = 0.0
 )
@@ -31,8 +29,4 @@ func (microbe *Microbe) Process(selector *ActionSelector, inputs []float64) Posi
 
 func (microbe *Microbe) MoveTo(position Position) {
 	microbe.position = position
-}
-
-func (microbe *Microbe) Print() {
-	fmt.Printf("position: (%2d, %2d) fitness: %2.3f\n", microbe.position.x, microbe.position.y, microbe.fitness)
 }

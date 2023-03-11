@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 const PRINT_EVERY_NTH_GEN = 10
 
 func main() {
@@ -27,12 +29,14 @@ func main() {
 
 	Loop(populationFactory, executor, terminator, collector, mutator)
 	outputter.MakeOutput(arguments.outputPath)
+	fmt.Printf("Done. Saved: %s\n", arguments.outputPath)
 }
 
 func Loop(populationFactory *PopulationFactory, executor *TaskExecutor, terminator *ExecutionTerminator, collector *DataCollector, mutator *Mutator) {
 	var population = populationFactory.MakeRandom()
 	var generation = 0
 	for {
+		fmt.Printf("Simulating %d/%d\n", generation, terminator.arguments.maxGenerations)
 		executor.ExecuteTask(generation, population)
 		collector.CollectStats(generation, population)
 		if terminator.ShouldTerminate(generation, population) {

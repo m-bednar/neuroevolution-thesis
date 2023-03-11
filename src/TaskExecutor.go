@@ -1,9 +1,5 @@
 package main
 
-import (
-	"fmt"
-)
-
 type TaskExecutor struct {
 	enviroment *Enviroment
 	outputter  *Outputter
@@ -26,7 +22,6 @@ func (executor *TaskExecutor) ExecuteTask(generation int, population []*Microbe)
 	for _, microbe := range population {
 		microbe.fitness += executor.evaluator.GetFinalEvaluation(microbe)
 	}
-	fmt.Println(generation)
 }
 
 func (executor *TaskExecutor) ExecuteStep(population []*Microbe) {
