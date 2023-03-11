@@ -2,16 +2,18 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"image"
 	"image/jpeg"
 	"log"
+	"sync"
 
 	"github.com/icza/mjpeg"
 )
 
 const (
 	FPS          = 15
-	JPEG_QUALITY = 95
+	JPEG_QUALITY = 90
 )
 
 type VideoMaker struct {
@@ -35,17 +37,40 @@ func (maker *VideoMaker) MakeWritter(filename string) mjpeg.AviWriter {
 
 func (maker *VideoMaker) MakeVideoToFile(filename string, collector *DataCollector) {
 	var writter = maker.MakeWritter(filename)
-	var frames = maker.MakeFrames(collector.samples)
 
-	// TODO: Use goroutines
-	for i := range frames {
-		var encoded = maker.EncodeFrame(frames[i])
-		writter.AddFrame(encoded)
+	for i, sample := range collector.samples {
+		maker.AddGenerationSampleFrame(writter, i, sample)
+		fmt.Println(i)
 	}
 
 	if err := writter.Close(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func (maker *VideoMaker) AddGenerationSampleFrame(writter mjpeg.AviWriter, generation int, sample GenerationSample) {
+	var encoded = maker.EncodeFramesAsync(generation, sample)
+	for _, enc := range encoded {
+		writter.AddFrame(enc)
+	}
+}
+
+func (maker *VideoMaker) EncodeFramesAsync(generation int, sample GenerationSample) [][]byte {
+	var wg = sync.WaitGroup{}
+	var count = len(sample.steps)
+	var encoded = make([][]byte, count)
+
+	wg.Add(count)
+	for i, s := range sample.steps {
+		go func(ind int, step StepSample) {
+			var frame = maker.renderer.RenderStep(generation, step)
+			encoded[ind] = maker.EncodeFrame(frame)
+			wg.Done()
+		}(i, s)
+	}
+	wg.Wait()
+
+	return encoded
 }
 
 func (maker *VideoMaker) EncodeFrame(frame *image.RGBA) []byte {
@@ -55,21 +80,4 @@ func (maker *VideoMaker) EncodeFrame(frame *image.RGBA) []byte {
 		log.Fatal(err)
 	}
 	return buffer.Bytes()
-}
-
-func (maker *VideoMaker) MakeFrames(samples []GenerationSample) []Frame {
-	var frames = make([]Frame, 0)
-	for i, sample := range samples {
-		frames = append(frames, maker.CaptureGeneration(i, sample)...)
-	}
-	return frames
-}
-
-func (maker *VideoMaker) CaptureGeneration(generation int, sample GenerationSample) []Frame {
-	var steps = make([]Frame, len(sample.steps))
-	for i, step := range sample.steps {
-		var frame = maker.renderer.RenderStep(generation, step)
-		steps[i] = frame
-	}
-	return steps
 }
