@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	TILE_DISPLAY_SIZE = 12
+	TILE_DISPLAY_SIZE = 16
 	FONT_SIZE         = 18
 )
 
@@ -27,10 +27,9 @@ var (
 
 type Renderer struct {
 	imageSize  int
+	font       draw2d.FontData
 	enviroment *Enviroment
-	image      *image.RGBA
 	background *image.RGBA
-	context    *draw2dimg.GraphicContext
 }
 
 func LoadGoRegularFont() draw2d.FontData {
@@ -102,57 +101,60 @@ func CreateBackground(enviroment *Enviroment, imgSize int) *image.RGBA {
 
 func NewRenderer(enviroment *Enviroment) *Renderer {
 	var size = enviroment.size * TILE_DISPLAY_SIZE
-	var img = image.NewRGBA(image.Rect(0, 0, size, size))
-	var context = draw2dimg.NewGraphicContext(img)
 	var background = CreateBackground(enviroment, size)
-
-	context.SetFontData(LoadGoRegularFont())
-	context.SetFontSize(FONT_SIZE)
+	var font = LoadGoRegularFont()
 
 	return &Renderer{
 		imageSize:  size,
+		font:       font,
 		enviroment: enviroment,
-		image:      img,
 		background: background,
-		context:    context,
 	}
 }
 
-func (renderer *Renderer) DrawCircle(x float64, y float64) {
+func (renderer *Renderer) CreateImageWithContext() (*image.RGBA, *draw2dimg.GraphicContext) {
+	var img = image.NewRGBA(image.Rect(0, 0, renderer.imageSize, renderer.imageSize))
+	var context = draw2dimg.NewGraphicContext(img)
+	context.SetFontData(renderer.font)
+	context.SetFontSize(FONT_SIZE)
+	return img, context
+}
+
+func DrawCircle(context *draw2dimg.GraphicContext, x float64, y float64) {
 	const halfSize = TILE_DISPLAY_SIZE / 2
 	const radius = halfSize - 1
 	const circle = 2 * math.Pi
-
-	renderer.context.BeginPath()
-	renderer.context.ArcTo(x+halfSize, y+halfSize, radius, radius, 0, circle)
-	renderer.context.FillStroke()
+	context.BeginPath()
+	context.ArcTo(x+halfSize, y+halfSize, radius, radius, 0, circle)
+	context.FillStroke()
 }
 
-func (renderer *Renderer) DrawBackground() {
+func DrawBackground(context *draw2dimg.GraphicContext, img *image.RGBA, background *image.RGBA) {
 	// Own re-implementation of DrawImage(renderer.background)
 	// Does the basically same in this case, but much faster.
-	renderer.context.Clear()
-	copy(renderer.image.Pix, renderer.background.Pix)
+	context.Clear()
+	copy(img.Pix, background.Pix)
 }
 
-func (renderer *Renderer) DrawPopulation(population []*Microbe) {
-	renderer.context.SetFillColor(MICROBE_COLOR)
-	renderer.context.SetLineWidth(0)
-	for _, microbe := range population {
-		var x = float64(microbe.position.x * TILE_DISPLAY_SIZE)
-		var y = float64(microbe.position.y * TILE_DISPLAY_SIZE)
-		renderer.DrawCircle(x, y)
+func DrawPopulation(context *draw2dimg.GraphicContext, sample StepSample) {
+	context.SetFillColor(MICROBE_COLOR)
+	context.SetLineWidth(0)
+	for _, position := range sample.positions {
+		var x = float64(position.x * TILE_DISPLAY_SIZE)
+		var y = float64(position.y * TILE_DISPLAY_SIZE)
+		DrawCircle(context, x, y)
 	}
 }
 
-func (renderer *Renderer) DrawGenerationNumber(generation int) {
-	renderer.context.SetFillColor(color.Black)
-	renderer.context.FillStringAt(strconv.Itoa(generation), 0, FONT_SIZE)
+func DrawGenerationNumber(context *draw2dimg.GraphicContext, generation int) {
+	context.SetFillColor(color.Black)
+	context.FillStringAt(strconv.Itoa(generation), 0, FONT_SIZE)
 }
 
-func (renderer *Renderer) RenderScene(generation int, population []*Microbe) *image.RGBA {
-	renderer.DrawBackground()
-	renderer.DrawPopulation(population)
-	renderer.DrawGenerationNumber(generation)
-	return renderer.image
+func (renderer *Renderer) RenderStep(generation int, sample StepSample) *image.RGBA {
+	var img, context = renderer.CreateImageWithContext()
+	DrawBackground(context, img, renderer.background)
+	DrawPopulation(context, sample)
+	DrawGenerationNumber(context, generation)
+	return img
 }

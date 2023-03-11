@@ -44,7 +44,7 @@ func CreatePercentageTicks() []chart.Tick {
 	return ticks
 }
 
-func MakeChart(collector *DataCollector) {
+func (maker *ChartMaker) MakeChart(collector *DataCollector) {
 	var survivability = collector.stats.survivability
 	var graph = chart.Chart{
 		Background: chart.Style{

@@ -17,7 +17,7 @@ func main() {
 	var terminator = NewExecutionTerminator(gatherer, arguments)
 	var mutator = NewMutator(NewGaussMutationStrategy(arguments.mutationStrength))
 
-	var outputter = NewOutputter(arguments.outputPath, collector, renderer)
+	var outputter = NewOutputter(collector, renderer)
 	var executor = NewTaskExecutor(enviroment, outputter, collector, evaluator, actionSelector, arguments.steps)
 
 	// Factories and generators
@@ -26,8 +26,7 @@ func main() {
 	var populationFactory = NewPopulationFactory(arguments.popSize, positionGenerator, neuralNetworkFactory, parentSelector)
 
 	Loop(populationFactory, executor, terminator, collector, mutator)
-	// outputter.SaveAll()
-	MakeChart(collector)
+	outputter.MakeOutput(arguments.outputPath)
 }
 
 func Loop(populationFactory *PopulationFactory, executor *TaskExecutor, terminator *ExecutionTerminator, collector *DataCollector, mutator *Mutator) {

@@ -22,16 +22,20 @@ func CreateOutputPath(outputPath string) {
 	}
 }
 
-func NewOutputter(outputPath string, collector *DataCollector, renderer *Renderer) *Outputter {
-	CreateOutputPath(outputPath)
-	var videoPath = path.Join(outputPath, VIDEO_FILE_NAME)
+func NewOutputter(collector *DataCollector, renderer *Renderer) *Outputter {
 	return &Outputter{
 		collector:  collector,
 		chartMaker: NewChartMaker(),
-		videoMaker: NewVideoMaker(videoPath, renderer),
+		videoMaker: NewVideoMaker(renderer),
 	}
 }
 
-func (outputter *Outputter) SaveAll() {
-	outputter.videoMaker.SaveVideo()
+func (outputter *Outputter) MakeOutput(outputPath string) {
+	CreateOutputPath(outputPath)
+	var videoPath = path.Join(outputPath, VIDEO_FILE_NAME)
+
+	// TODO: Make gourutines
+
+	outputter.chartMaker.MakeChart(outputter.collector)
+	outputter.videoMaker.MakeVideoToFile(videoPath, outputter.collector)
 }
