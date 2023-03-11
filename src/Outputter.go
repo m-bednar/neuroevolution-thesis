@@ -7,6 +7,7 @@ import (
 )
 
 const (
+	CHART_FILE_NAME = "chart.png"
 	VIDEO_FILE_NAME = "video.avi"
 	OUTPUT_DIR_PERM = 0770
 )
@@ -33,9 +34,10 @@ func NewOutputter(collector *DataCollector, renderer *Renderer) *Outputter {
 
 func (outputter *Outputter) MakeOutput(outputPath string) {
 	CreateOutputPath(outputPath)
+	var chartPath = path.Join(outputPath, CHART_FILE_NAME)
 	var videoPath = path.Join(outputPath, VIDEO_FILE_NAME)
 
 	// TODO: Use goroutines
-	outputter.chartMaker.MakeChart(outputter.collector)
+	outputter.chartMaker.MakeChart(chartPath, outputter.collector)
 	outputter.videoMaker.MakeVideoToFile(videoPath, outputter.collector)
 }

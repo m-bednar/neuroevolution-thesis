@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"strconv"
 
@@ -44,9 +45,8 @@ func CreatePercentageTicks() []chart.Tick {
 	return ticks
 }
 
-func (maker *ChartMaker) MakeChart(collector *DataCollector) {
-	var survivability = collector.stats.survivability
-	var graph = chart.Chart{
+func CreateGraph(survivability []float64) chart.Chart {
+	return chart.Chart{
 		Background: chart.Style{
 			Padding: chart.Box{Top: 20, Left: 20},
 		},
@@ -63,17 +63,24 @@ func (maker *ChartMaker) MakeChart(collector *DataCollector) {
 			Ticks: CreatePercentageTicks(),
 		},
 	}
+}
 
-	// Add legend
+func (maker *ChartMaker) MakeChart(filename string, collector *DataCollector) {
+	var survivability = collector.stats.survivability
+	var graph = CreateGraph(survivability)
+
+	// Add legend to chart
 	graph.Elements = []chart.Renderable{
 		chart.Legend(&graph),
 	}
 
-	var file, _ = os.Create("output/chart.png")
-	var err = graph.Render(chart.PNG, file)
-
+	var file, err = os.Create(filename)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
+	}
+
+	if err := graph.Render(chart.PNG, file); err != nil {
+		log.Fatal(err)
 	}
 
 	file.Close()
