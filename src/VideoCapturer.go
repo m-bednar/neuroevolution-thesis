@@ -37,6 +37,7 @@ func (maker *VideoMaker) MakeVideoToFile(filename string, collector *DataCollect
 	var writter = maker.MakeWritter(filename)
 	var frames = maker.MakeFrames(collector.samples)
 
+	// TODO: Use goroutines
 	for i := range frames {
 		var encoded = maker.EncodeFrame(frames[i])
 		writter.AddFrame(encoded)
@@ -50,8 +51,7 @@ func (maker *VideoMaker) MakeVideoToFile(filename string, collector *DataCollect
 func (maker *VideoMaker) EncodeFrame(frame *image.RGBA) []byte {
 	var opts = jpeg.Options{Quality: JPEG_QUALITY}
 	var buffer = bytes.NewBuffer([]byte{})
-	var err = jpeg.Encode(buffer, frame, &opts)
-	if err != nil {
+	if err := jpeg.Encode(buffer, frame, &opts); err != nil {
 		log.Fatal(err)
 	}
 	return buffer.Bytes()

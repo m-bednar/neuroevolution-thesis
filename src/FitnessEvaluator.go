@@ -1,8 +1,10 @@
 package main
 
-const NON_PASSABLE_PENALTY = -0.1
-const SAFEZONE_FINAL_REWARD = 10.0
-const MOVE_EVALUATION_FITNESS_COEF = 0.4
+const (
+	NON_PASSABLE_PENALTY         = -0.1
+	SAFEZONE_FINAL_REWARD        = 10.0
+	MOVE_EVALUATION_FITNESS_COEF = 0.4
+)
 
 type FitnessEvaluator struct {
 	enviroment *Enviroment

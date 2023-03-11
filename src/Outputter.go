@@ -6,8 +6,10 @@ import (
 	"path"
 )
 
-const VIDEO_FILE_NAME = "video.avi"
-const OUTPUT_DIRECTORY_PERMISSIONS = 0770
+const (
+	VIDEO_FILE_NAME = "video.avi"
+	OUTPUT_DIR_PERM = 0770
+)
 
 type Outputter struct {
 	collector  *DataCollector
@@ -16,8 +18,7 @@ type Outputter struct {
 }
 
 func CreateOutputPath(outputPath string) {
-	var err = os.MkdirAll(outputPath, OUTPUT_DIRECTORY_PERMISSIONS)
-	if err != nil {
+	if err := os.MkdirAll(outputPath, OUTPUT_DIR_PERM); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -34,8 +35,7 @@ func (outputter *Outputter) MakeOutput(outputPath string) {
 	CreateOutputPath(outputPath)
 	var videoPath = path.Join(outputPath, VIDEO_FILE_NAME)
 
-	// TODO: Make gourutines
-
+	// TODO: Use goroutines
 	outputter.chartMaker.MakeChart(outputter.collector)
 	outputter.videoMaker.MakeVideoToFile(videoPath, outputter.collector)
 }

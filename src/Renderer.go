@@ -16,11 +16,12 @@ import (
 const (
 	TILE_DISPLAY_SIZE = 16
 	FONT_SIZE         = 18
+	GRID_LINE_WIDTH   = 1
 )
 
 var (
 	MICROBE_COLOR   = color.RGBA{30, 120, 240, 255}
-	GRID_LINE_COLOR = color.RGBA{190, 190, 190, 255}
+	GRID_LINE_COLOR = color.RGBA{200, 200, 200, 255}
 	NONE_TILE_COLOR = color.White
 	SAFE_FILE_COLOR = color.RGBA{190, 255, 210, 255}
 )
@@ -70,7 +71,7 @@ func PredrawTilesOnBackground(context *draw2dimg.GraphicContext, enviroment *Env
 
 func PredrawGridOnBackground(context *draw2dimg.GraphicContext, enviroment *Enviroment, imgSize int) {
 	context.SetStrokeColor(GRID_LINE_COLOR)
-	context.SetLineWidth(1)
+	context.SetLineWidth(GRID_LINE_WIDTH)
 
 	// horizontal lines
 	for i := 1; i < enviroment.size; i++ {
@@ -122,7 +123,7 @@ func (renderer *Renderer) CreateImageWithContext() (*image.RGBA, *draw2dimg.Grap
 
 func DrawCircle(context *draw2dimg.GraphicContext, x float64, y float64) {
 	const halfSize = TILE_DISPLAY_SIZE / 2
-	const radius = halfSize - 1
+	const radius = halfSize - GRID_LINE_WIDTH
 	const circle = 2 * math.Pi
 	context.BeginPath()
 	context.ArcTo(x+halfSize, y+halfSize, radius, radius, 0, circle)
