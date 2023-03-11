@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	FPS          = 15
+	FPS          = 12
 	JPEG_QUALITY = 90
 )
 

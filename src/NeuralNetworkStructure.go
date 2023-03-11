@@ -1,16 +1,5 @@
 package main
 
-/*
-const (
-	NN_LAYER_WIDTH  = 8
-	NN_NUM_LAYERS   = 2
-
-	NN_NUM_OUTPUTS  = 5
-	NN_NUM_INPUTS   = 2
-	NN_WEIGHT_LIMIT = 6.0
-)
-*/
-
 const (
 	NN_OUTPUTS_COUNT = 5
 	NN_INPUTS_COUNT  = 2
@@ -43,7 +32,7 @@ func NewNeuralNetworkStructure(layerCount int, layerWidth int) *NeuralNetworkStr
 func (structure *NeuralNetworkStructure) ComputeNumberOfWeights() int {
 	var width = structure.layerWidth
 	var count = structure.layerCount - 1
-	return (NN_INPUTS_COUNT * width) + (NN_OUTPUTS_COUNT * width) + ((NN_LAYER_WIDTH * width) * count)
+	return (NN_INPUTS_COUNT * width) + (NN_OUTPUTS_COUNT * width) + ((width * width) * count)
 }
 
 func (structure *NeuralNetworkStructure) GetLayersWidths() []int {

@@ -7,14 +7,16 @@ type CrossoverStrategy interface {
 }
 
 type NeuralNetworkFactory struct {
-	rng      *rand.Rand
-	strategy CrossoverStrategy
+	rng       *rand.Rand
+	structure *NeuralNetworkStructure
+	strategy  CrossoverStrategy
 }
 
-func NewNeuralNetworkFactory(strategy CrossoverStrategy) *NeuralNetworkFactory {
+func NewNeuralNetworkFactory(structure *NeuralNetworkStructure, strategy CrossoverStrategy) *NeuralNetworkFactory {
 	return &NeuralNetworkFactory{
-		rng:      NewUnixTimeRng(),
-		strategy: strategy,
+		rng:       NewUnixTimeRng(),
+		structure: structure,
+		strategy:  strategy,
 	}
 }
 
@@ -28,14 +30,14 @@ func (factory *NeuralNetworkFactory) Reproduce(parent1 *Microbe, parent2 *Microb
 	var nn1 = parent1.neuralNetwork
 	var nn2 = parent2.neuralNetwork
 	var weights = factory.strategy.Crossover(nn1.weights, nn2.weights)
-	return NewNeuralNetwork(weights)
+	return NewNeuralNetwork(factory.structure, weights)
 }
 
 func (factory *NeuralNetworkFactory) MakeRandom() NeuralNetwork {
-	var size = ComputeNumberOfWeights()
+	var size = factory.structure.ComputeNumberOfWeights()
 	var weights = make([]float64, size)
 	for i := 0; i < size; i++ {
 		weights[i] = factory.GenerateFloat(-NN_WEIGHT_LIMIT, NN_WEIGHT_LIMIT)
 	}
-	return NewNeuralNetwork(weights)
+	return NewNeuralNetwork(factory.structure, weights)
 }

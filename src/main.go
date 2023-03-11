@@ -23,8 +23,10 @@ func main() {
 	var executor = NewTaskExecutor(enviroment, outputter, collector, evaluator, actionSelector, arguments.steps)
 
 	// Factories and generators
+	var crossoverStrategy = NewArithmeticCrossoverStrategy()
 	var positionGenerator = NewPositionGenerator(enviroment)
-	var neuralNetworkFactory = NewNeuralNetworkFactory(NewArithmeticCrossoverStrategy())
+	var neuralNetworkStructure = NewNeuralNetworkStructure(2, 8)
+	var neuralNetworkFactory = NewNeuralNetworkFactory(neuralNetworkStructure, crossoverStrategy)
 	var populationFactory = NewPopulationFactory(arguments.popSize, positionGenerator, neuralNetworkFactory, parentSelector)
 
 	Loop(populationFactory, executor, terminator, collector, mutator)
