@@ -26,9 +26,7 @@ func (factory *NeuralNetworkFactory) GenerateFloat(min float64, max float64) flo
 	return (rand * size) + min
 }
 
-func (factory *NeuralNetworkFactory) Reproduce(parent1 *Microbe, parent2 *Microbe) NeuralNetwork {
-	var nn1 = parent1.neuralNetwork
-	var nn2 = parent2.neuralNetwork
+func (factory *NeuralNetworkFactory) Reproduce(nn1 NeuralNetwork, nn2 NeuralNetwork) NeuralNetwork {
 	var weights = factory.strategy.Crossover(nn1.weights, nn2.weights)
 	return NewNeuralNetwork(factory.structure, weights)
 }

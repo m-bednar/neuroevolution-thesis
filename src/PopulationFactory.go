@@ -28,7 +28,9 @@ func (factory *PopulationFactory) ReproduceFrom(population []*Microbe) []*Microb
 		var parent1 = factory.selector.SelectOneByTournament(population)
 		var parent2 = factory.selector.SelectOneByTournament(population)
 		var position = factory.positionGenerator.Make()
-		var neuralNetwork = factory.neuralNetworkFactory.Reproduce(parent1, parent2)
+		var neuralNetwork1 = parent1.neuralNetwork
+		var neuralNetwork2 = parent2.neuralNetwork
+		var neuralNetwork = factory.neuralNetworkFactory.Reproduce(neuralNetwork1, neuralNetwork2)
 		new[i] = NewMicrobe(position, neuralNetwork)
 	}
 	return new

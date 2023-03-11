@@ -4,9 +4,6 @@ const (
 	INITIAL_FITNESS = 0.0
 )
 
-// TODO: Move to more suitable location
-var rng = NewUnixTimeRng()
-
 type Microbe struct {
 	position      Position
 	neuralNetwork NeuralNetwork
