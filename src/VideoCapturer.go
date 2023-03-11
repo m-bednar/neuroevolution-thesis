@@ -35,12 +35,15 @@ func (maker *VideoMaker) MakeWritter(filename string) mjpeg.AviWriter {
 	return writter
 }
 
-func (maker *VideoMaker) MakeVideoToFile(filename string, collector *DataCollector) {
+func (maker *VideoMaker) MakeVideoToFile(filename string, captureModifier int, collector *DataCollector) {
 	var writter = maker.MakeWritter(filename)
+	var count = (len(collector.samples) - 1) / captureModifier
 
 	for i, sample := range collector.samples {
-		maker.AddGenerationSampleFrame(writter, i, sample)
-		fmt.Printf("Processing %d/%d\n", i, len(collector.samples)-1)
+		if i%captureModifier == 0 {
+			maker.AddGenerationSampleFrame(writter, i, sample)
+			fmt.Printf("Processing %d/%d\n", i/captureModifier, count)
+		}
 	}
 
 	if err := writter.Close(); err != nil {

@@ -15,6 +15,7 @@ steps				int			-steps
 mutation strength	float		-mutstr
 tournament size		int			-tsize
 output directory    string      -out
+capture modifier    int			-cmod
 */
 
 type ProgramArguments struct {
@@ -26,6 +27,7 @@ type ProgramArguments struct {
 	mutationStrength float64
 	tournamentSize   int
 	outputPath       string
+	captureModifier  int
 }
 
 func ParseProgramArguments() *ProgramArguments {
@@ -39,6 +41,7 @@ func ParseProgramArguments() *ProgramArguments {
 	flag.Float64Var(&arguments.mutationStrength, "mutstr", 0.0, "Gauss mutation strenght. (0.1 = 10%, 1 = 100%, etc.)")
 	flag.IntVar(&arguments.tournamentSize, "tsize", 0, "Number of microbes from whom parent is selected in tournament.")
 	flag.StringVar(&arguments.outputPath, "out", "", "Path of output directory.")
+	flag.IntVar(&arguments.captureModifier, "cmod", 1, "Generation capture modifier. Only every nth generation will be captured on video.")
 	flag.Parse()
 
 	if arguments.enviromentFile == "" {

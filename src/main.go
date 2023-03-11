@@ -28,8 +28,8 @@ func main() {
 	var populationFactory = NewPopulationFactory(arguments.popSize, positionGenerator, neuralNetworkFactory, parentSelector)
 
 	Loop(populationFactory, executor, terminator, collector, mutator)
-	outputter.MakeOutput(arguments.outputPath)
-	fmt.Printf("Done. Saved: %s\n", arguments.outputPath)
+	outputter.MakeOutput(arguments.outputPath, arguments.captureModifier)
+	fmt.Println("Done.")
 }
 
 func Loop(populationFactory *PopulationFactory, executor *TaskExecutor, terminator *ExecutionTerminator, collector *DataCollector, mutator *Mutator) {

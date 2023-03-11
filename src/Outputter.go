@@ -32,12 +32,12 @@ func NewOutputter(collector *DataCollector, renderer *Renderer) *Outputter {
 	}
 }
 
-func (outputter *Outputter) MakeOutput(outputPath string) {
+func (outputter *Outputter) MakeOutput(outputPath string, captureModifier int) {
 	CreateOutputPath(outputPath)
 	var chartPath = path.Join(outputPath, CHART_FILE_NAME)
 	var videoPath = path.Join(outputPath, VIDEO_FILE_NAME)
 
 	// TODO: Use goroutines
 	outputter.chartMaker.MakeChart(chartPath, outputter.collector)
-	outputter.videoMaker.MakeVideoToFile(videoPath, outputter.collector)
+	outputter.videoMaker.MakeVideoToFile(videoPath, captureModifier, outputter.collector)
 }
