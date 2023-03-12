@@ -5,7 +5,8 @@ type StepSample struct {
 }
 
 type GenerationSample struct {
-	steps []StepSample
+	genomes [][]int8
+	steps   []StepSample
 }
 
 type StatsData struct {
@@ -36,4 +37,5 @@ func (collector *DataCollector) CollectPositions(generation int, population Popu
 func (collector *DataCollector) CollectStats(generation int, population Population) {
 	var survivability = collector.gatherer.GetSuccessRate(population)
 	collector.stats.survivability = append(collector.stats.survivability, survivability)
+	collector.samples[generation].genomes = population.CollectNormalizedGenomes()
 }

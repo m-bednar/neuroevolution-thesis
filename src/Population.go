@@ -19,3 +19,15 @@ func (population Population) CollectPositions() []Position {
 	}
 	return positions
 }
+
+func (population Population) CollectNormalizedGenomes() [][]int8 {
+	var genomes = make([][]int8, len(population))
+	for i, microbe := range population {
+		var size = len(microbe.neuralNetwork.weights)
+		genomes[i] = make([]int8, size)
+		for j, w := range microbe.neuralNetwork.weights {
+			genomes[i][j] = int8((w / NN_WEIGHT_LIMIT) * 127)
+		}
+	}
+	return genomes
+}

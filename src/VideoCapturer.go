@@ -64,12 +64,12 @@ func (maker *VideoMaker) EncodeFramesAsync(generation int, sample GenerationSamp
 	var encoded = make([][]byte, count)
 
 	wg.Add(count)
-	for i, s := range sample.steps {
-		go func(ind int, step StepSample) {
-			var frame = maker.renderer.RenderStep(generation, step)
+	for i := range sample.steps {
+		go func(ind int) {
+			var frame = maker.renderer.RenderStep(generation, ind, sample)
 			encoded[ind] = maker.EncodeFrame(frame)
 			wg.Done()
-		}(i, s)
+		}(i)
 	}
 	wg.Wait()
 

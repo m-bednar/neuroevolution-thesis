@@ -24,7 +24,7 @@ var (
 	GRID_LINE_COLOR = color.RGBA{200, 200, 200, 255}
 	NONE_TILE_COLOR = color.White
 	SAFE_TILE_COLOR = color.RGBA{190, 255, 210, 255}
-	WALL_TILE_COLOR = color.RGBA{120, 120, 120, 255}
+	WALL_TILE_COLOR = color.RGBA{150, 150, 150, 255}
 )
 
 type Renderer struct {
@@ -57,6 +57,29 @@ func GetTileColor(tile TileType) color.Color {
 	default:
 		return NONE_TILE_COLOR
 	}
+}
+
+func GetMicrobeColor(genome []int8) color.RGBA {
+	const red, alpha = 0, 255
+
+	var div = len(genome) / 2
+	var rem = len(genome) % 2
+	var values = []uint8{0, 0}
+	var lengths = []int{div, div + rem}
+
+	var start = 0
+	for i, length := range lengths {
+		var sum = 0
+		for j := start; j < start+length; j++ {
+			sum += int(genome[j])
+		}
+		var avg = float64(sum) / float64(length)
+		var norm = avg / NN_WEIGHT_LIMIT
+		values[i] = uint8((norm * 80) + 120)
+		start += length
+	}
+
+	return color.RGBA{red, values[0], values[1], alpha}
 }
 
 func PredrawTilesOnBackground(context *draw2dimg.GraphicContext, enviroment *Enviroment) {
@@ -140,10 +163,14 @@ func DrawBackground(context *draw2dimg.GraphicContext, img *image.RGBA, backgrou
 	copy(img.Pix, background.Pix)
 }
 
-func DrawPopulation(context *draw2dimg.GraphicContext, sample StepSample) {
-	context.SetFillColor(MICROBE_COLOR)
+func DrawPopulation(context *draw2dimg.GraphicContext, step int, sample GenerationSample) {
 	context.SetLineWidth(0)
-	for _, position := range sample.positions {
+	var positions = sample.steps[step].positions
+
+	for i, position := range positions {
+		var color = GetMicrobeColor(sample.genomes[i])
+		context.SetFillColor(color)
+
 		var x = float64(position.x * TILE_DISPLAY_SIZE)
 		var y = float64(position.y * TILE_DISPLAY_SIZE)
 		DrawCircle(context, x, y)
@@ -155,10 +182,10 @@ func DrawGenerationNumber(context *draw2dimg.GraphicContext, generation int) {
 	context.FillStringAt(strconv.Itoa(generation), 0, FONT_SIZE)
 }
 
-func (renderer *Renderer) RenderStep(generation int, sample StepSample) *image.RGBA {
+func (renderer *Renderer) RenderStep(generation int, step int, sample GenerationSample) *image.RGBA {
 	var img, context = renderer.CreateImageWithContext()
 	DrawBackground(context, img, renderer.background)
-	DrawPopulation(context, sample)
+	DrawPopulation(context, step, sample)
 	DrawGenerationNumber(context, generation)
 	return img
 }
