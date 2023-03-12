@@ -23,7 +23,8 @@ var (
 	MICROBE_COLOR   = color.RGBA{30, 120, 240, 255}
 	GRID_LINE_COLOR = color.RGBA{200, 200, 200, 255}
 	NONE_TILE_COLOR = color.White
-	SAFE_FILE_COLOR = color.RGBA{190, 255, 210, 255}
+	SAFE_TILE_COLOR = color.RGBA{190, 255, 210, 255}
+	WALL_TILE_COLOR = color.RGBA{120, 120, 120, 255}
 )
 
 type Renderer struct {
@@ -50,7 +51,9 @@ func LoadGoRegularFont() draw2d.FontData {
 func GetTileColor(tile TileType) color.Color {
 	switch tile {
 	case Safe:
-		return SAFE_FILE_COLOR
+		return SAFE_TILE_COLOR
+	case Wall:
+		return WALL_TILE_COLOR
 	default:
 		return NONE_TILE_COLOR
 	}

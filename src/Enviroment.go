@@ -10,6 +10,7 @@ type TileType uint8
 const (
 	None TileType = iota
 	Safe
+	Wall
 )
 
 func (tile TileType) IsSafe() bool {

@@ -13,7 +13,12 @@ func NewPositionGenerator(enviroment *Enviroment) *PositionGenerator {
 }
 
 func (generator *PositionGenerator) Make() Position {
-	var x = generator.rng.Intn(generator.enviroment.size)
-	var y = generator.rng.Intn(generator.enviroment.size)
-	return NewPosition(x, y)
+	for {
+		var x = generator.rng.Intn(generator.enviroment.size)
+		var y = generator.rng.Intn(generator.enviroment.size)
+		var position = NewPosition(x, y)
+		if generator.enviroment.GetTile(position).IsPassable() {
+			return position
+		}
+	}
 }
