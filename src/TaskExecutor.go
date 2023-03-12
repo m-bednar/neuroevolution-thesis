@@ -8,6 +8,12 @@ type TaskExecutor struct {
 	steps      int
 }
 
+func GetNormalizeDistanceToImpassableTile(enviroment *Enviroment, origin Position, direction Direction) float64 {
+	var enviromentSize = float64(enviroment.size - 1)
+	var distance = enviroment.GetDistanceToImpassableTileInDirection(origin, direction)
+	return (distance - 1) / enviromentSize
+}
+
 func NewTaskExecutor(enviroment *Enviroment, collector *DataCollector, evaluator *FitnessEvaluator, steps int) *TaskExecutor {
 	var selector = NewActionSelector()
 	return &TaskExecutor{enviroment, collector, evaluator, selector, steps}
@@ -35,7 +41,16 @@ func (executor *TaskExecutor) ExecuteStep(population Population) {
 }
 
 func (executor *TaskExecutor) MakeNeuralNetworkInputs(microbe *Microbe) []float64 {
-	var borderDistWest = float64(microbe.position.x) / float64(executor.enviroment.size)
-	var borderDistNorth = float64(microbe.position.y) / float64(executor.enviroment.size)
-	return []float64{borderDistWest, borderDistNorth}
+	var position = microbe.position
+	var enviroment = executor.enviroment
+	var enviromentSize = float64(enviroment.size)
+
+	var borderDistWest = float64(position.x) / enviromentSize
+	var borderDistNorth = float64(position.y) / enviromentSize
+	var impDistNorth = GetNormalizeDistanceToImpassableTile(enviroment, position, North)
+	var impDistSouth = GetNormalizeDistanceToImpassableTile(enviroment, position, South)
+	var impDistWest = GetNormalizeDistanceToImpassableTile(enviroment, position, West)
+	var impDistEast = GetNormalizeDistanceToImpassableTile(enviroment, position, East)
+
+	return []float64{borderDistWest, borderDistNorth, impDistNorth, impDistSouth, impDistWest, impDistEast}
 }

@@ -8,7 +8,7 @@ import (
 
 const (
 	NN_OUTPUTS_COUNT = 5
-	NN_INPUTS_COUNT  = 2
+	NN_INPUTS_COUNT  = 6
 )
 
 type NeuralNetworkStructure struct {

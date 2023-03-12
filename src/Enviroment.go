@@ -13,6 +13,15 @@ const (
 	Wall
 )
 
+type Direction Position
+
+var (
+	North = Direction(Position{0, -1})
+	South = Direction(Position{0, 1})
+	West  = Direction(Position{-1, 0})
+	East  = Direction(Position{1, 0})
+)
+
 func (tile TileType) IsSafe() bool {
 	return tile == Safe
 }
@@ -71,4 +80,12 @@ func (enviroment *Enviroment) GetAllTilesOfType(tileType TileType) []Position {
 		}
 	}
 	return positions
+}
+
+func (enviroment *Enviroment) GetDistanceToImpassableTileInDirection(origin Position, direction Direction) float64 {
+	var current = origin
+	for enviroment.IsPassable(current) {
+		current = current.Add(direction.x, direction.y)
+	}
+	return origin.DistanceTo(current)
 }
