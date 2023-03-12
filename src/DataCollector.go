@@ -23,20 +23,17 @@ func NewDataCollector(gatherer *StatsGatherer, maxGenerations int) *DataCollecto
 	return &DataCollector{gatherer, samples, StatsData{}}
 }
 
-func NewStepSample(population []*Microbe) StepSample {
-	var positions = make([]Position, len(population))
-	for i, microbe := range population {
-		positions[i] = microbe.position
-	}
+func NewStepSample(population Population) StepSample {
+	var positions = population.CollectPositions()
 	return StepSample{positions}
 }
 
-func (collector *DataCollector) CollectPositions(generation int, population []*Microbe) {
+func (collector *DataCollector) CollectPositions(generation int, population Population) {
 	var stepSample = NewStepSample(population)
 	collector.samples[generation].steps = append(collector.samples[generation].steps, stepSample)
 }
 
-func (collector *DataCollector) CollectStats(generation int, population []*Microbe) {
+func (collector *DataCollector) CollectStats(generation int, population Population) {
 	var survivability = collector.gatherer.GetSuccessRate(population)
 	collector.stats.survivability = append(collector.stats.survivability, survivability)
 }

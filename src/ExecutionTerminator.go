@@ -9,7 +9,7 @@ func NewExecutionTerminator(stats *StatsGatherer, arguments *ProgramArguments) *
 	return &ExecutionTerminator{stats, arguments}
 }
 
-func (terminator *ExecutionTerminator) ShouldTerminate(generation int, population []*Microbe) bool {
+func (terminator *ExecutionTerminator) ShouldTerminate(generation int, population Population) bool {
 	var successRate = terminator.stats.GetSuccessRate(population)
 	if successRate >= terminator.arguments.minSuccessRate {
 		return true

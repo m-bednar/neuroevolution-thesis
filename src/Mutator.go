@@ -12,7 +12,7 @@ func NewMutator(strategy MutationStrategy) *Mutator {
 	return &Mutator{strategy}
 }
 
-func (mutator *Mutator) MutatePopulation(population []*Microbe) {
+func (mutator *Mutator) MutatePopulation(population Population) {
 	for i := range population {
 		mutator.strategy.Mutate(population[i].neuralNetwork.weights)
 	}

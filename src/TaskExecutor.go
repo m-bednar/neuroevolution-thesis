@@ -13,7 +13,7 @@ func NewTaskExecutor(enviroment *Enviroment, outputter *Outputter, collector *Da
 	return &TaskExecutor{enviroment, outputter, collector, evaluator, selector, steps}
 }
 
-func (executor *TaskExecutor) ExecuteTask(generation int, population []*Microbe) {
+func (executor *TaskExecutor) ExecuteTask(generation int, population Population) {
 	for i := 0; i < executor.steps; i++ {
 		executor.ExecuteStep(population)
 		// executor.outputter.CaptureStep(generation, population)
@@ -24,7 +24,7 @@ func (executor *TaskExecutor) ExecuteTask(generation int, population []*Microbe)
 	}
 }
 
-func (executor *TaskExecutor) ExecuteStep(population []*Microbe) {
+func (executor *TaskExecutor) ExecuteStep(population Population) {
 	for _, microbe := range population {
 		var inputs = executor.MakeNeuralNetworkInputs(microbe)
 		var result = microbe.Process(executor.selector, inputs)
