@@ -27,9 +27,10 @@ type Enviroment struct {
 }
 
 func NewEnviroment(tiles []TileType) *Enviroment {
+	var size = ComputeEnviromentSize(tiles)
 	return &Enviroment{
 		tiles: tiles,
-		size:  ComputeEnviromentSize(tiles),
+		size:  size,
 	}
 }
 
@@ -59,4 +60,15 @@ func (enviroment *Enviroment) IsInsideBorders(position Position) bool {
 func (enviroment *Enviroment) GetTile(position Position) TileType {
 	var index = (position.y * enviroment.size) + position.x
 	return enviroment.tiles[index]
+}
+
+func (enviroment *Enviroment) GetAllTilesOfType(tileType TileType) []Position {
+	var positions = make([]Position, 0)
+	for i, tile := range enviroment.tiles {
+		if tile == tileType {
+			var position = NewPosition(i%enviroment.size, i/enviroment.size)
+			positions = append(positions, position)
+		}
+	}
+	return positions
 }

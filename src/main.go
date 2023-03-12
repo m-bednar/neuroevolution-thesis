@@ -10,7 +10,8 @@ func main() {
 
 	// Setup
 	var enviroment = NewEnviroment(tiles)
-	var evaluator = NewFitnessEvaluator(enviroment)
+	var evaluationMap = NewEvaluationMap(enviroment)
+	var evaluator = NewFitnessEvaluator(enviroment, evaluationMap)
 	var renderer = NewRenderer(enviroment)
 	var actionSelector = NewActionSelector()
 	var parentSelector = NewParentSelector(arguments.tournamentSize)
