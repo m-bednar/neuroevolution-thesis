@@ -13,15 +13,15 @@ func main() {
 	var evaluationMap = NewEvaluationMap(enviroment)
 	var evaluator = NewFitnessEvaluator(enviroment, evaluationMap)
 	var renderer = NewRenderer(enviroment)
-	var actionSelector = NewActionSelector()
 	var parentSelector = NewParentSelector(arguments.tournamentSize)
 	var gatherer = NewStatsGatherer(enviroment, parentSelector)
 	var collector = NewDataCollector(gatherer, arguments.maxGenerations)
 	var terminator = NewExecutionTerminator(gatherer, arguments)
-	var mutator = NewMutator(NewGaussMutationStrategy(arguments.mutationStrength))
+	var mutationStrategy = NewGaussMutationStrategy(arguments.mutationStrength)
+	var mutator = NewMutator(mutationStrategy)
 
 	var outputter = NewOutputter(collector, renderer)
-	var executor = NewTaskExecutor(enviroment, outputter, collector, evaluator, actionSelector, arguments.steps)
+	var executor = NewTaskExecutor(enviroment, collector, evaluator, arguments.steps)
 
 	// Factories and generators
 	var crossoverStrategy = NewArithmeticCrossoverStrategy()

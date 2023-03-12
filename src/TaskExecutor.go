@@ -2,21 +2,20 @@ package main
 
 type TaskExecutor struct {
 	enviroment *Enviroment
-	outputter  *Outputter
 	collector  *DataCollector
 	evaluator  *FitnessEvaluator
 	selector   *ActionSelector
 	steps      int
 }
 
-func NewTaskExecutor(enviroment *Enviroment, outputter *Outputter, collector *DataCollector, evaluator *FitnessEvaluator, selector *ActionSelector, steps int) *TaskExecutor {
-	return &TaskExecutor{enviroment, outputter, collector, evaluator, selector, steps}
+func NewTaskExecutor(enviroment *Enviroment, collector *DataCollector, evaluator *FitnessEvaluator, steps int) *TaskExecutor {
+	var selector = NewActionSelector()
+	return &TaskExecutor{enviroment, collector, evaluator, selector, steps}
 }
 
 func (executor *TaskExecutor) ExecuteTask(generation int, population Population) {
 	for i := 0; i < executor.steps; i++ {
 		executor.ExecuteStep(population)
-		// executor.outputter.CaptureStep(generation, population)
 		executor.collector.CollectPositions(generation, population)
 	}
 	for _, microbe := range population {
