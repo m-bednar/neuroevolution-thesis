@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	TILE_DISPLAY_SIZE = 16
+	TILE_DISPLAY_SIZE = 18
 	FONT_SIZE         = 18
 	GRID_LINE_WIDTH   = 1
 )

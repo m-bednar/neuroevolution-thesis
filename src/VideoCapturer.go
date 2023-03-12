@@ -13,7 +13,7 @@ import (
 
 const (
 	FPS          = 12
-	JPEG_QUALITY = 90
+	JPEG_QUALITY = 95
 )
 
 type VideoMaker struct {

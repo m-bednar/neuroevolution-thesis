@@ -2,14 +2,18 @@ package main
 
 import (
 	"log"
+	"math"
 	"os"
 	"strconv"
 
 	"github.com/wcharczuk/go-chart"
 )
 
-const PERCENTAGE_TICKS = 10
-const GENERATION_TICKS = 10
+const (
+	PERCENTAGE_TICKS      = 10
+	GENERATION_TICKS      = 10
+	MOVING_AVG_FRAME_PERC = 0.1
+)
 
 type ChartMaker struct{}
 
@@ -31,6 +35,36 @@ func CreateSurvivabilitySeries(data []float64) chart.ContinuousSeries {
 		XValues: GenerateContinuousRange(len(data)),
 		YValues: data,
 	}
+}
+
+func CreateMovingAverageSurvivabilitySeries(data []float64) chart.ContinuousSeries {
+	return chart.ContinuousSeries{
+		Name:    "Survivability [avg]",
+		XValues: GenerateContinuousRange(len(data)),
+		YValues: GenerateMovingAverage(data),
+	}
+}
+
+func GenerateMovingAverage(data []float64) []float64 {
+	var result = make([]float64, len(data))
+	for i := range data {
+		result[i] = GetMovingAverageFor(data, i)
+	}
+	return result
+}
+
+func GetMovingAverageFor(data []float64, i int) float64 {
+	var dataSize = float64(len(data))
+	var frameSize = dataSize * MOVING_AVG_FRAME_PERC
+	var half = int(frameSize) / 2
+	var start = int(math.Max(float64(i-half), 0))
+	var end = int(math.Min(float64(i+half), dataSize))
+	var frame = data[start:end]
+	var sum = 0.0
+	for _, v := range frame {
+		sum += v
+	}
+	return sum / float64(len(frame))
 }
 
 func CreatePercentageTicks() []chart.Tick {
@@ -72,6 +106,7 @@ func CreateGraph(survivability []float64) chart.Chart {
 		},
 		Series: []chart.Series{
 			CreateSurvivabilitySeries(survivability),
+			CreateMovingAverageSurvivabilitySeries(survivability),
 		},
 		XAxis: chart.XAxis{
 			Name:      "Generation",
