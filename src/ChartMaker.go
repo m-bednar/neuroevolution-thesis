@@ -9,6 +9,7 @@ import (
 )
 
 const PERCENTAGE_TICKS = 10
+const GENERATION_TICKS = 10
 
 type ChartMaker struct{}
 
@@ -45,7 +46,26 @@ func CreatePercentageTicks() []chart.Tick {
 	return ticks
 }
 
+func CreateGenerationTicks(generations int) []chart.Tick {
+	var ticks = make([]chart.Tick, GENERATION_TICKS+1)
+	var valueStep = generations / GENERATION_TICKS
+	for i := 0; i <= GENERATION_TICKS; i++ {
+		ticks[i] = chart.Tick{
+			Value: float64(valueStep * i),
+			Label: strconv.Itoa(valueStep * i),
+		}
+	}
+	if generations%GENERATION_TICKS != 0 {
+		ticks = append(ticks, chart.Tick{
+			Value: float64(generations - 1),
+			Label: strconv.Itoa(generations - 1),
+		})
+	}
+	return ticks
+}
+
 func CreateGraph(survivability []float64) chart.Chart {
+	var generations = len(survivability)
 	return chart.Chart{
 		Background: chart.Style{
 			Padding: chart.Box{Top: 20, Left: 20},
@@ -57,6 +77,7 @@ func CreateGraph(survivability []float64) chart.Chart {
 			Name:      "Generation",
 			Style:     chart.StyleShow(),
 			NameStyle: chart.StyleShow(),
+			Ticks:     CreateGenerationTicks(generations),
 		},
 		YAxis: chart.YAxis{
 			Style: chart.StyleShow(),
