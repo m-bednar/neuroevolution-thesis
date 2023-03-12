@@ -1,5 +1,11 @@
 package main
 
+import (
+	"log"
+	"strconv"
+	"strings"
+)
+
 const (
 	NN_OUTPUTS_COUNT = 5
 	NN_INPUTS_COUNT  = 2
@@ -9,6 +15,20 @@ type NeuralNetworkStructure struct {
 	layerCount int
 	layerWidth int
 	layers     []int
+}
+
+func ParseNeuralNetworkScheme(scheme string) (int, int) {
+	const separator = "x"
+	var parts = strings.Split(scheme, separator)
+	if len(parts) != 2 {
+		log.Fatal("Incorrect format of neural network scheme.")
+	}
+	var count, cerr = strconv.Atoi(parts[0])
+	var width, werr = strconv.Atoi(parts[1])
+	if cerr != nil || werr != nil {
+		log.Fatal("Incorrect format of neural network scheme.")
+	}
+	return count, width
 }
 
 func ConstructLayers(layerCount int, layerWidth int) []int {
@@ -21,7 +41,8 @@ func ConstructLayers(layerCount int, layerWidth int) []int {
 	return layers
 }
 
-func NewNeuralNetworkStructure(layerCount int, layerWidth int) *NeuralNetworkStructure {
+func NewNeuralNetworkStructure(scheme string) *NeuralNetworkStructure {
+	var layerCount, layerWidth = ParseNeuralNetworkScheme(scheme)
 	return &NeuralNetworkStructure{
 		layerCount: layerCount,
 		layerWidth: layerWidth,

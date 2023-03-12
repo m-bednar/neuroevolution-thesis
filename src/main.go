@@ -25,7 +25,7 @@ func main() {
 	// Factories and generators
 	var crossoverStrategy = NewArithmeticCrossoverStrategy()
 	var positionGenerator = NewPositionGenerator(enviroment)
-	var neuralNetworkStructure = NewNeuralNetworkStructure(2, 8)
+	var neuralNetworkStructure = NewNeuralNetworkStructure(arguments.neuralNetworkScheme)
 	var neuralNetworkFactory = NewNeuralNetworkFactory(neuralNetworkStructure, crossoverStrategy)
 	var populationFactory = NewPopulationFactory(arguments.popSize, positionGenerator, neuralNetworkFactory, parentSelector)
 

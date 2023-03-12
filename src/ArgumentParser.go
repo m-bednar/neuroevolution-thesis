@@ -16,18 +16,25 @@ mutation strength	float		-mutstr
 tournament size		int			-tsize
 output directory    string      -out
 capture modifier    int			-cmod
+neural net. scheme 	string 		-nn
 */
 
+type NeuralNetworkScheme struct {
+	layerCount int
+	layerWidth int
+}
+
 type ProgramArguments struct {
-	enviromentFile   string
-	popSize          int
-	maxGenerations   int
-	minSuccessRate   float64
-	steps            int
-	mutationStrength float64
-	tournamentSize   int
-	outputPath       string
-	captureModifier  int
+	enviromentFile      string
+	popSize             int
+	maxGenerations      int
+	minSuccessRate      float64
+	steps               int
+	mutationStrength    float64
+	tournamentSize      int
+	outputPath          string
+	captureModifier     int
+	neuralNetworkScheme string
 }
 
 func ParseProgramArguments() *ProgramArguments {
@@ -42,6 +49,7 @@ func ParseProgramArguments() *ProgramArguments {
 	flag.IntVar(&arguments.tournamentSize, "tsize", 0, "Number of microbes from whom parent is selected in tournament.")
 	flag.StringVar(&arguments.outputPath, "out", "", "Path of output directory.")
 	flag.IntVar(&arguments.captureModifier, "cmod", 1, "Generation capture modifier. Only every nth generation will be captured on video.")
+	flag.StringVar(&arguments.neuralNetworkScheme, "nn", "", "Scheme of neural network hidden layers, pattern: [count]x[width].")
 	flag.Parse()
 
 	if arguments.enviromentFile == "" {
@@ -70,6 +78,9 @@ func ParseProgramArguments() *ProgramArguments {
 	}
 	if arguments.outputPath == "" {
 		log.Fatal("Output path not set.")
+	}
+	if arguments.neuralNetworkScheme == "" {
+		log.Fatal("Neural network scheme not set.")
 	}
 
 	return &arguments
