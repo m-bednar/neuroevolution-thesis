@@ -1,9 +1,11 @@
 package main
 
-import "math"
+import (
+	"math"
+)
 
 const (
-	NN_WEIGHT_LIMIT = 6.0
+	NN_WEIGHT_LIMIT = 8.0
 )
 
 type NeuralNetwork struct {

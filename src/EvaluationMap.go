@@ -4,10 +4,6 @@ import (
 	"log"
 )
 
-const (
-	EVALUATION_DISTANCE_MULT = 6
-)
-
 type EvaluationMap struct {
 	evaluations []float64
 	enviroment  *Enviroment
@@ -33,7 +29,7 @@ func CreateEvaluation(enviroment *Enviroment, x int, y int) float64 {
 	var position = NewPosition(x, y)
 
 	if !enviroment.GetTile(position).IsPassable() {
-		return 0.0
+		return WALL_TILE_EVALUATION
 	}
 
 	var closestSafeTile = FindClosestSafeTile(enviroment, position)

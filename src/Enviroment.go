@@ -26,6 +26,10 @@ func (tile TileType) IsSafe() bool {
 	return tile == Safe
 }
 
+func (tile TileType) IsWall() bool {
+	return tile == Wall
+}
+
 func (tile TileType) IsPassable() bool {
 	return tile == None || tile == Safe
 }
@@ -82,10 +86,13 @@ func (enviroment *Enviroment) GetAllTilesOfType(tileType TileType) []Position {
 	return positions
 }
 
-func (enviroment *Enviroment) GetDistanceToImpassableTileInDirection(origin Position, direction Direction) float64 {
+func (enviroment *Enviroment) GetDistanceToWallTileInDirection(origin Position, direction Direction) (bool, float64) {
 	var current = origin
-	for enviroment.IsPassable(current) {
+	for enviroment.IsInsideBorders(current) {
+		if enviroment.GetTile(current).IsWall() {
+			return true, origin.DistanceTo(current)
+		}
 		current = current.Add(direction.x, direction.y)
 	}
-	return origin.DistanceTo(current)
+	return false, 0
 }

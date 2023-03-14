@@ -1,10 +1,5 @@
 package main
 
-const (
-	SAFEZONE_FINAL_REWARD        = 15
-	MOVE_EVALUATION_FITNESS_COEF = 1
-)
-
 type FitnessEvaluator struct {
 	enviroment    *Enviroment
 	evaluationMap *EvaluationMap
@@ -18,6 +13,9 @@ func NewFitnessEvaluator(enviroment *Enviroment, evaluationMap *EvaluationMap) *
 }
 
 func (evaluator *FitnessEvaluator) EvaluateMove(origin Position, next Position) float64 {
+	if !evaluator.enviroment.IsInsideBorders(next) {
+		return OUT_OF_BORDER_MOVE_EVALUATION
+	}
 	var originEvaluation = evaluator.evaluationMap.GetEvaluation(origin)
 	var nextEvaluation = evaluator.evaluationMap.GetEvaluation(next)
 	var evaluation = nextEvaluation - originEvaluation
