@@ -10,7 +10,8 @@ type GenerationSample struct {
 }
 
 type StatsData struct {
-	survivability []float64
+	averageFitness []float64
+	highestFitness []float64
 }
 
 type DataCollector struct {
@@ -20,7 +21,7 @@ type DataCollector struct {
 }
 
 func NewDataCollector(gatherer *StatsGatherer, maxGenerations int) *DataCollector {
-	var samples = make([]GenerationSample, maxGenerations+1) // FIXME: Can be bigger, than needed after minSurvivability achieved
+	var samples = make([]GenerationSample, maxGenerations+1)
 	return &DataCollector{gatherer, samples, StatsData{}}
 }
 
@@ -35,7 +36,9 @@ func (collector *DataCollector) CollectPositions(generation int, population Popu
 }
 
 func (collector *DataCollector) CollectStats(generation int, population Population) {
-	var survivability = collector.gatherer.GetSuccessRate(population)
-	collector.stats.survivability = append(collector.stats.survivability, survivability)
+	var averageFitness = collector.gatherer.GetAverageFitness(population)
+	var highestFitness = collector.gatherer.GetHighestFitness(population)
+	collector.stats.averageFitness = append(collector.stats.averageFitness, averageFitness)
+	collector.stats.highestFitness = append(collector.stats.highestFitness, highestFitness)
 	collector.samples[generation].genomes = population.CollectNormalizedGenomes()
 }

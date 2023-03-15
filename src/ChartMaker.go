@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"math"
 	"os"
 	"strconv"
 
@@ -10,9 +9,7 @@ import (
 )
 
 const (
-	PERCENTAGE_TICKS      = 10
-	GENERATION_TICKS      = 10
-	MOVING_AVG_FRAME_PERC = 0.1
+	GENERATION_TICKS = 10
 )
 
 type ChartMaker struct{}
@@ -29,55 +26,20 @@ func GenerateContinuousRange(x int) []float64 {
 	return r
 }
 
-func CreateSurvivabilitySeries(data []float64) chart.ContinuousSeries {
+func CreateAverageFitnessSeries(data []float64) chart.ContinuousSeries {
 	return chart.ContinuousSeries{
-		Name:    "Survivability",
+		Name:    "Fitness [avg.]",
 		XValues: GenerateContinuousRange(len(data)),
 		YValues: data,
 	}
 }
 
-func CreateMovingAverageSurvivabilitySeries(data []float64) chart.ContinuousSeries {
+func CreateHighestFitnessSeries(data []float64) chart.ContinuousSeries {
 	return chart.ContinuousSeries{
-		Name:    "Survivability [avg]",
+		Name:    "Fitness [high.]",
 		XValues: GenerateContinuousRange(len(data)),
-		YValues: GenerateMovingAverage(data),
+		YValues: data,
 	}
-}
-
-func GenerateMovingAverage(data []float64) []float64 {
-	var result = make([]float64, len(data))
-	for i := range data {
-		result[i] = GetMovingAverageFor(data, i)
-	}
-	return result
-}
-
-func GetMovingAverageFor(data []float64, i int) float64 {
-	var dataSize = float64(len(data))
-	var frameSize = dataSize * MOVING_AVG_FRAME_PERC
-	var half = int(frameSize) / 2
-	var start = int(math.Max(float64(i-half), 0))
-	var end = int(math.Min(float64(i+half), dataSize))
-	var frame = data[start:end]
-	var sum = 0.0
-	for _, v := range frame {
-		sum += v
-	}
-	return sum / float64(len(frame))
-}
-
-func CreatePercentageTicks() []chart.Tick {
-	var ticks = make([]chart.Tick, PERCENTAGE_TICKS+1)
-	var valueStep = 1.0 / PERCENTAGE_TICKS
-	var labelStep = 100 / PERCENTAGE_TICKS
-	for i := 0; i <= PERCENTAGE_TICKS; i++ {
-		ticks[i] = chart.Tick{
-			Value: valueStep * float64(i),
-			Label: strconv.Itoa(labelStep*i) + "%",
-		}
-	}
-	return ticks
 }
 
 func CreateGenerationTicks(generations int) []chart.Tick {
@@ -98,32 +60,32 @@ func CreateGenerationTicks(generations int) []chart.Tick {
 	return ticks
 }
 
-func CreateGraph(survivability []float64) chart.Chart {
-	var generations = len(survivability)
+func CreateGraph(averageFitness, highestFitness []float64) chart.Chart {
+	var n = len(averageFitness)
 	return chart.Chart{
 		Background: chart.Style{
 			Padding: chart.Box{Top: 20, Left: 20},
 		},
 		Series: []chart.Series{
-			CreateSurvivabilitySeries(survivability),
-			CreateMovingAverageSurvivabilitySeries(survivability),
+			CreateAverageFitnessSeries(averageFitness),
+			CreateHighestFitnessSeries(highestFitness),
 		},
 		XAxis: chart.XAxis{
 			Name:      "Generation",
 			Style:     chart.StyleShow(),
 			NameStyle: chart.StyleShow(),
-			Ticks:     CreateGenerationTicks(generations),
+			Ticks:     CreateGenerationTicks(n),
 		},
 		YAxis: chart.YAxis{
 			Style: chart.StyleShow(),
-			Ticks: CreatePercentageTicks(),
 		},
 	}
 }
 
 func (maker *ChartMaker) MakeChart(filename string, collector *DataCollector) {
-	var survivability = collector.stats.survivability
-	var graph = CreateGraph(survivability)
+	var averageFitness = collector.stats.averageFitness
+	var highestFitness = collector.stats.highestFitness
+	var graph = CreateGraph(averageFitness, highestFitness)
 
 	// Add legend to chart
 	graph.Elements = []chart.Renderable{

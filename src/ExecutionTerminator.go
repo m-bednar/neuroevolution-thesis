@@ -10,12 +10,5 @@ func NewExecutionTerminator(stats *StatsGatherer, arguments *ProgramArguments) *
 }
 
 func (terminator *ExecutionTerminator) ShouldTerminate(generation int, population Population) bool {
-	var successRate = terminator.stats.GetSuccessRate(population)
-	if successRate >= terminator.arguments.minSuccessRate {
-		return true
-	}
-	if generation >= terminator.arguments.maxGenerations {
-		return true
-	}
-	return false
+	return generation >= terminator.arguments.maxGenerations
 }
