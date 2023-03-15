@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 )
 
@@ -28,7 +29,7 @@ func FindClosestSafeTile(enviroment *Enviroment, position Position) Position {
 func CreateEvaluation(enviroment *Enviroment, x int, y int) float64 {
 	var position = NewPosition(x, y)
 
-	if !enviroment.GetTile(position).IsPassable() {
+	if enviroment.GetTile(position).IsWall() {
 		return WALL_TILE_EVALUATION
 	}
 
@@ -54,6 +55,15 @@ func NewEvaluationMap(enviroment *Enviroment) *EvaluationMap {
 	return &EvaluationMap{
 		evaluations: CreateEvaluations(enviroment),
 		enviroment:  enviroment,
+	}
+}
+
+func (evaluationMap *EvaluationMap) Print() {
+	for y := 0; y < evaluationMap.enviroment.size; y++ {
+		for x := 0; x < evaluationMap.enviroment.size; x++ {
+			fmt.Printf("%2.2f ", evaluationMap.GetEvaluation(NewPosition(x, y)))
+		}
+		fmt.Println()
 	}
 }
 

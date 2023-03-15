@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/myfantasy/mft/im"
 	"github.com/wcharczuk/go-chart"
 )
 
@@ -60,6 +61,29 @@ func CreateGenerationTicks(generations int) []chart.Tick {
 	return ticks
 }
 
+func WindowFilter(data []float64, index int) float64 {
+	const size = 8
+	const half = size / 2
+	var from = im.Max(0, index-half)
+	var to = im.Min(len(data), index+half)
+
+	var window = data[from:to]
+	var sum = 0.0
+	for _, v := range window {
+		sum += v
+	}
+
+	return sum / float64(len(window))
+}
+
+func WindowFilterAll(data []float64) []float64 {
+	var filtered = make([]float64, len(data))
+	for i := range data {
+		filtered[i] = WindowFilter(data, i)
+	}
+	return filtered
+}
+
 func CreateGraph(averageFitness, highestFitness []float64) chart.Chart {
 	var n = len(averageFitness)
 	return chart.Chart{
@@ -67,8 +91,8 @@ func CreateGraph(averageFitness, highestFitness []float64) chart.Chart {
 			Padding: chart.Box{Top: 20, Left: 20},
 		},
 		Series: []chart.Series{
-			CreateAverageFitnessSeries(averageFitness),
-			CreateHighestFitnessSeries(highestFitness),
+			CreateAverageFitnessSeries(WindowFilterAll(averageFitness)),
+			// CreateHighestFitnessSeries(highestFitness),
 		},
 		XAxis: chart.XAxis{
 			Name:      "Generation",

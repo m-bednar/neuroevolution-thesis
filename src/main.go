@@ -16,7 +16,6 @@ func main() {
 	var parentSelector = NewParentSelector(arguments.tournamentSize)
 	var gatherer = NewStatsGatherer(enviroment, parentSelector)
 	var collector = NewDataCollector(gatherer, arguments.maxGenerations)
-	var terminator = NewExecutionTerminator(gatherer, arguments)
 	var mutationStrategy = NewGaussMutationStrategy(arguments.mutationStrength)
 	var mutator = NewMutator(mutationStrategy)
 
@@ -30,19 +29,19 @@ func main() {
 	var neuralNetworkFactory = NewNeuralNetworkFactory(neuralNetworkStructure, crossoverStrategy)
 	var populationFactory = NewPopulationFactory(arguments.popSize, positionGenerator, neuralNetworkFactory, parentSelector)
 
-	Loop(populationFactory, executor, terminator, collector, mutator)
+	Loop(arguments, populationFactory, executor, collector, mutator)
 	outputter.MakeOutput(arguments.outputPath, arguments.captureModifier)
 	fmt.Println("Done.")
 }
 
-func Loop(populationFactory *PopulationFactory, executor *TaskExecutor, terminator *ExecutionTerminator, collector *DataCollector, mutator *Mutator) {
+func Loop(args *ProgramArguments, populationFactory *PopulationFactory, executor *TaskExecutor, collector *DataCollector, mutator *Mutator) {
 	var population = populationFactory.MakeRandom()
 	var generation = 0
 	for {
-		fmt.Printf("Simulating %d/%d\n", generation, terminator.arguments.maxGenerations)
+		fmt.Printf("Simulating %d/%d\n", generation, args.maxGenerations)
 		executor.ExecuteTask(generation, population)
 		collector.CollectStats(generation, population)
-		if terminator.ShouldTerminate(generation, population) {
+		if generation >= args.maxGenerations {
 			return
 		}
 
