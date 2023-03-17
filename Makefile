@@ -1,6 +1,6 @@
 
 run:
-	go run ./src -env="env.txt" -pop=200 -maxg=1000 -steps=42 -mutstr=0.2 -tsize=5 -out=output -cmod=10 -nn=3x18
+	go run ./src -env="maps/maze.txt" -pop=200 -maxg=1000 -steps=60 -mutstr=0.2 -tsize=10 -out=output -cmod=20 -nn=3x18
 
 build:
 	go build -o neuroevolution.exe ./src 
