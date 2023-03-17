@@ -63,21 +63,21 @@ func (selector *ActionSelector) ProbabilitySelect(probabilities []float64) int {
 	panic("Probability selection was done on slice with <1 sum")
 }
 
-func (selector *ActionSelector) SelectAction(neuronOutputs []float64) (int, int) {
+func (selector *ActionSelector) SelectMoveAction(neuronOutputs []float64) Direction {
 	var probabilities = SoftMax(neuronOutputs)
 	var action = selector.ProbabilitySelect(probabilities)
 
 	switch action {
 	case MOVE_EAST_ACTION_INDEX:
-		return 1, 0
+		return East
 	case MOVE_WEST_ACTION_INDEX:
-		return -1, 0
+		return West
 	case MOVE_SOUTH_ACTION_INDEX:
-		return 0, 1
+		return South
 	case MOVE_NORTH_ACTION_INDEX:
-		return 0, -1
+		return North
 	case NO_MOVE_ACTION_INDEX:
-		return 0, 0
+		return Origin
 	}
 
 	panic("No programmed action was selected")

@@ -44,30 +44,36 @@ func ReLU(value float64) float64 {
 }
 
 func (neuralNetwork *NeuralNetwork) Process(inputs []float64) []float64 {
-	var widths = neuralNetwork.structure.GetLayersWidths()
-	var buffer = inputs
+	var structure = neuralNetwork.structure
+	var widths = structure.GetLayersWidths()
+	var maxWidth = structure.GetMaxLayerWidth()
+	var lastWidth = widths[len(widths)-1]
+
+	var buffer = make([]float64, maxWidth)
+	var neurons = make([]float64, maxWidth)
+
+	copy(buffer, inputs)
 
 	// Traverse layer by layer
 	for layer := 1; layer < len(widths); layer++ {
-		var previousWidth = widths[layer-1]
-		var currentWidth = widths[layer]
-		var offset = neuralNetwork.structure.GetLayerIndexOffset(layer)
+		var previous = widths[layer-1]
+		var current = widths[layer]
+		var offset = structure.GetLayerOffset(layer)
 
-		// Values of each neuron
-		var neurons = make([]float64, currentWidth)
+		// Values of neurons in previous layer
+		var values = buffer[:previous]
 
-		// Traverse neurons and compute it's value
-		for i := 0; i < currentWidth; i++ {
-			var from = offset + (i * previousWidth)
-			var to = from + previousWidth
+		// Traverse neurons in current layer and compute it's value
+		for i := 0; i < current; i++ {
+			var from = offset + (i * previous)
+			var to = from + previous
 			var weights = neuralNetwork.weights[from:to]
-			var sum = WeightedSum(weights, buffer)
+			var sum = WeightedSum(weights, values)
 			neurons[i] = ReLU(sum)
 		}
 
-		buffer = make([]float64, currentWidth)
 		copy(buffer, neurons)
 	}
 
-	return buffer
+	return buffer[:lastWidth]
 }

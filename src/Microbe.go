@@ -18,10 +18,8 @@ func NewMicrobe(position Position, neuralNetwork NeuralNetwork) *Microbe {
 	}
 }
 
-func (microbe *Microbe) Process(selector *ActionSelector, inputs []float64) Position {
-	var outputs = microbe.neuralNetwork.Process(inputs)
-	var moveX, moveY = selector.SelectAction(outputs)
-	return microbe.position.Add(moveX, moveY)
+func (microbe *Microbe) Process(inputs []float64) []float64 {
+	return microbe.neuralNetwork.Process(inputs)
 }
 
 func (microbe *Microbe) MoveTo(position Position) {

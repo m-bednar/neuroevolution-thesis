@@ -29,7 +29,9 @@ func (executor *TaskExecutor) ExecuteTask(generation int, population Population)
 func (executor *TaskExecutor) ExecuteStep(population Population) {
 	for _, microbe := range population {
 		var inputs = executor.inputsMaker.MakeInputsFor(microbe)
-		var result = microbe.Process(executor.selector, inputs)
+		var output = microbe.Process(inputs)
+		var action = executor.selector.SelectMoveAction(output)
+		var result = microbe.position.AddToDirection(action)
 		if executor.enviroment.IsPassable(result) {
 			microbe.MoveTo(result)
 		}

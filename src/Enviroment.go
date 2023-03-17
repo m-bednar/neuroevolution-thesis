@@ -17,10 +17,11 @@ const (
 type Direction Position
 
 var (
-	North = Direction(Position{0, -1})
-	South = Direction(Position{0, 1})
-	West  = Direction(Position{-1, 0})
-	East  = Direction(Position{1, 0})
+	Origin = Direction(Position{0, 0})
+	North  = Direction(Position{0, -1})
+	South  = Direction(Position{0, 1})
+	West   = Direction(Position{-1, 0})
+	East   = Direction(Position{1, 0})
 )
 
 func (tile TileType) IsSafe() bool {
