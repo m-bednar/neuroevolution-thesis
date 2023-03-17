@@ -8,29 +8,39 @@ func main() {
 	var args = ParseProgramArguments()
 	var tiles = ReadEnviromentFile(args.enviromentFile)
 
+	// Arguments
+	var populationSize = args.populationSize
+	var tournamentSize = args.tournamentSize
+	var maxGenerations = args.maxGenerations
+	var stepsCount = args.stepsCount
+	var captureModifier = args.captureModifier
+	var mutationStrength = args.mutationStrength
+	var outputPath = args.outputPath
+	var neuralNetworkScheme = args.neuralNetworkScheme
+
 	// Setup
 	var enviroment = NewEnviroment(tiles)
 	var evaluationMap = NewEvaluationMap(enviroment)
 	var evaluator = NewFitnessEvaluator(enviroment, evaluationMap)
 	var renderer = NewRenderer(enviroment)
-	var parentSelector = NewParentSelector(args.tournamentSize)
+	var parentSelector = NewParentSelector(tournamentSize)
 	var gatherer = NewStatsGatherer(enviroment, parentSelector)
-	var collector = NewDataCollector(gatherer, args.maxGenerations, args.steps, args.captureModifier)
-	var mutationStrategy = NewGaussMutationStrategy(args.mutationStrength)
+	var collector = NewDataCollector(gatherer, maxGenerations, stepsCount, captureModifier)
+	var mutationStrategy = NewGaussMutationStrategy(mutationStrength)
 	var mutator = NewMutator(mutationStrategy)
 
-	var outputter = NewOutputter(collector, renderer, args.captureModifier)
-	var executor = NewTaskExecutor(enviroment, collector, evaluator, args.steps)
+	var outputter = NewOutputter(collector, renderer)
+	var executor = NewTaskExecutor(enviroment, collector, evaluator, stepsCount)
 
 	// Factories and generators
 	var crossoverStrategy = NewArithmeticCrossoverStrategy()
-	var positionGenerator = NewSpawnSelector(enviroment)
-	var neuralNetworkStructure = NewNeuralNetworkStructure(args.neuralNetworkScheme)
+	var spawnSelector = NewSpawnSelector(enviroment)
+	var neuralNetworkStructure = NewNeuralNetworkStructure(neuralNetworkScheme)
 	var neuralNetworkFactory = NewNeuralNetworkFactory(neuralNetworkStructure, crossoverStrategy)
-	var populationFactory = NewPopulationFactory(args.popSize, positionGenerator, neuralNetworkFactory, parentSelector)
+	var populationFactory = NewPopulationFactory(populationSize, spawnSelector, neuralNetworkFactory, parentSelector)
 
 	Loop(args, populationFactory, executor, mutator)
-	outputter.MakeOutput(args.outputPath)
+	outputter.MakeOutput(outputPath)
 	fmt.Println("Done.")
 }
 

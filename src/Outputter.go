@@ -24,11 +24,11 @@ func CreateOutputPath(outputPath string) {
 	}
 }
 
-func NewOutputter(collector *DataCollector, renderer *Renderer, captureModifier int) *Outputter {
+func NewOutputter(collector *DataCollector, renderer *Renderer) *Outputter {
 	return &Outputter{
 		collector:  collector,
 		chartMaker: NewChartMaker(),
-		videoMaker: NewVideoMaker(renderer, captureModifier),
+		videoMaker: NewVideoMaker(renderer),
 	}
 }
 

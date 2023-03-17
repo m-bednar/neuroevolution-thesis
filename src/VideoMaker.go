@@ -18,14 +18,13 @@ const (
 )
 
 type VideoMaker struct {
-	renderer        *Renderer
-	captureModifier int
+	renderer *Renderer
 }
 
 type Frame *image.RGBA
 
-func NewVideoMaker(renderer *Renderer, captureModifier int) *VideoMaker {
-	return &VideoMaker{renderer, captureModifier}
+func NewVideoMaker(renderer *Renderer) *VideoMaker {
+	return &VideoMaker{renderer}
 }
 
 func (maker *VideoMaker) MakeWritter(filename string) mjpeg.AviWriter {
