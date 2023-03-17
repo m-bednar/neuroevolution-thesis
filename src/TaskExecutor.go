@@ -18,11 +18,12 @@ func NewTaskExecutor(enviroment *Enviroment, collector *DataCollector, evaluator
 func (executor *TaskExecutor) ExecuteTask(generation int, population Population) {
 	for i := 0; i < executor.steps; i++ {
 		executor.ExecuteStep(population)
-		executor.collector.CollectPositions(generation, population)
+		executor.collector.CollectStep(i, population)
 	}
 	for _, microbe := range population {
-		microbe.fitness += executor.evaluator.GetFinalEvaluation(microbe)
+		microbe.fitness += executor.evaluator.GetEvaluation(microbe)
 	}
+	executor.collector.CollectGeneration(generation, population)
 }
 
 func (executor *TaskExecutor) ExecuteStep(population Population) {
@@ -30,7 +31,6 @@ func (executor *TaskExecutor) ExecuteStep(population Population) {
 		var inputs = executor.inputsMaker.MakeInputsFor(microbe)
 		var result = microbe.Process(executor.selector, inputs)
 		if executor.enviroment.IsPassable(result) {
-			microbe.fitness += executor.evaluator.EvaluateMove(microbe.position, result)
 			microbe.MoveTo(result)
 		}
 	}

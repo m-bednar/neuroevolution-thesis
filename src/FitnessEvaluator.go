@@ -16,16 +16,6 @@ func NewFitnessEvaluator(enviroment *Enviroment, evaluationMap *EvaluationMap) *
 	}
 }
 
-func (evaluator *FitnessEvaluator) EvaluateMove(origin Position, next Position) float64 {
-	var originEvaluation = evaluator.evaluationMap.GetEvaluation(origin)
-	var nextEvaluation = evaluator.evaluationMap.GetEvaluation(next)
-	var evaluation = nextEvaluation - originEvaluation
-	return evaluation
-}
-
-func (evaluator *FitnessEvaluator) GetFinalEvaluation(microbe *Microbe) float64 {
-	if evaluator.enviroment.GetTile(microbe.position).IsSafe() {
-		return SAFEZONE_FINAL_REWARD
-	}
-	return 0
+func (evaluator *FitnessEvaluator) GetEvaluation(microbe *Microbe) float64 {
+	return evaluator.evaluationMap.GetEvaluation(microbe.position)
 }

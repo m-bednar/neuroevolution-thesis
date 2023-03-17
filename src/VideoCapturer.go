@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"image"
 	"image/jpeg"
 	"log"
@@ -37,21 +36,12 @@ func (maker *VideoMaker) MakeWritter(filename string) mjpeg.AviWriter {
 	return writter
 }
 
-func (maker *VideoMaker) ShouldCapture(frameIndex int) bool {
-	return frameIndex < CAPTURE_MARGIN || frameIndex%maker.captureModifier == 0
-}
-
 func (maker *VideoMaker) MakeVideoToFile(filename string, collector *DataCollector) {
 	var writter = maker.MakeWritter(filename)
-	var total = (len(collector.samples)-1)/maker.captureModifier + CAPTURE_MARGIN
-	var count = 0
+	var samples = collector.GetCapturedGenerationSamples()
 
-	for i, sample := range collector.samples {
-		if maker.ShouldCapture(i) {
-			maker.AddGenerationSampleFrame(writter, i, sample)
-			count++
-			fmt.Printf("Processing %d/%d\n", count, total)
-		}
+	for i, sample := range samples {
+		maker.AddGenerationSampleFrame(writter, i, sample)
 	}
 
 	if err := writter.Close(); err != nil {
@@ -59,23 +49,23 @@ func (maker *VideoMaker) MakeVideoToFile(filename string, collector *DataCollect
 	}
 }
 
-func (maker *VideoMaker) AddGenerationSampleFrame(writter mjpeg.AviWriter, generation int, sample GenerationSample) {
+func (maker *VideoMaker) AddGenerationSampleFrame(writter mjpeg.AviWriter, generation int, sample CapturedGenerationSample) {
 	var encoded = maker.EncodeFramesAsync(generation, sample)
 	for _, enc := range encoded {
 		writter.AddFrame(enc)
 	}
 }
 
-func (maker *VideoMaker) EncodeFramesAsync(generation int, sample GenerationSample) [][]byte {
+func (maker *VideoMaker) EncodeFramesAsync(generation int, sample CapturedGenerationSample) [][]byte {
 	var wg = sync.WaitGroup{}
 	var total = len(sample.steps)
 	var encoded = make([][]byte, total)
 
 	wg.Add(total)
 	for i := range sample.steps {
-		go func(ind int) {
-			var frame = maker.renderer.RenderStep(generation, ind, sample)
-			encoded[ind] = maker.EncodeFrame(frame)
+		go func(j int) {
+			var frame = maker.renderer.RenderStep(sample, j)
+			encoded[j] = maker.EncodeFrame(frame)
 			wg.Done()
 		}(i)
 	}

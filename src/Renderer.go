@@ -21,11 +21,11 @@ const (
 
 var (
 	MICROBE_COLOR    = color.RGBA{30, 120, 240, 255}
-	GRID_LINE_COLOR  = color.RGBA{180, 180, 180, 255}
+	GRID_LINE_COLOR  = color.RGBA{170, 170, 170, 255}
 	NONE_TILE_COLOR  = color.White
-	SAFE_TILE_COLOR  = color.RGBA{190, 255, 210, 255}
-	WALL_TILE_COLOR  = color.RGBA{150, 150, 150, 255}
-	SPAWN_TILE_COLOR = color.RGBA{190, 210, 255, 255}
+	SAFE_TILE_COLOR  = color.RGBA{160, 255, 200, 255}
+	WALL_TILE_COLOR  = color.RGBA{140, 140, 140, 255}
+	SPAWN_TILE_COLOR = color.RGBA{160, 200, 255, 255}
 )
 
 type Renderer struct {
@@ -166,9 +166,9 @@ func DrawBackground(context *draw2dimg.GraphicContext, img *image.RGBA, backgrou
 	copy(img.Pix, background.Pix)
 }
 
-func DrawPopulation(context *draw2dimg.GraphicContext, step int, sample GenerationSample) {
+func DrawPopulation(context *draw2dimg.GraphicContext, step int, sample CapturedGenerationSample) {
 	context.SetLineWidth(0)
-	var positions = sample.steps[step].positions
+	var positions = sample.steps[step]
 
 	for i, position := range positions {
 		var color = GetMicrobeColor(sample.genomes[i])
@@ -186,10 +186,10 @@ func DrawGenerationNumber(context *draw2dimg.GraphicContext, generation int) {
 	context.FillStringAt(strconv.Itoa(generation), 0, FONT_SIZE)
 }
 
-func (renderer *Renderer) RenderStep(generation int, step int, sample GenerationSample) *image.RGBA {
+func (renderer *Renderer) RenderStep(sample CapturedGenerationSample, step int) *image.RGBA {
 	var img, context = renderer.CreateImageWithContext()
 	DrawBackground(context, img, renderer.background)
 	DrawPopulation(context, step, sample)
-	DrawGenerationNumber(context, generation)
+	DrawGenerationNumber(context, sample.generation)
 	return img
 }

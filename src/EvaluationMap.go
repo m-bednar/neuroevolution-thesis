@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
+	"math"
 
-	astar "github.com/fzipp/astar"
+	as "github.com/fzipp/astar"
 )
 
 type EvaluationMap struct {
@@ -11,8 +12,13 @@ type EvaluationMap struct {
 	enviroment  *Enviroment
 }
 
+func EvaluateDistance(distance int) float64 {
+	return 1.0 / math.Sqrt(float64(distance))
+}
+
 func CreateEvaluations(enviroment *Enviroment) []float64 {
 	var evaluations = make([]float64, len(enviroment.tiles))
+	var distances = make([]int, len(enviroment.tiles))
 	var safeTiles = enviroment.GetAllTilesOfType(Safe)
 	var passableTiles = enviroment.GetAllPassableTiles()
 	var distanceTo = Position.DistanceTo
@@ -21,22 +27,22 @@ func CreateEvaluations(enviroment *Enviroment) []float64 {
 		var start = safeTile
 		for _, emptyTile := range passableTiles {
 			var end = emptyTile
-			var path = astar.FindPath[Position](enviroment, start, end, distanceTo, distanceTo)
+			var path = as.FindPath[Position](enviroment, start, end, distanceTo, distanceTo)
 			if path != nil {
 				var index = enviroment.GetTileIndex(end)
-				var prev = evaluations[index]
-				var curr = float64(len(path))
+				var prev = distances[index]
+				var curr = len(path)
 				if prev == 0 || curr < prev {
-					evaluations[index] = curr
+					distances[index] = curr
 				}
 			}
 		}
 	}
 
-	// Distance -> evaluation
-	for i, evaluation := range evaluations {
-		if evaluation != 0 {
-			evaluations[i] = 1.0 / evaluation
+	// Distances -> evaluations
+	for i, distance := range distances {
+		if distance != 0 {
+			evaluations[i] = EvaluateDistance(distance)
 		}
 	}
 
@@ -53,7 +59,12 @@ func NewEvaluationMap(enviroment *Enviroment) *EvaluationMap {
 func (evaluationMap *EvaluationMap) Print() {
 	for y := 0; y < evaluationMap.enviroment.size; y++ {
 		for x := 0; x < evaluationMap.enviroment.size; x++ {
-			fmt.Printf("%5.2f ", evaluationMap.GetEvaluation(NewPosition(x, y)))
+			var evaluation = evaluationMap.GetEvaluation(NewPosition(x, y))
+			if evaluation == 0.0 {
+				fmt.Printf("xxxx ")
+			} else {
+				fmt.Printf("%4.2f ", evaluation)
+			}
 		}
 		fmt.Println()
 	}

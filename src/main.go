@@ -5,42 +5,41 @@ import "fmt"
 const PRINT_EVERY_NTH_GEN = 10
 
 func main() {
-	var arguments = ParseProgramArguments()
-	var tiles = ReadEnviromentFile(arguments.enviromentFile)
+	var args = ParseProgramArguments()
+	var tiles = ReadEnviromentFile(args.enviromentFile)
 
 	// Setup
 	var enviroment = NewEnviroment(tiles)
 	var evaluationMap = NewEvaluationMap(enviroment)
 	var evaluator = NewFitnessEvaluator(enviroment, evaluationMap)
 	var renderer = NewRenderer(enviroment)
-	var parentSelector = NewParentSelector(arguments.tournamentSize)
+	var parentSelector = NewParentSelector(args.tournamentSize)
 	var gatherer = NewStatsGatherer(enviroment, parentSelector)
-	var collector = NewDataCollector(gatherer, arguments.maxGenerations)
-	var mutationStrategy = NewGaussMutationStrategy(arguments.mutationStrength)
+	var collector = NewDataCollector(gatherer, args.maxGenerations, args.steps, args.captureModifier)
+	var mutationStrategy = NewGaussMutationStrategy(args.mutationStrength)
 	var mutator = NewMutator(mutationStrategy)
 
-	var outputter = NewOutputter(collector, renderer, arguments.captureModifier)
-	var executor = NewTaskExecutor(enviroment, collector, evaluator, arguments.steps)
+	var outputter = NewOutputter(collector, renderer, args.captureModifier)
+	var executor = NewTaskExecutor(enviroment, collector, evaluator, args.steps)
 
 	// Factories and generators
 	var crossoverStrategy = NewArithmeticCrossoverStrategy()
 	var positionGenerator = NewSpawnSelector(enviroment)
-	var neuralNetworkStructure = NewNeuralNetworkStructure(arguments.neuralNetworkScheme)
+	var neuralNetworkStructure = NewNeuralNetworkStructure(args.neuralNetworkScheme)
 	var neuralNetworkFactory = NewNeuralNetworkFactory(neuralNetworkStructure, crossoverStrategy)
-	var populationFactory = NewPopulationFactory(arguments.popSize, positionGenerator, neuralNetworkFactory, parentSelector)
+	var populationFactory = NewPopulationFactory(args.popSize, positionGenerator, neuralNetworkFactory, parentSelector)
 
-	Loop(arguments, populationFactory, executor, collector, mutator)
-	outputter.MakeOutput(arguments.outputPath)
+	Loop(args, populationFactory, executor, mutator)
+	outputter.MakeOutput(args.outputPath)
 	fmt.Println("Done.")
 }
 
-func Loop(args *ProgramArguments, populationFactory *PopulationFactory, executor *TaskExecutor, collector *DataCollector, mutator *Mutator) {
+func Loop(args *ProgramArguments, populationFactory *PopulationFactory, executor *TaskExecutor, mutator *Mutator) {
 	var population = populationFactory.MakeRandom()
 	var generation = 0
 	for {
 		fmt.Printf("Simulating %d/%d\n", generation, args.maxGenerations)
 		executor.ExecuteTask(generation, population)
-		collector.CollectStats(generation, population)
 		if generation >= args.maxGenerations {
 			return
 		}
