@@ -16,6 +16,8 @@ func NewFitnessEvaluator(enviroment *Enviroment, evaluationMap *EvaluationMap) *
 	}
 }
 
-func (evaluator *FitnessEvaluator) GetEvaluation(microbe *Microbe) float64 {
-	return evaluator.evaluationMap.GetEvaluation(microbe.position)
+func (evaluator *FitnessEvaluator) Evaluate(population Population) {
+	for _, microbe := range population {
+		microbe.fitness = evaluator.evaluationMap.GetEvaluation(microbe.position)
+	}
 }

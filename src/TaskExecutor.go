@@ -20,9 +20,7 @@ func (executor *TaskExecutor) ExecuteTask(generation int, population Population)
 		executor.ExecuteStep(population)
 		executor.collector.CollectStep(i, population)
 	}
-	for _, microbe := range population {
-		microbe.fitness += executor.evaluator.GetEvaluation(microbe)
-	}
+	executor.evaluator.Evaluate(population)
 	executor.collector.CollectGeneration(generation, population)
 }
 

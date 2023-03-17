@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 const PRINT_EVERY_NTH_GEN = 10
 
@@ -46,16 +48,10 @@ func main() {
 
 func Loop(args *ProgramArguments, populationFactory *PopulationFactory, executor *TaskExecutor, mutator *Mutator) {
 	var population = populationFactory.MakeRandom()
-	var generation = 0
-	for {
+	for generation := 0; generation <= args.maxGenerations; generation++ {
 		fmt.Printf("Simulating %d/%d\n", generation, args.maxGenerations)
-		executor.ExecuteTask(generation, population)
-		if generation >= args.maxGenerations {
-			return
-		}
-
-		population = populationFactory.ReproduceFrom(population)
-		mutator.MutatePopulation(population)
-		generation++
+		executor.ExecuteTask(generation, population)             // 40ms
+		population = populationFactory.ReproduceFrom(population) // 5ms
+		mutator.MutatePopulation(population)                     // 10ms
 	}
 }
