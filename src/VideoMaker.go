@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"image"
 	"image/jpeg"
 	"log"
@@ -39,9 +40,11 @@ func (maker *VideoMaker) MakeWritter(filename string) mjpeg.AviWriter {
 func (maker *VideoMaker) MakeVideoToFile(filename string, collector *DataCollector) {
 	var writter = maker.MakeWritter(filename)
 	var samples = collector.GetCapturedGenerationSamples()
+	var total = len(samples) - 1
 
 	for i, sample := range samples {
 		maker.AddGenerationSampleFrame(writter, i, sample)
+		fmt.Printf("Processing %d/%d\n", i, total)
 	}
 
 	if err := writter.Close(); err != nil {
