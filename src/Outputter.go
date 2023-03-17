@@ -24,20 +24,20 @@ func CreateOutputPath(outputPath string) {
 	}
 }
 
-func NewOutputter(collector *DataCollector, renderer *Renderer) *Outputter {
+func NewOutputter(collector *DataCollector, renderer *Renderer, captureModifier int) *Outputter {
 	return &Outputter{
 		collector:  collector,
 		chartMaker: NewChartMaker(),
-		videoMaker: NewVideoMaker(renderer),
+		videoMaker: NewVideoMaker(renderer, captureModifier),
 	}
 }
 
-func (outputter *Outputter) MakeOutput(outputPath string, captureModifier int) {
+func (outputter *Outputter) MakeOutput(outputPath string) {
 	CreateOutputPath(outputPath)
 
 	var chartPath = path.Join(outputPath, CHART_FILE_NAME)
 	var videoPath = path.Join(outputPath, VIDEO_FILE_NAME)
 
 	outputter.chartMaker.MakeChart(chartPath, outputter.collector)
-	outputter.videoMaker.MakeVideoToFile(videoPath, captureModifier, outputter.collector)
+	outputter.videoMaker.MakeVideoToFile(videoPath, outputter.collector)
 }

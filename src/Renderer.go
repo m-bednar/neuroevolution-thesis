@@ -15,16 +15,17 @@ import (
 
 const (
 	TILE_DISPLAY_SIZE = 18
-	FONT_SIZE         = 18
+	FONT_SIZE         = 20
 	GRID_LINE_WIDTH   = 1
 )
 
 var (
-	MICROBE_COLOR   = color.RGBA{30, 120, 240, 255}
-	GRID_LINE_COLOR = color.RGBA{200, 200, 200, 255}
-	NONE_TILE_COLOR = color.White
-	SAFE_TILE_COLOR = color.RGBA{190, 255, 210, 255}
-	WALL_TILE_COLOR = color.RGBA{150, 150, 150, 255}
+	MICROBE_COLOR    = color.RGBA{30, 120, 240, 255}
+	GRID_LINE_COLOR  = color.RGBA{180, 180, 180, 255}
+	NONE_TILE_COLOR  = color.White
+	SAFE_TILE_COLOR  = color.RGBA{190, 255, 210, 255}
+	WALL_TILE_COLOR  = color.RGBA{150, 150, 150, 255}
+	SPAWN_TILE_COLOR = color.RGBA{190, 210, 255, 255}
 )
 
 type Renderer struct {
@@ -54,6 +55,8 @@ func GetTileColor(tile TileType) color.Color {
 		return SAFE_TILE_COLOR
 	case Wall:
 		return WALL_TILE_COLOR
+	case Spawn:
+		return SPAWN_TILE_COLOR
 	default:
 		return NONE_TILE_COLOR
 	}
@@ -179,6 +182,7 @@ func DrawPopulation(context *draw2dimg.GraphicContext, step int, sample Generati
 
 func DrawGenerationNumber(context *draw2dimg.GraphicContext, generation int) {
 	context.SetFillColor(color.Black)
+	context.SetStrokeColor(color.White)
 	context.FillStringAt(strconv.Itoa(generation), 0, FONT_SIZE)
 }
 

@@ -11,6 +11,7 @@ const (
 	None TileType = iota
 	Safe
 	Wall
+	Spawn
 )
 
 type Direction Position
@@ -31,7 +32,7 @@ func (tile TileType) IsWall() bool {
 }
 
 func (tile TileType) IsPassable() bool {
-	return tile == None || tile == Safe
+	return tile != Wall
 }
 
 type Enviroment struct {
@@ -70,13 +71,17 @@ func (enviroment *Enviroment) IsInsideBorders(position Position) bool {
 	return position.x >= 0 && position.y >= 0 && position.x < enviroment.size && position.y < enviroment.size
 }
 
+func (enviroment *Enviroment) GetTileIndex(position Position) int {
+	return (position.y * enviroment.size) + position.x
+}
+
 func (enviroment *Enviroment) GetTile(position Position) TileType {
-	var index = (position.y * enviroment.size) + position.x
+	var index = enviroment.GetTileIndex(position)
 	return enviroment.tiles[index]
 }
 
 func (enviroment *Enviroment) GetAllTilesOfType(tileType TileType) []Position {
-	var positions = make([]Position, 0)
+	var positions = make([]Position, 0, len(enviroment.tiles))
 	for i, tile := range enviroment.tiles {
 		if tile == tileType {
 			var position = NewPosition(i%enviroment.size, i/enviroment.size)
@@ -86,7 +91,18 @@ func (enviroment *Enviroment) GetAllTilesOfType(tileType TileType) []Position {
 	return positions
 }
 
-func (enviroment *Enviroment) GetDistanceToWallTileInDirection(origin Position, direction Direction) (bool, float64) {
+func (enviroment *Enviroment) GetAllPassableTiles() []Position {
+	var positions = make([]Position, 0, len(enviroment.tiles))
+	for i, tile := range enviroment.tiles {
+		if tile.IsPassable() {
+			var position = NewPosition(i%enviroment.size, i/enviroment.size)
+			positions = append(positions, position)
+		}
+	}
+	return positions
+}
+
+func (enviroment *Enviroment) GetDistanceToWallInDirection(origin Position, direction Direction) (bool, float64) {
 	var current = origin
 	for enviroment.IsInsideBorders(current) {
 		if enviroment.GetTile(current).IsWall() {
@@ -95,4 +111,18 @@ func (enviroment *Enviroment) GetDistanceToWallTileInDirection(origin Position, 
 		current = current.Add(direction.x, direction.y)
 	}
 	return false, 0
+}
+
+func (enviroment *Enviroment) Neighbours(position Position) []Position {
+	var neighbours = []Position{
+		position.Add(1, 0), position.Add(-1, 0),
+		position.Add(0, 1), position.Add(0, -1),
+	}
+	var passable = make([]Position, 0, len(neighbours))
+	for _, neighbour := range neighbours {
+		if enviroment.IsPassable(neighbour) {
+			passable = append(passable, neighbour)
+		}
+	}
+	return passable
 }

@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"log"
+
+	astar "github.com/fzipp/astar"
 )
 
 type EvaluationMap struct {
@@ -10,44 +11,35 @@ type EvaluationMap struct {
 	enviroment  *Enviroment
 }
 
-func FindClosestSafeTile(enviroment *Enviroment, position Position) Position {
-	var safeTiles = enviroment.GetAllTilesOfType(Safe)
-	if len(safeTiles) == 0 {
-		log.Fatal("No safe tiles found in enviroment.")
-	}
-
-	var closest = safeTiles[0]
-	for _, safeTile := range safeTiles {
-		if position.DistanceTo(safeTile) < position.DistanceTo(closest) {
-			closest = safeTile
-		}
-	}
-
-	return closest
-}
-
-func CreateEvaluation(enviroment *Enviroment, x int, y int) float64 {
-	var position = NewPosition(x, y)
-
-	if enviroment.GetTile(position).IsWall() {
-		return WALL_TILE_EVALUATION
-	}
-
-	var closestSafeTile = FindClosestSafeTile(enviroment, position)
-	var distance = position.DistanceTo(closestSafeTile) + 1
-
-	return EVALUATION_DISTANCE_MULT * (1 / distance)
-}
-
 func CreateEvaluations(enviroment *Enviroment) []float64 {
-	var size = enviroment.size
-	var evaluations = make([]float64, size*size)
-	for y := 0; y < size; y++ {
-		for x := 0; x < size; x++ {
-			var i = y*size + x
-			evaluations[i] = CreateEvaluation(enviroment, x, y)
+	var evaluations = make([]float64, len(enviroment.tiles))
+	var safeTiles = enviroment.GetAllTilesOfType(Safe)
+	var passableTiles = enviroment.GetAllPassableTiles()
+	var distanceTo = Position.DistanceTo
+
+	for _, safeTile := range safeTiles {
+		var start = safeTile
+		for _, emptyTile := range passableTiles {
+			var end = emptyTile
+			var path = astar.FindPath[Position](enviroment, start, end, distanceTo, distanceTo)
+			if path != nil {
+				var index = enviroment.GetTileIndex(end)
+				var prev = evaluations[index]
+				var curr = float64(len(path))
+				if prev == 0 || curr < prev {
+					evaluations[index] = curr
+				}
+			}
 		}
 	}
+
+	// Distance -> evaluation
+	for i, evaluation := range evaluations {
+		if evaluation != 0 {
+			evaluations[i] = 1.0 / evaluation
+		}
+	}
+
 	return evaluations
 }
 
@@ -61,7 +53,7 @@ func NewEvaluationMap(enviroment *Enviroment) *EvaluationMap {
 func (evaluationMap *EvaluationMap) Print() {
 	for y := 0; y < evaluationMap.enviroment.size; y++ {
 		for x := 0; x < evaluationMap.enviroment.size; x++ {
-			fmt.Printf("%2.2f ", evaluationMap.GetEvaluation(NewPosition(x, y)))
+			fmt.Printf("%5.2f ", evaluationMap.GetEvaluation(NewPosition(x, y)))
 		}
 		fmt.Println()
 	}

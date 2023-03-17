@@ -19,18 +19,18 @@ func main() {
 	var mutationStrategy = NewGaussMutationStrategy(arguments.mutationStrength)
 	var mutator = NewMutator(mutationStrategy)
 
-	var outputter = NewOutputter(collector, renderer)
+	var outputter = NewOutputter(collector, renderer, arguments.captureModifier)
 	var executor = NewTaskExecutor(enviroment, collector, evaluator, arguments.steps)
 
 	// Factories and generators
 	var crossoverStrategy = NewArithmeticCrossoverStrategy()
-	var positionGenerator = NewPositionGenerator(enviroment)
+	var positionGenerator = NewSpawnSelector(enviroment)
 	var neuralNetworkStructure = NewNeuralNetworkStructure(arguments.neuralNetworkScheme)
 	var neuralNetworkFactory = NewNeuralNetworkFactory(neuralNetworkStructure, crossoverStrategy)
 	var populationFactory = NewPopulationFactory(arguments.popSize, positionGenerator, neuralNetworkFactory, parentSelector)
 
 	Loop(arguments, populationFactory, executor, collector, mutator)
-	outputter.MakeOutput(arguments.outputPath, arguments.captureModifier)
+	outputter.MakeOutput(arguments.outputPath)
 	fmt.Println("Done.")
 }
 

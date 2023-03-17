@@ -12,18 +12,20 @@ import (
 )
 
 const (
-	FPS          = 12
-	JPEG_QUALITY = 98
+	FPS            = 12
+	JPEG_QUALITY   = 98
+	CAPTURE_MARGIN = 10
 )
 
 type VideoMaker struct {
-	renderer *Renderer
+	renderer        *Renderer
+	captureModifier int
 }
 
 type Frame *image.RGBA
 
-func NewVideoMaker(renderer *Renderer) *VideoMaker {
-	return &VideoMaker{renderer: renderer}
+func NewVideoMaker(renderer *Renderer, captureModifier int) *VideoMaker {
+	return &VideoMaker{renderer, captureModifier}
 }
 
 func (maker *VideoMaker) MakeWritter(filename string) mjpeg.AviWriter {
@@ -35,14 +37,20 @@ func (maker *VideoMaker) MakeWritter(filename string) mjpeg.AviWriter {
 	return writter
 }
 
-func (maker *VideoMaker) MakeVideoToFile(filename string, captureModifier int, collector *DataCollector) {
+func (maker *VideoMaker) ShouldCapture(frameIndex int) bool {
+	return frameIndex < CAPTURE_MARGIN || frameIndex%maker.captureModifier == 0
+}
+
+func (maker *VideoMaker) MakeVideoToFile(filename string, collector *DataCollector) {
 	var writter = maker.MakeWritter(filename)
-	var count = (len(collector.samples) - 1) / captureModifier
+	var total = (len(collector.samples)-1)/maker.captureModifier + CAPTURE_MARGIN
+	var count = 0
 
 	for i, sample := range collector.samples {
-		if i%captureModifier == 0 {
+		if maker.ShouldCapture(i) {
 			maker.AddGenerationSampleFrame(writter, i, sample)
-			fmt.Printf("Processing %d/%d\n", i/captureModifier, count)
+			count++
+			fmt.Printf("Processing %d/%d\n", count, total)
 		}
 	}
 
@@ -60,10 +68,10 @@ func (maker *VideoMaker) AddGenerationSampleFrame(writter mjpeg.AviWriter, gener
 
 func (maker *VideoMaker) EncodeFramesAsync(generation int, sample GenerationSample) [][]byte {
 	var wg = sync.WaitGroup{}
-	var count = len(sample.steps)
-	var encoded = make([][]byte, count)
+	var total = len(sample.steps)
+	var encoded = make([][]byte, total)
 
-	wg.Add(count)
+	wg.Add(total)
 	for i := range sample.steps {
 		go func(ind int) {
 			var frame = maker.renderer.RenderStep(generation, ind, sample)
