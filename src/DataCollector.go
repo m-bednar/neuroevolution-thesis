@@ -1,5 +1,9 @@
 package main
 
+const (
+	CAPTURE_MARGIN = 10
+)
+
 type GenerationSample struct {
 	genomes        [][]int8
 	steps          [][]Position
@@ -53,7 +57,7 @@ func (collector *DataCollector) CollectGeneration(generation int, population Pop
 }
 
 func (collector *DataCollector) ShouldCapture(generation int) bool {
-	return (generation % collector.captureModifier) == 0
+	return generation <= CAPTURE_MARGIN || (generation%collector.captureModifier) == 0
 }
 
 func (collector *DataCollector) GetCapturedGenerationSamples() []CapturedGenerationSample {
