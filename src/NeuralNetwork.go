@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	NN_WEIGHT_LIMIT = 8.0
+	NN_WEIGHT_LIMIT = 2.0
 )
 
 type NeuralNetwork struct {
