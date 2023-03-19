@@ -12,16 +12,19 @@ type GenerationSample struct {
 	captured       bool
 }
 
+type CapturedGenerationSample struct {
+	generation int
+	GenerationSample
+}
+
+/*
+Collects statistical data and data required for rendering.
+*/
 type DataCollector struct {
 	gatherer        *StatsGatherer
 	samples         []GenerationSample
 	currentSteps    [][]Position
 	captureModifier int
-}
-
-type CapturedGenerationSample struct {
-	generation int
-	GenerationSample
 }
 
 func CopyNestedPositions(source [][]Position) [][]Position {

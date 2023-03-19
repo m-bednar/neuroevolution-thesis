@@ -1,5 +1,8 @@
 package main
 
+/*
+Crossover strategy, that averages two weights vectors into single one.
+*/
 type ArithmeticCrossoverStrategy struct {
 }
 

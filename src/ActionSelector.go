@@ -2,7 +2,6 @@ package main
 
 import (
 	"math"
-	"math/rand"
 )
 
 const (
@@ -14,12 +13,12 @@ const (
 )
 
 type ActionSelector struct {
-	rng *rand.Rand
+	rng *MutexedRand
 }
 
 func NewActionSelector() *ActionSelector {
 	return &ActionSelector{
-		rng: NewUnixTimeRng(),
+		rng: NewMutexedRand(),
 	}
 }
 
@@ -54,6 +53,7 @@ func SoftMax(values []float64) []float64 {
 
 func (selector *ActionSelector) ProbabilitySelect(probabilities []float64) int {
 	var rnd = selector.rng.Float64()
+
 	for i, probability := range probabilities {
 		if rnd <= probability {
 			return i

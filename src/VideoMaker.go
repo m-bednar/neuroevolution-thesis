@@ -17,13 +17,14 @@ const (
 )
 
 type VideoMaker struct {
-	renderer *Renderer
+	collector *DataCollector
+	renderer  *Renderer
 }
 
 type Frame *image.RGBA
 
-func NewVideoMaker(renderer *Renderer) *VideoMaker {
-	return &VideoMaker{renderer}
+func NewVideoMaker(collector *DataCollector, renderer *Renderer) *VideoMaker {
+	return &VideoMaker{collector, renderer}
 }
 
 func (maker *VideoMaker) MakeWritter(filename string) mjpeg.AviWriter {
@@ -35,9 +36,9 @@ func (maker *VideoMaker) MakeWritter(filename string) mjpeg.AviWriter {
 	return writter
 }
 
-func (maker *VideoMaker) MakeVideoToFile(filename string, collector *DataCollector) {
+func (maker *VideoMaker) MakeVideoToFile(filename string) {
 	var writter = maker.MakeWritter(filename)
-	var samples = collector.GetCapturedGenerationSamples()
+	var samples = maker.collector.GetCapturedGenerationSamples()
 	var total = len(samples) - 1
 
 	for i, sample := range samples {

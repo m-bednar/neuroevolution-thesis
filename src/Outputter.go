@@ -13,7 +13,6 @@ const (
 )
 
 type Outputter struct {
-	collector  *DataCollector
 	chartMaker *ChartMaker
 	videoMaker *VideoMaker
 }
@@ -26,9 +25,8 @@ func CreateOutputPath(outputPath string) {
 
 func NewOutputter(collector *DataCollector, renderer *Renderer) *Outputter {
 	return &Outputter{
-		collector:  collector,
-		chartMaker: NewChartMaker(),
-		videoMaker: NewVideoMaker(renderer),
+		chartMaker: NewChartMaker(collector),
+		videoMaker: NewVideoMaker(collector, renderer),
 	}
 }
 
@@ -38,6 +36,6 @@ func (outputter *Outputter) MakeOutput(outputPath string) {
 	var chartPath = path.Join(outputPath, CHART_FILE_NAME)
 	var videoPath = path.Join(outputPath, VIDEO_FILE_NAME)
 
-	outputter.chartMaker.MakeChart(chartPath, outputter.collector)
-	outputter.videoMaker.MakeVideoToFile(videoPath, outputter.collector)
+	outputter.chartMaker.MakeChart(chartPath)
+	outputter.videoMaker.MakeVideoToFile(videoPath)
 }

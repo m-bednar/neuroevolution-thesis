@@ -1,5 +1,7 @@
 package main
 
+import "sync"
+
 type TaskExecutor struct {
 	enviroment  *Enviroment
 	collector   *DataCollector
@@ -25,13 +27,23 @@ func (executor *TaskExecutor) ExecuteTask(generation int, population Population)
 }
 
 func (executor *TaskExecutor) ExecuteStep(population Population) {
-	for _, microbe := range population {
-		var inputs = executor.inputsMaker.MakeInputsFor(microbe)
-		var output = microbe.Process(inputs)
-		var action = executor.selector.SelectMoveAction(output)
-		var result = microbe.position.AddToDirection(action)
-		if executor.enviroment.IsPassable(result) {
-			microbe.MoveTo(result)
-		}
+	var wg = sync.WaitGroup{}
+	wg.Add(len(population))
+	for _, m := range population {
+		go func(microbe *Microbe) {
+			executor.ExecuteMicrobeStep(microbe)
+			wg.Done()
+		}(m)
+	}
+	wg.Wait()
+}
+
+func (executor *TaskExecutor) ExecuteMicrobeStep(microbe *Microbe) {
+	var inputs = executor.inputsMaker.MakeInputsFor(microbe)
+	var output = microbe.Process(inputs)
+	var action = executor.selector.SelectMoveAction(output)
+	var result = microbe.position.AddToDirection(action)
+	if executor.enviroment.IsPassable(result) {
+		microbe.MoveTo(result)
 	}
 }

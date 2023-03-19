@@ -41,17 +41,17 @@ func main() {
 	var neuralNetworkFactory = NewNeuralNetworkFactory(neuralNetworkStructure, crossoverStrategy)
 	var populationFactory = NewPopulationFactory(populationSize, spawnSelector, neuralNetworkFactory, parentSelector)
 
-	Loop(args, populationFactory, executor, mutator)
+	Loop(maxGenerations, populationFactory, executor, mutator)
 	outputter.MakeOutput(outputPath)
 	fmt.Println("Done.")
 }
 
-func Loop(args *ProgramArguments, populationFactory *PopulationFactory, executor *TaskExecutor, mutator *Mutator) {
+func Loop(maxGenerations int, populationFactory *PopulationFactory, executor *TaskExecutor, mutator *Mutator) {
 	var population = populationFactory.MakeRandom()
-	for generation := 0; generation <= args.maxGenerations; generation++ {
-		fmt.Printf("Simulating %d/%d\n", generation, args.maxGenerations)
-		executor.ExecuteTask(generation, population)             // 40ms
-		population = populationFactory.ReproduceFrom(population) // 5ms
-		mutator.MutatePopulation(population)                     // 10ms
+	for generation := 0; generation <= maxGenerations; generation++ {
+		fmt.Printf("Simulating %d/%d\n", generation, maxGenerations)
+		executor.ExecuteTask(generation, population)
+		population = populationFactory.ReproduceFrom(population)
+		mutator.MutatePopulation(population)
 	}
 }

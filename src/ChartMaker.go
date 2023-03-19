@@ -16,10 +16,14 @@ const (
 	WINDOW_FILTER_SIZE_PERC = 0.02
 )
 
-type ChartMaker struct{}
+type ChartMaker struct {
+	collector *DataCollector
+}
 
-func NewChartMaker() *ChartMaker {
-	return &ChartMaker{}
+func NewChartMaker(collector *DataCollector) *ChartMaker {
+	return &ChartMaker{
+		collector: collector,
+	}
 }
 
 func GenerateContinuousRange(x int) []float64 {
@@ -123,9 +127,9 @@ func CreateGraph(averageFitnesses, highestFitnesses []float64) chart.Chart {
 	}
 }
 
-func (maker *ChartMaker) MakeChart(filename string, collector *DataCollector) {
-	var averageFitnesses = collector.GetAverageFitnesses()
-	var highestFitnesses = collector.GetHighestFitnesses()
+func (maker *ChartMaker) MakeChart(filename string) {
+	var averageFitnesses = maker.collector.GetAverageFitnesses()
+	var highestFitnesses = maker.collector.GetHighestFitnesses()
 	var graph = CreateGraph(averageFitnesses, highestFitnesses)
 
 	// Add legend to chart

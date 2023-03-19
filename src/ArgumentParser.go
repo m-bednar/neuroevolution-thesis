@@ -19,11 +19,9 @@ capture modifier    int			-cmod
 neural net. scheme 	string 		-nn
 */
 
-type NeuralNetworkScheme struct {
-	layerCount int
-	layerWidth int
-}
-
+/*
+Structure for storing parsed program arguments.
+*/
 type ProgramArguments struct {
 	enviromentFile      string
 	populationSize      int
@@ -36,6 +34,9 @@ type ProgramArguments struct {
 	neuralNetworkScheme string
 }
 
+/*
+Parses and validates program arguments and then returns them as suitable structure.
+*/
 func ParseProgramArguments() *ProgramArguments {
 	var arguments = ProgramArguments{}
 

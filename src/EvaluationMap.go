@@ -21,13 +21,16 @@ func CreateEvaluations(enviroment *Enviroment) []float64 {
 	var distances = make([]int, len(enviroment.tiles))
 	var safeTiles = enviroment.GetAllTilesOfType(Safe)
 	var passableTiles = enviroment.GetAllPassableTiles()
-	var distanceTo = Position.DistanceTo
+	var distFunc = Position.DistanceTo
+	var findPath = as.FindPath[Position]
 
+	// Evaluate each passable tile by finding
+	// it's shortest path to closest safe tile
 	for _, safeTile := range safeTiles {
 		var start = safeTile
-		for _, emptyTile := range passableTiles {
-			var end = emptyTile
-			var path = as.FindPath[Position](enviroment, start, end, distanceTo, distanceTo)
+		for _, passableTile := range passableTiles {
+			var end = passableTile
+			var path = findPath(enviroment, start, end, distFunc, distFunc)
 			if path != nil {
 				var index = enviroment.GetTileIndex(end)
 				var prev = distances[index]
@@ -39,7 +42,7 @@ func CreateEvaluations(enviroment *Enviroment) []float64 {
 		}
 	}
 
-	// Distances -> evaluations
+	// Transform distances to evaluations
 	for i, distance := range distances {
 		if distance != 0 {
 			evaluations[i] = EvaluateDistance(distance)
