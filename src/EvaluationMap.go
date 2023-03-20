@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"math"
+	"sync"
 
 	as "github.com/fzipp/astar"
+	"github.com/myfantasy/mft/im"
 )
 
 type EvaluationMap struct {
@@ -12,8 +14,9 @@ type EvaluationMap struct {
 	enviroment  *Enviroment
 }
 
-func EvaluateDistance(distance int) float64 {
-	return 1.0 / math.Sqrt(float64(distance))
+func EvaluateDistance(distance, max int) float64 {
+	var value = float64(-(distance - max)) + math.SmallestNonzeroFloat64
+	return value / float64(max)
 }
 
 func CreateEvaluations(enviroment *Enviroment) []float64 {
@@ -23,29 +26,33 @@ func CreateEvaluations(enviroment *Enviroment) []float64 {
 	var passableTiles = enviroment.GetAllPassableTiles()
 	var distFunc = Position.DistanceTo
 	var findPath = as.FindPath[Position]
+	var mutex = sync.Mutex{}
 
 	// Evaluate each passable tile by finding
 	// it's shortest path to closest safe tile
-	for _, safeTile := range safeTiles {
-		var start = safeTile
+	LoopAsync(safeTiles, func(index int, safeTile Position) {
 		for _, passableTile := range passableTiles {
+			var start = safeTile
 			var end = passableTile
 			var path = findPath(enviroment, start, end, distFunc, distFunc)
 			if path != nil {
 				var index = enviroment.GetTileIndex(end)
-				var prev = distances[index]
 				var curr = len(path)
+				mutex.Lock()
+				var prev = distances[index]
 				if prev == 0 || curr < prev {
 					distances[index] = curr
 				}
+				mutex.Unlock()
 			}
 		}
-	}
+	})
 
 	// Transform distances to evaluations
+	var max = im.MaxS(distances...)
 	for i, distance := range distances {
 		if distance != 0 {
-			evaluations[i] = EvaluateDistance(distance)
+			evaluations[i] = EvaluateDistance(distance, max)
 		}
 	}
 
@@ -64,9 +71,9 @@ func (evaluationMap *EvaluationMap) Print() {
 		for x := 0; x < evaluationMap.enviroment.size; x++ {
 			var evaluation = evaluationMap.GetEvaluation(NewPosition(x, y))
 			if evaluation == 0.0 {
-				fmt.Printf("xxxx ")
+				fmt.Printf("xxxxx ")
 			} else {
-				fmt.Printf("%4.2f ", evaluation)
+				fmt.Printf("%5.2f ", evaluation)
 			}
 		}
 		fmt.Println()
