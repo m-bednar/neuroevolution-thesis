@@ -6,7 +6,6 @@ import (
 	"image"
 	"image/jpeg"
 	"log"
-	"sync"
 
 	"github.com/icza/mjpeg"
 )
@@ -59,19 +58,12 @@ func (maker *VideoMaker) AddGenerationSampleFrame(writter mjpeg.AviWriter, gener
 }
 
 func (maker *VideoMaker) EncodeFramesAsync(generation int, sample CapturedGenerationSample) [][]byte {
-	var wg = sync.WaitGroup{}
-	var total = len(sample.steps)
-	var encoded = make([][]byte, total)
+	var encoded = make([][]byte, len(sample.steps))
 
-	wg.Add(total)
-	for i := range sample.steps {
-		go func(j int) {
-			var frame = maker.renderer.RenderStep(sample, j)
-			encoded[j] = maker.EncodeFrame(frame)
-			wg.Done()
-		}(i)
-	}
-	wg.Wait()
+	LoopAsync(sample.steps, func(index int, _ []Position) {
+		var frame = maker.renderer.RenderStep(sample, index)
+		encoded[index] = maker.EncodeFrame(frame)
+	})
 
 	return encoded
 }
