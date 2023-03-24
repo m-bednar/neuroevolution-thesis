@@ -80,7 +80,7 @@ func GetMicrobeColor(genome []int8) color.RGBA {
 		}
 		var avg = float64(sum) / float64(length)
 		var norm = avg / NN_WEIGHT_LIMIT
-		values[i] = uint8((norm * 60) + 120)
+		values[i] = uint8((norm * 40) + 130)
 		start += length
 	}
 
