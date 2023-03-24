@@ -3,6 +3,9 @@ package main
 import (
 	"log"
 	"math/rand"
+
+	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
 )
 
 type SpawnSelector struct {
@@ -11,7 +14,7 @@ type SpawnSelector struct {
 }
 
 func NewSpawnSelector(enviroment *Enviroment) *SpawnSelector {
-	var rng = NewUnixTimeRng()
+	var rng = NewTimeSeedRng()
 	var spawns = enviroment.GetAllTilesOfType(Spawn)
 	if len(spawns) == 0 {
 		log.Fatal("No spawn tiles in enviroment found.")
@@ -19,7 +22,7 @@ func NewSpawnSelector(enviroment *Enviroment) *SpawnSelector {
 	return &SpawnSelector{spawns, rng}
 }
 
-func (selector *SpawnSelector) GetRandomSpawnPosition() Position {
+func (selector *SpawnSelector) GetPosition() Position {
 	var index = selector.rng.Intn(len(selector.spawns))
 	return selector.spawns[index]
 }

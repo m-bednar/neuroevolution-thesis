@@ -1,26 +1,8 @@
-package main
-
-import (
-	"math"
-)
-
-const (
-	NN_WEIGHT_LIMIT = 2.0
-)
+package neuralnet
 
 type NeuralNetwork struct {
 	structure *NeuralNetworkStructure
 	weights   []float64
-}
-
-func ClampWeight(weight float64) float64 {
-	return math.Max(-NN_WEIGHT_LIMIT, math.Min(NN_WEIGHT_LIMIT, weight))
-}
-
-func ClampWeights(weights []float64) {
-	for i, weight := range weights {
-		weights[i] = ClampWeight(weight)
-	}
 }
 
 func NewNeuralNetwork(structure *NeuralNetworkStructure, weights []float64) NeuralNetwork {
@@ -41,6 +23,10 @@ func ReLU(value float64) float64 {
 		return 0.0
 	}
 	return value
+}
+
+func (neuralNetwork *NeuralNetwork) GetWeights() []float64 {
+	return neuralNetwork.weights
 }
 
 func (neuralNetwork *NeuralNetwork) Process(inputs []float64) []float64 {

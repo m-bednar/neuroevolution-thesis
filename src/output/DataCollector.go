@@ -1,4 +1,9 @@
-package main
+package output
+
+import (
+	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/microbe"
+)
 
 const (
 	CAPTURE_MARGIN = 10

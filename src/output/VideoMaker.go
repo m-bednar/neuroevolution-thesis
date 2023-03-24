@@ -1,4 +1,4 @@
-package main
+package output
 
 import (
 	"bytes"
@@ -8,6 +8,8 @@ import (
 	"log"
 
 	"github.com/icza/mjpeg"
+	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
 )
 
 const (

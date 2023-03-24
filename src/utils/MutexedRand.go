@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"math/rand"
@@ -12,7 +12,7 @@ type MutexedRand struct {
 
 func NewMutexedRand() *MutexedRand {
 	return &MutexedRand{
-		rng: NewUnixTimeRng(),
+		rng: NewTimeSeedRng(),
 	}
 }
 

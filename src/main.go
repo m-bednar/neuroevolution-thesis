@@ -2,9 +2,13 @@ package main
 
 import (
 	"fmt"
-)
 
-const PRINT_EVERY_NTH_GEN = 10
+	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/microbe"
+	. "github.com/m-bednar/neuroevolution-thesis/src/neuralnet"
+	. "github.com/m-bednar/neuroevolution-thesis/src/output"
+	. "github.com/m-bednar/neuroevolution-thesis/src/strategy"
+)
 
 func main() {
 	var args = ParseProgramArguments()
@@ -25,8 +29,8 @@ func main() {
 	var evaluationMap = NewEvaluationMap(enviroment)
 	var evaluator = NewFitnessEvaluator(enviroment, evaluationMap)
 	var renderer = NewRenderer(enviroment)
-	var parentSelector = NewParentSelector(tournamentSize)
-	var gatherer = NewStatsGatherer(enviroment, parentSelector)
+	var parentSelector = NewTournamentParentSelector(tournamentSize)
+	var gatherer = NewStatsGatherer(enviroment)
 	var collector = NewDataCollector(gatherer, maxGenerations, stepsCount, captureModifier)
 	var mutationStrategy = NewGaussMutationStrategy(mutationStrength)
 	var mutator = NewMutator(mutationStrategy)

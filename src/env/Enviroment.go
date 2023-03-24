@@ -1,4 +1,4 @@
-package main
+package env
 
 import (
 	"log"
@@ -12,16 +12,6 @@ const (
 	Safe
 	Wall
 	Spawn
-)
-
-type Direction Position
-
-var (
-	Origin = Direction(Position{0, 0})
-	North  = Direction(Position{0, -1})
-	South  = Direction(Position{0, 1})
-	West   = Direction(Position{-1, 0})
-	East   = Direction(Position{1, 0})
 )
 
 func (tile TileType) IsSafe() bool {
@@ -56,6 +46,14 @@ func ComputeEnviromentSize(tiles []TileType) int {
 		log.Fatal("Enviroment size must be NxN tiles.")
 	}
 	return int(squared)
+}
+
+func (enviroment *Enviroment) GetTiles() []TileType {
+	return enviroment.tiles
+}
+
+func (enviroment *Enviroment) GetSize() int {
+	return enviroment.size
 }
 
 func (enviroment *Enviroment) IsPassable(position Position) bool {

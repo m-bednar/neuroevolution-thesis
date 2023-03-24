@@ -1,5 +1,10 @@
 package main
 
+import (
+	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/microbe"
+)
+
 const (
 	SAFEZONE_FINAL_REWARD = 1
 )
@@ -18,6 +23,7 @@ func NewFitnessEvaluator(enviroment *Enviroment, evaluationMap *EvaluationMap) *
 
 func (evaluator *FitnessEvaluator) Evaluate(population Population) {
 	for _, microbe := range population {
-		microbe.fitness = evaluator.evaluationMap.GetEvaluation(microbe.position)
+		var evaluation = evaluator.evaluationMap.GetEvaluation(microbe.GetPosition())
+		microbe.SetFitness(evaluation)
 	}
 }

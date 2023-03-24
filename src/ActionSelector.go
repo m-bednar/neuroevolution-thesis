@@ -2,6 +2,9 @@ package main
 
 import (
 	"math"
+
+	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
 )
 
 const (

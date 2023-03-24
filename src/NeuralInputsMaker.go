@@ -1,5 +1,10 @@
 package main
 
+import (
+	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/microbe"
+)
+
 const (
 	WALL_SENSORY_RANGE = 4.0
 )
@@ -23,11 +28,11 @@ func (maker *NeuralInputsMaker) GetSignalForWallTileInDirection(origin Position,
 }
 
 func (maker *NeuralInputsMaker) MakeInputsFor(microbe *Microbe) []float64 {
-	var position = microbe.position
+	var position = microbe.GetPosition()
 	var enviroment = maker.enviroment
-	var enviromentSize = float64(enviroment.size)
-	var borderDistWest = float64(position.x) / enviromentSize
-	var borderDistNorth = float64(position.y) / enviromentSize
+	var enviromentSize = float64(enviroment.GetSize())
+	var borderDistWest = float64(position.GetX()) / enviromentSize
+	var borderDistNorth = float64(position.GetY()) / enviromentSize
 	var wallNorth = maker.GetSignalForWallTileInDirection(position, North)
 	var wallSouth = maker.GetSignalForWallTileInDirection(position, South)
 	var wallWest = maker.GetSignalForWallTileInDirection(position, West)

@@ -6,6 +6,8 @@ import (
 	"sync"
 
 	as "github.com/fzipp/astar"
+	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
 	"github.com/myfantasy/mft/im"
 )
 
@@ -20,8 +22,8 @@ func EvaluateDistance(distance, max int) float64 {
 }
 
 func CreateEvaluations(enviroment *Enviroment) []float64 {
-	var evaluations = make([]float64, len(enviroment.tiles))
-	var distances = make([]int, len(enviroment.tiles))
+	var evaluations = make([]float64, len(enviroment.GetTiles()))
+	var distances = make([]int, len(enviroment.GetTiles()))
 	var safeTiles = enviroment.GetAllTilesOfType(Safe)
 	var passableTiles = enviroment.GetAllPassableTiles()
 	var distFunc = Position.DistanceTo
@@ -67,8 +69,8 @@ func NewEvaluationMap(enviroment *Enviroment) *EvaluationMap {
 }
 
 func (evaluationMap *EvaluationMap) Print() {
-	for y := 0; y < evaluationMap.enviroment.size; y++ {
-		for x := 0; x < evaluationMap.enviroment.size; x++ {
+	for y := 0; y < evaluationMap.enviroment.GetSize(); y++ {
+		for x := 0; x < evaluationMap.enviroment.GetSize(); x++ {
 			var evaluation = evaluationMap.GetEvaluation(NewPosition(x, y))
 			if evaluation == 0.0 {
 				fmt.Printf("xxxxx ")
@@ -81,7 +83,7 @@ func (evaluationMap *EvaluationMap) Print() {
 }
 
 func (evaluationMap *EvaluationMap) GetEvaluation(position Position) float64 {
-	var size = evaluationMap.enviroment.size
-	var i = position.y*size + position.x
+	var size = evaluationMap.enviroment.GetSize()
+	var i = position.GetY()*size + position.GetX()
 	return evaluationMap.evaluations[i]
 }

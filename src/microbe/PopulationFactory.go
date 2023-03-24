@@ -1,33 +1,40 @@
-package main
+package microbe
 
 import (
-	"math/rand"
+	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/neuralnet"
 )
+
+type PositionSelector interface {
+	GetPosition() Position
+}
+
+type ParentSelector interface {
+	SelectParent(population Population) *Microbe
+}
 
 type PopulationFactory struct {
 	populationSize       int
-	spawnSelector        *SpawnSelector
+	positionSelector     PositionSelector
+	selector             ParentSelector
 	neuralNetworkFactory *NeuralNetworkFactory
-	selector             *ParentSelector
-	rng                  *rand.Rand
 }
 
-func NewPopulationFactory(populationSize int, spawnSelector *SpawnSelector, neuralNetworkFactory *NeuralNetworkFactory, selector *ParentSelector) *PopulationFactory {
+func NewPopulationFactory(populationSize int, positionSelector PositionSelector, neuralNetworkFactory *NeuralNetworkFactory, selector ParentSelector) *PopulationFactory {
 	return &PopulationFactory{
 		populationSize:       populationSize,
-		spawnSelector:        spawnSelector,
+		positionSelector:     positionSelector,
 		neuralNetworkFactory: neuralNetworkFactory,
 		selector:             selector,
-		rng:                  NewUnixTimeRng(),
 	}
 }
 
 func (factory *PopulationFactory) ReproduceFrom(population Population) Population {
 	var new = make(Population, factory.populationSize)
 	for i := 0; i < factory.populationSize; i++ {
-		var parent1 = factory.selector.SelectOneByTournament(population)
-		var parent2 = factory.selector.SelectOneByTournament(population)
-		var position = factory.spawnSelector.GetRandomSpawnPosition()
+		var parent1 = factory.selector.SelectParent(population)
+		var parent2 = factory.selector.SelectParent(population)
+		var position = factory.positionSelector.GetPosition()
 		var neuralNetwork1 = parent1.neuralNetwork
 		var neuralNetwork2 = parent2.neuralNetwork
 		var neuralNetwork = factory.neuralNetworkFactory.Reproduce(neuralNetwork1, neuralNetwork2)
@@ -39,7 +46,7 @@ func (factory *PopulationFactory) ReproduceFrom(population Population) Populatio
 func (factory *PopulationFactory) MakeRandom() Population {
 	var population = make(Population, factory.populationSize)
 	for i := 0; i < factory.populationSize; i++ {
-		var position = factory.spawnSelector.GetRandomSpawnPosition()
+		var position = factory.positionSelector.GetPosition()
 		var neuralNetwork = factory.neuralNetworkFactory.MakeRandom()
 		population[i] = NewMicrobe(position, neuralNetwork)
 	}

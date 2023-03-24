@@ -1,5 +1,12 @@
 package main
 
+import (
+	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/microbe"
+	. "github.com/m-bednar/neuroevolution-thesis/src/output"
+	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
+)
+
 type TaskExecutor struct {
 	enviroment  *Enviroment
 	collector   *DataCollector
@@ -29,7 +36,7 @@ func (executor *TaskExecutor) ExecuteStep(population Population) {
 		var inputs = executor.inputsMaker.MakeInputsFor(microbe)
 		var output = microbe.Process(inputs)
 		var action = executor.selector.SelectMoveAction(output)
-		var result = microbe.position.AddToDirection(action)
+		var result = microbe.GetPosition().AddToDirection(action)
 		if executor.enviroment.IsPassable(result) {
 			microbe.MoveTo(result)
 		}

@@ -1,6 +1,11 @@
-package main
+package strategy
 
-import "math/rand"
+import (
+	"math/rand"
+
+	. "github.com/m-bednar/neuroevolution-thesis/src/neuralnet"
+	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
+)
 
 type GaussMutationStrategy struct {
 	rng      *rand.Rand
@@ -8,7 +13,7 @@ type GaussMutationStrategy struct {
 }
 
 func NewGaussMutationStrategy(strength float64) *GaussMutationStrategy {
-	var rng = NewUnixTimeRng()
+	var rng = NewTimeSeedRng()
 	return &GaussMutationStrategy{rng, strength}
 }
 

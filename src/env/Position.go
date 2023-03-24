@@ -1,4 +1,4 @@
-package main
+package env
 
 import "math"
 
@@ -6,6 +6,16 @@ type Position struct {
 	x int
 	y int
 }
+
+type Direction Position
+
+var (
+	Origin = Direction(Position{0, 0})
+	North  = Direction(Position{0, -1})
+	South  = Direction(Position{0, 1})
+	West   = Direction(Position{-1, 0})
+	East   = Direction(Position{1, 0})
+)
 
 func NewPosition(x int, y int) Position {
 	return Position{x, y}
@@ -25,4 +35,12 @@ func (origin Position) DistanceTo(position Position) float64 {
 	var dx = x2 - x1
 	var dy = y2 - y1
 	return math.Sqrt((dx * dx) + (dy * dy))
+}
+
+func (position Position) GetX() int {
+	return position.x
+}
+
+func (position Position) GetY() int {
+	return position.y
 }

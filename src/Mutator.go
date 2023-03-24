@@ -1,5 +1,9 @@
 package main
 
+import (
+	. "github.com/m-bednar/neuroevolution-thesis/src/microbe"
+)
+
 type Mutator struct {
 	strategy MutationStrategy
 }
@@ -14,6 +18,6 @@ func NewMutator(strategy MutationStrategy) *Mutator {
 
 func (mutator *Mutator) MutatePopulation(population Population) {
 	for i := range population {
-		mutator.strategy.Mutate(population[i].neuralNetwork.weights)
+		mutator.strategy.Mutate(population[i].GetNeuralNetwork().GetWeights())
 	}
 }

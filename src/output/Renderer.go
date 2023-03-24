@@ -1,4 +1,4 @@
-package main
+package output
 
 import (
 	"image"
@@ -10,6 +10,8 @@ import (
 	"github.com/golang/freetype/truetype"
 	"github.com/llgcode/draw2d"
 	"github.com/llgcode/draw2d/draw2dimg"
+	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/neuralnet"
 	"golang.org/x/image/font/gofont/gomono"
 )
 
@@ -86,8 +88,8 @@ func GetMicrobeColor(genome []int8) color.RGBA {
 }
 
 func PredrawTilesOnBackground(context *draw2dimg.GraphicContext, enviroment *Enviroment) {
-	for x := 0; x < enviroment.size; x++ {
-		for y := 0; y < enviroment.size; y++ {
+	for x := 0; x < enviroment.GetSize(); x++ {
+		for y := 0; y < enviroment.GetSize(); y++ {
 			var tile = enviroment.GetTile(NewPosition(x, y))
 			var color = GetTileColor(tile)
 			var rx = x * TILE_DISPLAY_SIZE
@@ -103,14 +105,14 @@ func PredrawGridOnBackground(context *draw2dimg.GraphicContext, enviroment *Envi
 	context.SetLineWidth(GRID_LINE_WIDTH)
 
 	// horizontal lines
-	for i := 1; i < enviroment.size; i++ {
+	for i := 1; i < enviroment.GetSize(); i++ {
 		var y = float64(i * TILE_DISPLAY_SIZE)
 		context.MoveTo(0, y)
 		context.LineTo(float64(imgSize), y)
 	}
 
 	// vertical lines
-	for i := 1; i < enviroment.size; i++ {
+	for i := 1; i < enviroment.GetSize(); i++ {
 		var x = float64(i * TILE_DISPLAY_SIZE)
 		context.MoveTo(x, 0)
 		context.LineTo(x, float64(imgSize))
@@ -130,7 +132,7 @@ func CreateBackground(enviroment *Enviroment, imgSize int) *image.RGBA {
 }
 
 func NewRenderer(enviroment *Enviroment) *Renderer {
-	var size = enviroment.size * TILE_DISPLAY_SIZE
+	var size = enviroment.GetSize() * TILE_DISPLAY_SIZE
 	var background = CreateBackground(enviroment, size)
 	var font = LoadGoRegularFont()
 
@@ -174,8 +176,8 @@ func DrawPopulation(context *draw2dimg.GraphicContext, step int, sample Captured
 		var color = GetMicrobeColor(sample.genomes[i])
 		context.SetFillColor(color)
 
-		var x = float64(position.x * TILE_DISPLAY_SIZE)
-		var y = float64(position.y * TILE_DISPLAY_SIZE)
+		var x = float64(position.GetX() * TILE_DISPLAY_SIZE)
+		var y = float64(position.GetY() * TILE_DISPLAY_SIZE)
 		DrawCircle(context, x, y)
 	}
 }
