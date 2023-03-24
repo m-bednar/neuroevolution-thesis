@@ -1,12 +1,11 @@
 package utils
 
 import (
-	"math/rand"
 	"sync"
 )
 
 type MutexedRand struct {
-	rng   *rand.Rand
+	rng   *Rng
 	mutex sync.Mutex
 }
 

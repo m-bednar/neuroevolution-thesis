@@ -1,15 +1,13 @@
 package main
 
 import (
-	"math/rand"
-
 	. "github.com/m-bednar/neuroevolution-thesis/src/microbe"
 	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
 )
 
 type TournamentParentSelector struct {
 	tournamentSize int
-	rng            *rand.Rand
+	rng            *Rng
 }
 
 func NewTournamentParentSelector(tournamentSize int) *TournamentParentSelector {

@@ -1,9 +1,7 @@
 package neuralnet
 
 import (
-	"math/rand"
-
-	"github.com/m-bednar/neuroevolution-thesis/src/utils"
+	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
 )
 
 type CrossoverStrategy interface {
@@ -11,14 +9,14 @@ type CrossoverStrategy interface {
 }
 
 type NeuralNetworkFactory struct {
-	rng       *rand.Rand
+	rng       *Rng
 	structure *NeuralNetworkStructure
 	strategy  CrossoverStrategy
 }
 
 func NewNeuralNetworkFactory(structure *NeuralNetworkStructure, strategy CrossoverStrategy) *NeuralNetworkFactory {
 	return &NeuralNetworkFactory{
-		rng:       utils.NewTimeSeedRng(),
+		rng:       NewTimeSeedRng(),
 		structure: structure,
 		strategy:  strategy,
 	}

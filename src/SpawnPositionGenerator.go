@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"math/rand"
 
 	. "github.com/m-bednar/neuroevolution-thesis/src/env"
 	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
@@ -10,7 +9,7 @@ import (
 
 type SpawnSelector struct {
 	spawns []Position
-	rng    *rand.Rand
+	rng    *Rng
 }
 
 func NewSpawnSelector(enviroment *Enviroment) *SpawnSelector {

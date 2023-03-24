@@ -1,14 +1,12 @@
 package strategy
 
 import (
-	"math/rand"
-
 	. "github.com/m-bednar/neuroevolution-thesis/src/neuralnet"
 	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
 )
 
 type GaussMutationStrategy struct {
-	rng      *rand.Rand
+	rng      *Rng
 	strength float64
 }
 
@@ -18,7 +16,9 @@ func NewGaussMutationStrategy(strength float64) *GaussMutationStrategy {
 }
 
 func (strategy *GaussMutationStrategy) MutateWeight(weight float64) float64 {
-	var mutation = strategy.rng.NormFloat64() * (NN_WEIGHT_LIMIT / 2) * strategy.strength
+	var halfLimit = NN_WEIGHT_LIMIT / 2
+	var deviation = halfLimit * strategy.strength
+	var mutation = strategy.rng.NormFloat64(deviation)
 	return weight + mutation
 }
 
