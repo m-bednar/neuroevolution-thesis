@@ -32,7 +32,7 @@ func (executor *TaskExecutor) ExecuteTask(generation int, population Population)
 }
 
 func (executor *TaskExecutor) ExecuteStep(population Population) {
-	LoopAsync(population, func(_ int, microbe *Microbe) {
+	ConcurrentLoop(population, func(_ int, microbe *Microbe) {
 		var inputs = executor.inputsMaker.MakeInputsFor(microbe)
 		var output = microbe.Process(inputs)
 		var action = executor.selector.SelectMoveAction(output)

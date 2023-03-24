@@ -52,6 +52,10 @@ func (enviroment *Enviroment) GetTiles() []TileType {
 	return enviroment.tiles
 }
 
+func (enviroment *Enviroment) GetNumberOfTiles() int {
+	return len(enviroment.tiles)
+}
+
 func (enviroment *Enviroment) GetSize() int {
 	return enviroment.size
 }

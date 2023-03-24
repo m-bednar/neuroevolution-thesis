@@ -1,9 +1,8 @@
-package main
+package enviroment
 
 import (
 	"log"
 
-	. "github.com/m-bednar/neuroevolution-thesis/src/enviroment"
 	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
 )
 

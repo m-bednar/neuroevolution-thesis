@@ -21,9 +21,16 @@ func EvaluateDistance(distance, max int) float64 {
 	return value / float64(max)
 }
 
-func CreateEvaluations(enviroment *Enviroment) []float64 {
-	var evaluations = make([]float64, len(enviroment.GetTiles()))
-	var distances = make([]int, len(enviroment.GetTiles()))
+func GetBetterPathDistance(previous int, current int) int {
+	if previous == 0 || current < previous {
+		return current
+	}
+	return previous
+}
+
+func GetTilesPathDistances(enviroment *Enviroment) []int {
+	var size = enviroment.GetNumberOfTiles()
+	var distances = make([]int, size)
 	var safeTiles = enviroment.GetAllTilesOfType(Safe)
 	var passableTiles = enviroment.GetAllPassableTiles()
 	var distFunc = Position.DistanceTo
@@ -32,25 +39,29 @@ func CreateEvaluations(enviroment *Enviroment) []float64 {
 
 	// Evaluate each passable tile by finding
 	// it's shortest path to closest safe tile
-	LoopAsync(safeTiles, func(index int, safeTile Position) {
-		for _, passableTile := range passableTiles {
-			var start = safeTile
-			var end = passableTile
+	for _, start := range safeTiles {
+		ConcurrentLoop(passableTiles, func(_ int, end Position) {
 			var path = findPath(enviroment, start, end, distFunc, distFunc)
 			if path != nil {
 				var index = enviroment.GetTileIndex(end)
 				var curr = len(path)
 				mutex.Lock()
 				var prev = distances[index]
-				if prev == 0 || curr < prev {
-					distances[index] = curr
-				}
+				distances[index] = GetBetterPathDistance(prev, curr)
 				mutex.Unlock()
 			}
-		}
-	})
+		})
+	}
+
+	return distances
+}
+
+func CreateEvaluations(enviroment *Enviroment) []float64 {
+	var size = enviroment.GetNumberOfTiles()
+	var distances = GetTilesPathDistances(enviroment)
 
 	// Transform distances to evaluations
+	var evaluations = make([]float64, size)
 	var max = im.MaxS(distances...)
 	for i, distance := range distances {
 		if distance != 0 {
