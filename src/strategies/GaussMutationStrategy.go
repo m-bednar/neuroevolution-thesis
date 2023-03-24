@@ -1,4 +1,4 @@
-package strategy
+package strategies
 
 import (
 	. "github.com/m-bednar/neuroevolution-thesis/src/neuralnet"

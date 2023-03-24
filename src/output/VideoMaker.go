@@ -8,7 +8,7 @@ import (
 	"log"
 
 	"github.com/icza/mjpeg"
-	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/enviroment"
 	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
 )
 

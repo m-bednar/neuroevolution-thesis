@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	as "github.com/fzipp/astar"
-	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/enviroment"
 	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
 	"github.com/myfantasy/mft/im"
 )

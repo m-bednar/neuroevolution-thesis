@@ -10,7 +10,7 @@ import (
 	"github.com/golang/freetype/truetype"
 	"github.com/llgcode/draw2d"
 	"github.com/llgcode/draw2d/draw2dimg"
-	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/enviroment"
 	. "github.com/m-bednar/neuroevolution-thesis/src/neuralnet"
 	"golang.org/x/image/font/gofont/gomono"
 )

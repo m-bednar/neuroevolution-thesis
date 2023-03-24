@@ -1,4 +1,4 @@
-package strategy
+package strategies
 
 /*
 Crossover strategy, that averages two weights vectors into single one.

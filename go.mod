@@ -12,3 +12,12 @@ require (
 	github.com/wcharczuk/go-chart v2.0.1+incompatible // indirect
 	golang.org/x/image v0.6.0 // indirect
 )
+
+replace (
+	github.com/m-bednar/neuroevolution-thesis/src/enviroment => ./src/enviroment
+	github.com/m-bednar/neuroevolution-thesis/src/microbe => ./src/microbe
+	github.com/m-bednar/neuroevolution-thesis/src/neuralnet => ./src/neuralnet
+	github.com/m-bednar/neuroevolution-thesis/src/output => ./src/output
+	github.com/m-bednar/neuroevolution-thesis/src/strategies => ./src/strategies
+	github.com/m-bednar/neuroevolution-thesis/src/utils => ./src/utils
+)

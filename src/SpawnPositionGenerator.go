@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/enviroment"
 	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
 )
 

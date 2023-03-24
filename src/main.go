@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 
-	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/enviroment"
 	. "github.com/m-bednar/neuroevolution-thesis/src/microbe"
 	. "github.com/m-bednar/neuroevolution-thesis/src/neuralnet"
 	. "github.com/m-bednar/neuroevolution-thesis/src/output"
-	. "github.com/m-bednar/neuroevolution-thesis/src/strategy"
+	. "github.com/m-bednar/neuroevolution-thesis/src/strategies"
 )
 
 func main() {

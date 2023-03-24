@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "github.com/m-bednar/neuroevolution-thesis/src/env"
+	. "github.com/m-bednar/neuroevolution-thesis/src/enviroment"
 	. "github.com/m-bednar/neuroevolution-thesis/src/microbe"
 	. "github.com/m-bednar/neuroevolution-thesis/src/output"
 	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
