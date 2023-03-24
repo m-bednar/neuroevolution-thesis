@@ -5,7 +5,7 @@ import (
 	"math"
 	"sync"
 
-	as "github.com/fzipp/astar"
+	"github.com/fzipp/astar"
 	. "github.com/m-bednar/neuroevolution-thesis/src/enviroment"
 	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
 	"github.com/myfantasy/mft/im"
@@ -34,7 +34,7 @@ func GetTilesPathDistances(enviroment *Enviroment) []int {
 	var safeTiles = enviroment.GetAllTilesOfType(Safe)
 	var passableTiles = enviroment.GetAllPassableTiles()
 	var distFunc = Position.DistanceTo
-	var findPath = as.FindPath[Position]
+	var findPath = astar.FindPath[Position]
 	var mutex = sync.Mutex{}
 
 	// Evaluate each passable tile by finding
