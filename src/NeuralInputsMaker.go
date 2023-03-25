@@ -20,7 +20,7 @@ func NewNeuralInputsMaker(enviroment *Enviroment) *NeuralInputsMaker {
 }
 
 func (maker *NeuralInputsMaker) GetSignalForWallTileInDirection(origin Position, direction Direction) float64 {
-	var hasWallInDirection, distanceToWall = maker.enviroment.GetDistanceToWallInDirection(origin, direction)
+	hasWallInDirection, distanceToWall := maker.enviroment.GetDistanceToWallInDirection(origin, direction)
 	if hasWallInDirection && distanceToWall <= WALL_SENSORY_RANGE {
 		return (WALL_SENSORY_RANGE - (distanceToWall - 1)) / WALL_SENSORY_RANGE
 	}

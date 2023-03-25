@@ -137,7 +137,7 @@ func (maker *ChartMaker) MakeChart(filename string) {
 		chart.Legend(&graph),
 	}
 
-	var file, err = os.Create(filename)
+	file, err := os.Create(filename)
 	if err != nil {
 		log.Fatal(err)
 	}

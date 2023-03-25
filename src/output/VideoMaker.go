@@ -30,7 +30,7 @@ func NewVideoMaker(collector *DataCollector, renderer *Renderer) *VideoMaker {
 
 func (maker *VideoMaker) MakeWritter(filename string) mjpeg.AviWriter {
 	size := int32(maker.renderer.imageSize)
-	var writter, err = mjpeg.New(filename, size, size, FPS)
+	writter, err := mjpeg.New(filename, size, size, FPS)
 	if err != nil {
 		log.Fatal(err)
 	}

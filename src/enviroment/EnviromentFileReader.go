@@ -21,7 +21,7 @@ func ReadEnviromentFile(filename string) []TileType {
 func ReadTiles(reader *bufio.Reader) []TileType {
 	tiles := make([]TileType, 0)
 	for {
-		var b, err = reader.ReadByte()
+		b, err := reader.ReadByte()
 		if err == io.EOF {
 			break
 		}

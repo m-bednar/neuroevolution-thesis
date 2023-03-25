@@ -38,7 +38,7 @@ type Renderer struct {
 }
 
 func LoadGoRegularFont() draw2d.FontData {
-	var font, err = truetype.Parse(gomono.TTF)
+	font, err := truetype.Parse(gomono.TTF)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -189,7 +189,7 @@ func DrawGenerationNumber(context *draw2dimg.GraphicContext, generation int) {
 }
 
 func (renderer *Renderer) RenderStep(sample CapturedGenerationSample, step int) *image.RGBA {
-	var img, context = renderer.CreateImageWithContext()
+	img, context := renderer.CreateImageWithContext()
 	DrawBackground(context, img, renderer.background)
 	DrawPopulation(context, step, sample)
 	DrawGenerationNumber(context, sample.generation)

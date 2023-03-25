@@ -30,8 +30,8 @@ func (position Position) AddToDirection(direction Direction) Position {
 }
 
 func (origin Position) DistanceTo(position Position) float64 {
-	var x1, y1 = float64(origin.x), float64(origin.y)
-	var x2, y2 = float64(position.x), float64(position.y)
+	x1, y1 := float64(origin.x), float64(origin.y)
+	x2, y2 := float64(position.x), float64(position.y)
 	dx := x2 - x1
 	dy := y2 - y1
 	return math.Sqrt((dx * dx) + (dy * dy))

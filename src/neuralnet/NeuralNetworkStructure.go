@@ -27,8 +27,8 @@ func ParseNeuralNetworkScheme(scheme string) (int, int) {
 	if len(parts) != 2 {
 		log.Fatal("Incorrect format of neural network scheme.")
 	}
-	var count, cerr = strconv.Atoi(parts[0])
-	var width, werr = strconv.Atoi(parts[1])
+	count, cerr := strconv.Atoi(parts[0])
+	width, werr := strconv.Atoi(parts[1])
 	if cerr != nil || werr != nil {
 		log.Fatal("Incorrect format of neural network scheme.")
 	}
@@ -66,7 +66,7 @@ func ConstructLayers(layerCount, layerWidth int) []int {
 }
 
 func NewNeuralNetworkStructure(scheme string) *NeuralNetworkStructure {
-	var layerCount, layerWidth = ParseNeuralNetworkScheme(scheme)
+	layerCount, layerWidth := ParseNeuralNetworkScheme(scheme)
 	layers := ConstructLayers(layerCount, layerWidth)
 	offsets := ConstructLayersOffsets(layers)
 	return &NeuralNetworkStructure{
