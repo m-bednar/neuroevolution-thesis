@@ -9,8 +9,9 @@ import (
 )
 
 const (
-	NN_OUTPUTS_COUNT = 5
-	NN_INPUTS_COUNT  = 6
+	NN_OUTPUTS_COUNT    = 5
+	NN_INPUTS_COUNT     = 6
+	NN_SCHEME_SEPARATOR = "x"
 )
 
 type NeuralNetworkStructure struct {
@@ -22,16 +23,17 @@ type NeuralNetworkStructure struct {
 }
 
 func ParseNeuralNetworkScheme(scheme string) (int, int) {
-	const separator = "x"
-	parts := strings.Split(scheme, separator)
+	parts := strings.Split(scheme, NN_SCHEME_SEPARATOR)
 	if len(parts) != 2 {
 		log.Fatal("Incorrect format of neural network scheme.")
 	}
+
 	count, cerr := strconv.Atoi(parts[0])
 	width, werr := strconv.Atoi(parts[1])
 	if cerr != nil || werr != nil {
 		log.Fatal("Incorrect format of neural network scheme.")
 	}
+
 	return count, width
 }
 
