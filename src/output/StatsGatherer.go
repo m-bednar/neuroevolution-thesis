@@ -18,7 +18,7 @@ func (gatherer *StatsGatherer) IsMicrobeInsideSafeZone(microbe *Microbe) bool {
 }
 
 func (gatherer *StatsGatherer) GetAverageFitness(population Population) float64 {
-	var sum = 0.0
+	sum := 0.0
 	for _, microbe := range population {
 		sum += microbe.GetFitness()
 	}
@@ -26,6 +26,6 @@ func (gatherer *StatsGatherer) GetAverageFitness(population Population) float64 
 }
 
 func (gatherer *StatsGatherer) GetHighestFitness(population Population) float64 {
-	var microbe = population.SelectOneWithHighestFitness()
+	microbe := population.SelectOneWithHighestFitness()
 	return microbe.GetFitness()
 }

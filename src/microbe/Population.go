@@ -8,7 +8,7 @@ import (
 type Population []*Microbe
 
 func (population Population) SelectOneWithHighestFitness() *Microbe {
-	var highest = population[0]
+	highest := population[0]
 	for _, microbe := range population {
 		if microbe.fitness > highest.fitness {
 			highest = microbe
@@ -18,7 +18,7 @@ func (population Population) SelectOneWithHighestFitness() *Microbe {
 }
 
 func (population Population) CollectPositions() []Position {
-	var positions = make([]Position, len(population))
+	positions := make([]Position, len(population))
 	for i, microbe := range population {
 		positions[i] = microbe.position
 	}
@@ -26,9 +26,9 @@ func (population Population) CollectPositions() []Position {
 }
 
 func (population Population) CollectNormalizedGenomes() [][]int8 {
-	var genomes = make([][]int8, len(population))
+	genomes := make([][]int8, len(population))
 	for i, microbe := range population {
-		var size = len(microbe.neuralNetwork.GetWeights())
+		size := len(microbe.neuralNetwork.GetWeights())
 		genomes[i] = make([]int8, size)
 		for j, w := range microbe.neuralNetwork.GetWeights() {
 			genomes[i][j] = int8((w / NN_WEIGHT_LIMIT) * 127)

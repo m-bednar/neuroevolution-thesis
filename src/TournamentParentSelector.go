@@ -18,13 +18,13 @@ func NewTournamentParentSelector(tournamentSize int) *TournamentParentSelector {
 }
 
 func (selector *TournamentParentSelector) SelectOneRandomly(population Population) *Microbe {
-	var max = len(population)
-	var rnd = selector.rng.Intn(max)
+	max := len(population)
+	rnd := selector.rng.Intn(max)
 	return population[rnd]
 }
 
 func (selector *TournamentParentSelector) SelectParent(population Population) *Microbe {
-	var selected = make(Population, selector.tournamentSize)
+	selected := make(Population, selector.tournamentSize)
 	for i := 0; i < selector.tournamentSize; i++ {
 		selected[i] = selector.SelectOneRandomly(population)
 	}

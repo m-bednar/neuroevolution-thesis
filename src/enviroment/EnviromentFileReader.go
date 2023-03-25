@@ -14,12 +14,12 @@ func ReadEnviromentFile(filename string) []TileType {
 		log.Fatal(err)
 	}
 	defer file.Close()
-	var reader = bufio.NewReader(file)
+	reader := bufio.NewReader(file)
 	return ReadTiles(reader)
 }
 
 func ReadTiles(reader *bufio.Reader) []TileType {
-	var tiles = make([]TileType, 0)
+	tiles := make([]TileType, 0)
 	for {
 		var b, err = reader.ReadByte()
 		if err == io.EOF {
@@ -35,8 +35,8 @@ func ReadTiles(reader *bufio.Reader) []TileType {
 		}
 
 		// Convert ascii value to tile type
-		var value = b - 48
-		var tile = TileType(value)
+		value := b - 48
+		tile := TileType(value)
 
 		tiles = append(tiles, tile)
 	}

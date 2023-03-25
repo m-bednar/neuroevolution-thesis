@@ -38,7 +38,7 @@ type ProgramArguments struct {
 Parses and validates program arguments and then returns them as suitable structure.
 */
 func ParseProgramArguments() *ProgramArguments {
-	var arguments = ProgramArguments{}
+	arguments := ProgramArguments{}
 
 	flag.StringVar(&arguments.enviromentFile, "env", "", "Path to file with enviroment data.")
 	flag.IntVar(&arguments.populationSize, "pop", 0, "Number of generated microbes in each generation.")

@@ -10,9 +10,9 @@ type Rng struct {
 }
 
 func NewTimeSeedRng() *Rng {
-	var seed = time.Now().UnixNano()
-	var source = rand.NewSource(seed)
-	var rnd = rand.New(source)
+	seed := time.Now().UnixNano()
+	source := rand.NewSource(seed)
+	rnd := rand.New(source)
 	return &Rng{Rand: rnd}
 }
 

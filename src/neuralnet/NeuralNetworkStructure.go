@@ -23,7 +23,7 @@ type NeuralNetworkStructure struct {
 
 func ParseNeuralNetworkScheme(scheme string) (int, int) {
 	const separator = "x"
-	var parts = strings.Split(scheme, separator)
+	parts := strings.Split(scheme, separator)
 	if len(parts) != 2 {
 		log.Fatal("Incorrect format of neural network scheme.")
 	}
@@ -36,7 +36,7 @@ func ParseNeuralNetworkScheme(scheme string) (int, int) {
 }
 
 func GetLayerIndexOffset(layers []int, layer int) int {
-	var sum = 0
+	sum := 0
 	for i := 0; i < (layer - 1); i++ {
 		sum += layers[i] * layers[i+1]
 	}
@@ -44,8 +44,8 @@ func GetLayerIndexOffset(layers []int, layer int) int {
 }
 
 func ConstructLayersOffsets(layers []int) []int {
-	var sum = 0
-	var offsets = make([]int, len(layers))
+	sum := 0
+	offsets := make([]int, len(layers))
 	for i := range layers {
 		offsets[i] = sum
 		if i+1 < len(layers) {
@@ -56,7 +56,7 @@ func ConstructLayersOffsets(layers []int) []int {
 }
 
 func ConstructLayers(layerCount, layerWidth int) []int {
-	var layers = []int{}
+	layers := []int{}
 	layers = append(layers, NN_INPUTS_COUNT)
 	for i := 0; i < layerCount; i++ {
 		layers = append(layers, layerWidth)
@@ -67,8 +67,8 @@ func ConstructLayers(layerCount, layerWidth int) []int {
 
 func NewNeuralNetworkStructure(scheme string) *NeuralNetworkStructure {
 	var layerCount, layerWidth = ParseNeuralNetworkScheme(scheme)
-	var layers = ConstructLayers(layerCount, layerWidth)
-	var offsets = ConstructLayersOffsets(layers)
+	layers := ConstructLayers(layerCount, layerWidth)
+	offsets := ConstructLayersOffsets(layers)
 	return &NeuralNetworkStructure{
 		layerCount: layerCount,
 		layerWidth: layerWidth,
@@ -79,8 +79,8 @@ func NewNeuralNetworkStructure(scheme string) *NeuralNetworkStructure {
 }
 
 func (structure *NeuralNetworkStructure) ComputeNumberOfWeights() int {
-	var width = structure.layerWidth
-	var count = structure.layerCount - 1
+	width := structure.layerWidth
+	count := structure.layerCount - 1
 	return (NN_INPUTS_COUNT * width) + (NN_OUTPUTS_COUNT * width) + ((width * width) * count)
 }
 

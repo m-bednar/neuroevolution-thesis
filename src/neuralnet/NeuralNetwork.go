@@ -11,7 +11,7 @@ func NewNeuralNetwork(structure *NeuralNetworkStructure, weights []float64) Neur
 }
 
 func WeightedSum(weights []float64, inputs []float64) float64 {
-	var sum = 0.0
+	sum := 0.0
 	for i, value := range inputs {
 		sum += value * weights[i]
 	}
@@ -30,31 +30,31 @@ func (neuralNetwork *NeuralNetwork) GetWeights() []float64 {
 }
 
 func (neuralNetwork *NeuralNetwork) Process(inputs []float64) []float64 {
-	var structure = neuralNetwork.structure
-	var widths = structure.GetLayersWidths()
-	var maxWidth = structure.GetMaxLayerWidth()
-	var lastWidth = widths[len(widths)-1]
+	structure := neuralNetwork.structure
+	widths := structure.GetLayersWidths()
+	maxWidth := structure.GetMaxLayerWidth()
+	lastWidth := widths[len(widths)-1]
 
-	var buffer = make([]float64, maxWidth)
-	var neurons = make([]float64, maxWidth)
+	buffer := make([]float64, maxWidth)
+	neurons := make([]float64, maxWidth)
 
 	copy(buffer, inputs)
 
 	// Traverse layer by layer
 	for layer := 1; layer < len(widths); layer++ {
-		var previous = widths[layer-1]
-		var current = widths[layer]
-		var offset = structure.GetLayerOffset(layer)
+		previous := widths[layer-1]
+		current := widths[layer]
+		offset := structure.GetLayerOffset(layer)
 
 		// Values of neurons in previous layer
-		var values = buffer[:previous]
+		values := buffer[:previous]
 
 		// Traverse neurons in current layer and compute it's value
 		for i := 0; i < current; i++ {
-			var from = offset + (i * previous)
-			var to = from + previous
-			var weights = neuralNetwork.weights[from:to]
-			var sum = WeightedSum(weights, values)
+			from := offset + (i * previous)
+			to := from + previous
+			weights := neuralNetwork.weights[from:to]
+			sum := WeightedSum(weights, values)
 			neurons[i] = ReLU(sum)
 		}
 

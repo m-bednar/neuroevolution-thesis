@@ -11,14 +11,14 @@ type GaussMutationStrategy struct {
 }
 
 func NewGaussMutationStrategy(strength float64) *GaussMutationStrategy {
-	var rng = NewTimeSeedRng()
+	rng := NewTimeSeedRng()
 	return &GaussMutationStrategy{rng, strength}
 }
 
 func (strategy *GaussMutationStrategy) MutateWeight(weight float64) float64 {
-	var halfLimit = NN_WEIGHT_LIMIT / 2
-	var deviation = halfLimit * strategy.strength
-	var mutation = strategy.rng.NormFloat64(deviation)
+	halfLimit := NN_WEIGHT_LIMIT / 2
+	deviation := halfLimit * strategy.strength
+	mutation := strategy.rng.NormFloat64(deviation)
 	return weight + mutation
 }
 

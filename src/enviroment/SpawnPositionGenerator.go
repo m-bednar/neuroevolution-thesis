@@ -12,8 +12,8 @@ type SpawnSelector struct {
 }
 
 func NewSpawnSelector(enviroment *Enviroment) *SpawnSelector {
-	var rng = NewTimeSeedRng()
-	var spawns = enviroment.GetAllTilesOfType(Spawn)
+	rng := NewTimeSeedRng()
+	spawns := enviroment.GetAllTilesOfType(Spawn)
 	if len(spawns) == 0 {
 		log.Fatal("No spawn tiles in enviroment found.")
 	}
@@ -21,6 +21,6 @@ func NewSpawnSelector(enviroment *Enviroment) *SpawnSelector {
 }
 
 func (selector *SpawnSelector) GetPosition() Position {
-	var index = selector.rng.Intn(len(selector.spawns))
+	index := selector.rng.Intn(len(selector.spawns))
 	return selector.spawns[index]
 }

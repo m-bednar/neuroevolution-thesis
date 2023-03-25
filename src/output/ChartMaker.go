@@ -27,7 +27,7 @@ func NewChartMaker(collector *DataCollector) *ChartMaker {
 }
 
 func GenerateContinuousRange(x int) []float64 {
-	var r = make([]float64, x)
+	r := make([]float64, x)
 	for i := 0; i < x; i++ {
 		r[i] = float64(i)
 	}
@@ -51,8 +51,8 @@ func CreateHighestFitnessSeries(data []float64) chart.ContinuousSeries {
 }
 
 func CreateGenerationTicks(generations int) []chart.Tick {
-	var ticks = make([]chart.Tick, GENERATION_TICKS_COUNT+1)
-	var step = generations / GENERATION_TICKS_COUNT
+	ticks := make([]chart.Tick, GENERATION_TICKS_COUNT+1)
+	step := generations / GENERATION_TICKS_COUNT
 	for i := 0; i <= GENERATION_TICKS_COUNT; i++ {
 		ticks[i] = chart.Tick{
 			Value: float64(step * i),
@@ -69,10 +69,10 @@ func CreateGenerationTicks(generations int) []chart.Tick {
 }
 
 func CreateValueTicks() []chart.Tick {
-	var ticks = make([]chart.Tick, VALUE_TICKS_COUNT+1)
-	var step = 1.0 / VALUE_TICKS_COUNT
+	ticks := make([]chart.Tick, VALUE_TICKS_COUNT+1)
+	step := 1.0 / VALUE_TICKS_COUNT
 	for i := 0; i <= VALUE_TICKS_COUNT; i++ {
-		var value = step * float64(i)
+		value := step * float64(i)
 		ticks[i] = chart.Tick{
 			Value: value,
 			Label: strconv.FormatFloat(value, 'f', VALUE_TICK_PRECISION, 64),
@@ -82,13 +82,13 @@ func CreateValueTicks() []chart.Tick {
 }
 
 func WindowFilter(data []float64, index int) float64 {
-	var size = int(float64(len(data)) * WINDOW_FILTER_SIZE_PERC)
-	var half = size / 2
-	var from = im.Max(0, index-half)
-	var to = im.Min(len(data), index+half)
+	size := int(float64(len(data)) * WINDOW_FILTER_SIZE_PERC)
+	half := size / 2
+	from := im.Max(0, index-half)
+	to := im.Min(len(data), index+half)
 
-	var window = data[from:to]
-	var sum = 0.0
+	window := data[from:to]
+	sum := 0.0
 	for _, v := range window {
 		sum += v
 	}
@@ -97,7 +97,7 @@ func WindowFilter(data []float64, index int) float64 {
 }
 
 func WindowFilterAll(data []float64) []float64 {
-	var filtered = make([]float64, len(data))
+	filtered := make([]float64, len(data))
 	for i := range data {
 		filtered[i] = WindowFilter(data, i)
 	}
@@ -105,7 +105,7 @@ func WindowFilterAll(data []float64) []float64 {
 }
 
 func CreateGraph(averageFitnesses, highestFitnesses []float64) chart.Chart {
-	var n = len(averageFitnesses)
+	n := len(averageFitnesses)
 	return chart.Chart{
 		Background: chart.Style{
 			Padding: chart.Box{Top: 20, Left: 20},
@@ -128,9 +128,9 @@ func CreateGraph(averageFitnesses, highestFitnesses []float64) chart.Chart {
 }
 
 func (maker *ChartMaker) MakeChart(filename string) {
-	var averageFitnesses = maker.collector.GetAverageFitnesses()
-	var highestFitnesses = maker.collector.GetHighestFitnesses()
-	var graph = CreateGraph(averageFitnesses, highestFitnesses)
+	averageFitnesses := maker.collector.GetAverageFitnesses()
+	highestFitnesses := maker.collector.GetHighestFitnesses()
+	graph := CreateGraph(averageFitnesses, highestFitnesses)
 
 	// Add legend to chart
 	graph.Elements = []chart.Renderable{

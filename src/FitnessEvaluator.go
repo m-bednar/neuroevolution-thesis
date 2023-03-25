@@ -23,7 +23,7 @@ func NewFitnessEvaluator(enviroment *Enviroment, evaluationMap *EvaluationMap) *
 
 func (evaluator *FitnessEvaluator) Evaluate(population Population) {
 	for _, microbe := range population {
-		var evaluation = evaluator.evaluationMap.GetEvaluation(microbe.GetPosition())
+		evaluation := evaluator.evaluationMap.GetEvaluation(microbe.GetPosition())
 		microbe.SetFitness(evaluation)
 	}
 }

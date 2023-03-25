@@ -17,7 +17,7 @@ func NewMutexedRand() *MutexedRand {
 
 func (mxtRand *MutexedRand) Float64() float64 {
 	mxtRand.mutex.Lock()
-	var value = mxtRand.rng.Float64()
+	value := mxtRand.rng.Float64()
 	mxtRand.mutex.Unlock()
 	return value
 }

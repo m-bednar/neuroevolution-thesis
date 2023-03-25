@@ -17,8 +17,8 @@ type TaskExecutor struct {
 }
 
 func NewTaskExecutor(enviroment *Enviroment, collector *DataCollector, evaluator *FitnessEvaluator, steps int) *TaskExecutor {
-	var selector = NewActionSelector()
-	var inputsMaker = NewNeuralInputsMaker(enviroment)
+	selector := NewActionSelector()
+	inputsMaker := NewNeuralInputsMaker(enviroment)
 	return &TaskExecutor{enviroment, collector, evaluator, selector, inputsMaker, steps}
 }
 
@@ -33,10 +33,10 @@ func (executor *TaskExecutor) ExecuteTask(generation int, population Population)
 
 func (executor *TaskExecutor) ExecuteStep(population Population) {
 	ConcurrentLoop(population, func(_ int, microbe *Microbe) {
-		var inputs = executor.inputsMaker.MakeInputsFor(microbe)
-		var output = microbe.Process(inputs)
-		var action = executor.selector.SelectMoveAction(output)
-		var result = microbe.GetPosition().AddToDirection(action)
+		inputs := executor.inputsMaker.MakeInputsFor(microbe)
+		output := microbe.Process(inputs)
+		action := executor.selector.SelectMoveAction(output)
+		result := microbe.GetPosition().AddToDirection(action)
 		if executor.enviroment.IsPassable(result) {
 			microbe.MoveTo(result)
 		}

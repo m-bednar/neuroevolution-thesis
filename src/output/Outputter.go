@@ -33,8 +33,8 @@ func NewOutputter(collector *DataCollector, renderer *Renderer) *Outputter {
 func (outputter *Outputter) MakeOutput(outputPath string) {
 	CreateOutputPath(outputPath)
 
-	var chartPath = path.Join(outputPath, CHART_FILE_NAME)
-	var videoPath = path.Join(outputPath, VIDEO_FILE_NAME)
+	chartPath := path.Join(outputPath, CHART_FILE_NAME)
+	videoPath := path.Join(outputPath, VIDEO_FILE_NAME)
 
 	outputter.chartMaker.MakeChart(chartPath)
 	outputter.videoMaker.MakeVideoToFile(videoPath)

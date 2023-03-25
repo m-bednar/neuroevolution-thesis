@@ -26,7 +26,7 @@ func NewActionSelector() *ActionSelector {
 }
 
 func GetSliceMaxValue(values []float64) float64 {
-	var max = -math.MaxFloat64
+	max := -math.MaxFloat64
 	for _, value := range values {
 		max = math.Max(max, value)
 	}
@@ -34,12 +34,12 @@ func GetSliceMaxValue(values []float64) float64 {
 }
 
 func SoftMax(values []float64) []float64 {
-	var max = GetSliceMaxValue(values)
+	max := GetSliceMaxValue(values)
 
-	var sum = 0.0
-	var result = make([]float64, len(values))
+	sum := 0.0
+	result := make([]float64, len(values))
 	for i, value := range values {
-		var x = math.Exp(value - max)
+		x := math.Exp(value - max)
 		result[i] = x
 		sum += x
 	}
@@ -55,7 +55,7 @@ func SoftMax(values []float64) []float64 {
 }
 
 func (selector *ActionSelector) ProbabilitySelect(probabilities []float64) int {
-	var rnd = selector.rng.Float64()
+	rnd := selector.rng.Float64()
 
 	for i, probability := range probabilities {
 		if rnd <= probability {
@@ -67,8 +67,8 @@ func (selector *ActionSelector) ProbabilitySelect(probabilities []float64) int {
 }
 
 func (selector *ActionSelector) SelectMoveAction(neuronOutputs []float64) Direction {
-	var probabilities = SoftMax(neuronOutputs)
-	var action = selector.ProbabilitySelect(probabilities)
+	probabilities := SoftMax(neuronOutputs)
+	action := selector.ProbabilitySelect(probabilities)
 
 	switch action {
 	case MOVE_EAST_ACTION_INDEX:

@@ -42,7 +42,7 @@ func LoadGoRegularFont() draw2d.FontData {
 	if err != nil {
 		log.Fatal(err)
 	}
-	var fontData = draw2d.FontData{
+	fontData := draw2d.FontData{
 		Name:   "goregular",
 		Family: draw2d.FontFamilyMono,
 		Style:  draw2d.FontStyleBold,
@@ -67,19 +67,19 @@ func GetTileColor(tile TileType) color.Color {
 func GetMicrobeColor(genome []int8) color.RGBA {
 	const red, alpha = 0, 255
 
-	var div = len(genome) / 2
-	var rem = len(genome) % 2
-	var values = []uint8{0, 0}
-	var lengths = []int{div, div + rem}
+	div := len(genome) / 2
+	rem := len(genome) % 2
+	values := []uint8{0, 0}
+	lengths := []int{div, div + rem}
 
-	var start = 0
+	start := 0
 	for i, length := range lengths {
-		var sum = 0
+		sum := 0
 		for j := start; j < start+length; j++ {
 			sum += int(genome[j])
 		}
-		var avg = float64(sum) / float64(length)
-		var norm = avg / NN_WEIGHT_LIMIT
+		avg := float64(sum) / float64(length)
+		norm := avg / NN_WEIGHT_LIMIT
 		values[i] = uint8((norm * 40) + 130)
 		start += length
 	}
@@ -90,10 +90,10 @@ func GetMicrobeColor(genome []int8) color.RGBA {
 func PredrawTilesOnBackground(context *draw2dimg.GraphicContext, enviroment *Enviroment) {
 	for x := 0; x < enviroment.GetSize(); x++ {
 		for y := 0; y < enviroment.GetSize(); y++ {
-			var tile = enviroment.GetTile(NewPosition(x, y))
-			var color = GetTileColor(tile)
-			var rx = x * TILE_DISPLAY_SIZE
-			var ry = y * TILE_DISPLAY_SIZE
+			tile := enviroment.GetTile(NewPosition(x, y))
+			color := GetTileColor(tile)
+			rx := x * TILE_DISPLAY_SIZE
+			ry := y * TILE_DISPLAY_SIZE
 			context.SetFillColor(color)
 			context.ClearRect(rx, ry, rx+TILE_DISPLAY_SIZE, ry+TILE_DISPLAY_SIZE)
 		}
@@ -106,14 +106,14 @@ func PredrawGridOnBackground(context *draw2dimg.GraphicContext, enviroment *Envi
 
 	// horizontal lines
 	for i := 1; i < enviroment.GetSize(); i++ {
-		var y = float64(i * TILE_DISPLAY_SIZE)
+		y := float64(i * TILE_DISPLAY_SIZE)
 		context.MoveTo(0, y)
 		context.LineTo(float64(imgSize), y)
 	}
 
 	// vertical lines
 	for i := 1; i < enviroment.GetSize(); i++ {
-		var x = float64(i * TILE_DISPLAY_SIZE)
+		x := float64(i * TILE_DISPLAY_SIZE)
 		context.MoveTo(x, 0)
 		context.LineTo(x, float64(imgSize))
 	}
@@ -122,8 +122,8 @@ func PredrawGridOnBackground(context *draw2dimg.GraphicContext, enviroment *Envi
 }
 
 func CreateBackground(enviroment *Enviroment, imgSize int) *image.RGBA {
-	var background = image.NewRGBA(image.Rect(0, 0, imgSize, imgSize))
-	var context = draw2dimg.NewGraphicContext(background)
+	background := image.NewRGBA(image.Rect(0, 0, imgSize, imgSize))
+	context := draw2dimg.NewGraphicContext(background)
 
 	PredrawTilesOnBackground(context, enviroment)
 	PredrawGridOnBackground(context, enviroment, imgSize)
@@ -132,9 +132,9 @@ func CreateBackground(enviroment *Enviroment, imgSize int) *image.RGBA {
 }
 
 func NewRenderer(enviroment *Enviroment) *Renderer {
-	var size = enviroment.GetSize() * TILE_DISPLAY_SIZE
-	var background = CreateBackground(enviroment, size)
-	var font = LoadGoRegularFont()
+	size := enviroment.GetSize() * TILE_DISPLAY_SIZE
+	background := CreateBackground(enviroment, size)
+	font := LoadGoRegularFont()
 
 	return &Renderer{
 		imageSize:  size,
@@ -145,8 +145,8 @@ func NewRenderer(enviroment *Enviroment) *Renderer {
 }
 
 func (renderer *Renderer) CreateImageWithContext() (*image.RGBA, *draw2dimg.GraphicContext) {
-	var img = image.NewRGBA(image.Rect(0, 0, renderer.imageSize, renderer.imageSize))
-	var context = draw2dimg.NewGraphicContext(img)
+	img := image.NewRGBA(image.Rect(0, 0, renderer.imageSize, renderer.imageSize))
+	context := draw2dimg.NewGraphicContext(img)
 	context.SetFontData(renderer.font)
 	context.SetFontSize(FONT_SIZE)
 	return img, context
@@ -170,14 +170,14 @@ func DrawBackground(context *draw2dimg.GraphicContext, img *image.RGBA, backgrou
 
 func DrawPopulation(context *draw2dimg.GraphicContext, step int, sample CapturedGenerationSample) {
 	context.SetLineWidth(0)
-	var positions = sample.steps[step]
+	positions := sample.steps[step]
 
 	for i, position := range positions {
-		var color = GetMicrobeColor(sample.genomes[i])
+		color := GetMicrobeColor(sample.genomes[i])
 		context.SetFillColor(color)
 
-		var x = float64(position.GetX() * TILE_DISPLAY_SIZE)
-		var y = float64(position.GetY() * TILE_DISPLAY_SIZE)
+		x := float64(position.GetX() * TILE_DISPLAY_SIZE)
+		y := float64(position.GetY() * TILE_DISPLAY_SIZE)
 		DrawCircle(context, x, y)
 	}
 }

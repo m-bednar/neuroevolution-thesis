@@ -33,7 +33,7 @@ type DataCollector struct {
 }
 
 func CopyNestedPositions(source [][]Position) [][]Position {
-	var destination = make([][]Position, len(source))
+	destination := make([][]Position, len(source))
 	for i := range source {
 		destination[i] = make([]Position, len(source[i]))
 		copy(destination[i], source[i])
@@ -42,19 +42,19 @@ func CopyNestedPositions(source [][]Position) [][]Position {
 }
 
 func NewDataCollector(gatherer *StatsGatherer, maxGenerations int, stepCount int, captureModifier int) *DataCollector {
-	var samples = make([]GenerationSample, maxGenerations+1)
-	var currentSteps = make([][]Position, stepCount)
+	samples := make([]GenerationSample, maxGenerations+1)
+	currentSteps := make([][]Position, stepCount)
 	return &DataCollector{gatherer, samples, currentSteps, captureModifier}
 }
 
 func (collector *DataCollector) CollectStep(step int, population Population) {
-	var positions = population.CollectPositions()
+	positions := population.CollectPositions()
 	collector.currentSteps[step] = positions
 }
 
 func (collector *DataCollector) CollectGeneration(generation int, population Population) {
-	var sample = &collector.samples[generation]
-	var captured = collector.ShouldCapture(generation)
+	sample := &collector.samples[generation]
+	captured := collector.ShouldCapture(generation)
 	if captured {
 		sample.genomes = population.CollectNormalizedGenomes()
 		sample.steps = CopyNestedPositions(collector.currentSteps)
@@ -69,7 +69,7 @@ func (collector *DataCollector) ShouldCapture(generation int) bool {
 }
 
 func (collector *DataCollector) GetCapturedGenerationSamples() []CapturedGenerationSample {
-	var captured = make([]CapturedGenerationSample, 0, len(collector.samples))
+	captured := make([]CapturedGenerationSample, 0, len(collector.samples))
 	for i, sample := range collector.samples {
 		if sample.captured {
 			captured = append(captured, CapturedGenerationSample{i, sample})
@@ -79,7 +79,7 @@ func (collector *DataCollector) GetCapturedGenerationSamples() []CapturedGenerat
 }
 
 func (collector *DataCollector) GetAverageFitnesses() []float64 {
-	var fitnesses = make([]float64, len(collector.samples))
+	fitnesses := make([]float64, len(collector.samples))
 	for i, sample := range collector.samples {
 		fitnesses[i] = sample.averageFitness
 	}
@@ -87,7 +87,7 @@ func (collector *DataCollector) GetAverageFitnesses() []float64 {
 }
 
 func (collector *DataCollector) GetHighestFitnesses() []float64 {
-	var fitnesses = make([]float64, len(collector.samples))
+	fitnesses := make([]float64, len(collector.samples))
 	for i, sample := range collector.samples {
 		fitnesses[i] = sample.highestFitness
 	}

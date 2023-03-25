@@ -32,7 +32,7 @@ type Enviroment struct {
 }
 
 func NewEnviroment(tiles []TileType) *Enviroment {
-	var size = ComputeEnviromentSize(tiles)
+	size := ComputeEnviromentSize(tiles)
 	return &Enviroment{
 		tiles: tiles,
 		size:  size,
@@ -40,8 +40,8 @@ func NewEnviroment(tiles []TileType) *Enviroment {
 }
 
 func ComputeEnviromentSize(tiles []TileType) int {
-	var count = float64(len(tiles))
-	var squared = math.Sqrt(count)
+	count := float64(len(tiles))
+	squared := math.Sqrt(count)
 	if squared != math.Trunc(squared) {
 		log.Fatal("Enviroment size must be NxN tiles.")
 	}
@@ -79,15 +79,15 @@ func (enviroment *Enviroment) GetTileIndex(position Position) int {
 }
 
 func (enviroment *Enviroment) GetTile(position Position) TileType {
-	var index = enviroment.GetTileIndex(position)
+	index := enviroment.GetTileIndex(position)
 	return enviroment.tiles[index]
 }
 
 func (enviroment *Enviroment) GetAllTilesOfType(tileType TileType) []Position {
-	var positions = make([]Position, 0, len(enviroment.tiles))
+	positions := make([]Position, 0, len(enviroment.tiles))
 	for i, tile := range enviroment.tiles {
 		if tile == tileType {
-			var position = NewPosition(i%enviroment.size, i/enviroment.size)
+			position := NewPosition(i%enviroment.size, i/enviroment.size)
 			positions = append(positions, position)
 		}
 	}
@@ -95,10 +95,10 @@ func (enviroment *Enviroment) GetAllTilesOfType(tileType TileType) []Position {
 }
 
 func (enviroment *Enviroment) GetAllPassableTiles() []Position {
-	var positions = make([]Position, 0, len(enviroment.tiles))
+	positions := make([]Position, 0, len(enviroment.tiles))
 	for i, tile := range enviroment.tiles {
 		if tile.IsPassable() {
-			var position = NewPosition(i%enviroment.size, i/enviroment.size)
+			position := NewPosition(i%enviroment.size, i/enviroment.size)
 			positions = append(positions, position)
 		}
 	}
@@ -106,7 +106,7 @@ func (enviroment *Enviroment) GetAllPassableTiles() []Position {
 }
 
 func (enviroment *Enviroment) GetDistanceToWallInDirection(origin Position, direction Direction) (bool, float64) {
-	var current = origin
+	current := origin
 	for enviroment.IsInsideBorders(current) {
 		if enviroment.GetTile(current).IsWall() {
 			return true, origin.DistanceTo(current)
@@ -117,11 +117,11 @@ func (enviroment *Enviroment) GetDistanceToWallInDirection(origin Position, dire
 }
 
 func (enviroment *Enviroment) Neighbours(position Position) []Position {
-	var neighbours = []Position{
+	neighbours := []Position{
 		position.Add(1, 0), position.Add(-1, 0),
 		position.Add(0, 1), position.Add(0, -1),
 	}
-	var passable = make([]Position, 0, len(neighbours))
+	passable := make([]Position, 0, len(neighbours))
 	for _, neighbour := range neighbours {
 		if enviroment.IsPassable(neighbour) {
 			passable = append(passable, neighbour)
