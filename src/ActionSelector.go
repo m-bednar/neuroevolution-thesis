@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	MOVE_EAST_ACTION_INDEX = iota
-	MOVE_WEST_ACTION_INDEX
+	MOVE_NORTH_ACTION_INDEX = iota
 	MOVE_SOUTH_ACTION_INDEX
-	MOVE_NORTH_ACTION_INDEX
+	MOVE_WEST_ACTION_INDEX
+	MOVE_EAST_ACTION_INDEX
 	NO_MOVE_ACTION_INDEX
 )
 
@@ -71,14 +71,14 @@ func (selector *ActionSelector) SelectMoveAction(neuronOutputs []float64) Direct
 	action := selector.ProbabilitySelect(probabilities)
 
 	switch action {
-	case MOVE_EAST_ACTION_INDEX:
-		return East
-	case MOVE_WEST_ACTION_INDEX:
-		return West
-	case MOVE_SOUTH_ACTION_INDEX:
-		return South
 	case MOVE_NORTH_ACTION_INDEX:
 		return North
+	case MOVE_SOUTH_ACTION_INDEX:
+		return South
+	case MOVE_WEST_ACTION_INDEX:
+		return West
+	case MOVE_EAST_ACTION_INDEX:
+		return East
 	case NO_MOVE_ACTION_INDEX:
 		return Origin
 	}

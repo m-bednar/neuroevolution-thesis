@@ -105,13 +105,15 @@ func (enviroment *Enviroment) GetAllPassableTiles() []Position {
 	return positions
 }
 
-func (enviroment *Enviroment) GetDistanceToWallInDirection(origin Position, direction Direction) (bool, float64) {
+func (enviroment *Enviroment) GetDistanceToWallInDirection(origin Position, direction Direction, max int) (bool, float64) {
+	tries := 0
 	current := origin
-	for enviroment.IsInsideBorders(current) {
+	for tries < max && enviroment.IsInsideBorders(current) {
 		if enviroment.GetTile(current).IsWall() {
 			return true, origin.DistanceTo(current)
 		}
 		current = current.Add(direction.x, direction.y)
+		tries++
 	}
 	return false, 0
 }
