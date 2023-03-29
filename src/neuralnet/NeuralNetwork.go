@@ -44,15 +44,13 @@ func (neuralNetwork *NeuralNetwork) Process(inputs []float64) []float64 {
 	for layer := 1; layer < len(widths); layer++ {
 		previous := widths[layer-1]
 		current := widths[layer]
-		offset := structure.GetLayerOffset(layer)
 
 		// Values of neurons in previous layer
 		values := buffer[:previous]
 
 		// Traverse neurons in current layer and compute it's value
 		for i := 0; i < current; i++ {
-			from := offset + (i * previous)
-			to := from + previous
+			from, to := structure.GetWeightsIndexSpan(layer, i)
 			weights := neuralNetwork.weights[from:to]
 			sum := WeightedSum(weights, values)
 			neurons[i] = ReLU(sum)
