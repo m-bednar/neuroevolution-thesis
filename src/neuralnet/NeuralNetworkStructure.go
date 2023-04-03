@@ -63,6 +63,7 @@ func NewNeuralNetworkStructure(scheme string) *NeuralNetworkStructure {
 	count, width := ParseNeuralNetworkScheme(scheme)
 	layers := ConstructLayers(count, width)
 	offsets := ConstructLayersOffsets(layers)
+
 	return &NeuralNetworkStructure{
 		layerCount: count,
 		layerWidth: width,
@@ -78,10 +79,10 @@ func (structure *NeuralNetworkStructure) ComputeNumberOfWeights() int {
 	return (NN_INPUTS_COUNT * width) + (NN_OUTPUTS_COUNT * width) + ((width * width) * count)
 }
 
-func (structure *NeuralNetworkStructure) GetWeightsIndexSpan(layer, index int) (int, int) {
+func (structure *NeuralNetworkStructure) GetWeightsIndexSpan(layer, neuron int) (int, int) {
 	offset := structure.offsets[layer-1]
 	previous := structure.layers[layer-1]
-	from := offset + (index * previous)
+	from := offset + (neuron * previous)
 	to := from + previous
 	return from, to
 }

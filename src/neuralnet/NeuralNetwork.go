@@ -29,14 +29,18 @@ func (neuralNetwork *NeuralNetwork) GetWeights() []float64 {
 	return neuralNetwork.weights
 }
 
+func (neuralNetwork *NeuralNetwork) GetWeightsFor(layer, neuron int) []float64 {
+	from, to := neuralNetwork.structure.GetWeightsIndexSpan(layer, neuron)
+	return neuralNetwork.weights[from:to]
+}
+
 func (neuralNetwork *NeuralNetwork) Process(inputs []float64) []float64 {
-	structure := neuralNetwork.structure
-	widths := structure.GetLayersWidths()
-	maxWidth := structure.GetMaxLayerWidth()
+	widths := neuralNetwork.structure.GetLayersWidths()
+	maxWidth := neuralNetwork.structure.GetMaxLayerWidth()
 	lastWidth := widths[len(widths)-1]
 
 	buffer := make([]float64, maxWidth)
-	neurons := make([]float64, maxWidth)
+	values := make([]float64, maxWidth)
 
 	copy(buffer, inputs)
 
@@ -45,18 +49,14 @@ func (neuralNetwork *NeuralNetwork) Process(inputs []float64) []float64 {
 		previous := widths[layer-1]
 		current := widths[layer]
 
-		// Values of neurons in previous layer
-		values := buffer[:previous]
-
 		// Traverse neurons in current layer and compute it's value
-		for i := 0; i < current; i++ {
-			from, to := structure.GetWeightsIndexSpan(layer, i)
-			weights := neuralNetwork.weights[from:to]
-			sum := WeightedSum(weights, values)
-			neurons[i] = ReLU(sum)
+		for neuron := 0; neuron < current; neuron++ {
+			weights := neuralNetwork.GetWeightsFor(layer, neuron)
+			sum := WeightedSum(weights, buffer[:previous])
+			values[neuron] = ReLU(sum)
 		}
 
-		copy(buffer, neurons)
+		copy(buffer, values)
 	}
 
 	return buffer[:lastWidth]
