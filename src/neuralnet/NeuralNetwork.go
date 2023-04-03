@@ -41,7 +41,6 @@ func (neuralNetwork *NeuralNetwork) Process(inputs []float64) []float64 {
 
 	buffer := make([]float64, maxWidth)
 	values := make([]float64, maxWidth)
-
 	copy(buffer, inputs)
 
 	// Traverse layer by layer
@@ -59,5 +58,5 @@ func (neuralNetwork *NeuralNetwork) Process(inputs []float64) []float64 {
 		copy(buffer, values)
 	}
 
-	return buffer[:lastWidth]
+	return values[:lastWidth]
 }
