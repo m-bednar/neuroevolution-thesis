@@ -7,11 +7,12 @@ import (
 
 	"github.com/myfantasy/mft/im"
 	"github.com/wcharczuk/go-chart"
+	"github.com/wcharczuk/go-chart/drawing"
 )
 
 const (
 	GENERATION_TICKS_COUNT  = 10
-	VALUE_TICKS_COUNT       = 10
+	VALUE_TICKS_COUNT       = 5
 	VALUE_TICK_PRECISION    = 2
 	WINDOW_FILTER_SIZE_PERC = 0.01
 )
@@ -104,9 +105,9 @@ func WindowFilterAll(data []float64) []float64 {
 	return filtered
 }
 
-func CreateGraph(averageFitnesses, highestFitnesses []float64) chart.Chart {
+func CreateGraph(averageFitnesses, highestFitnesses []float64) *chart.Chart {
 	n := len(averageFitnesses)
-	return chart.Chart{
+	return &chart.Chart{
 		Background: chart.Style{
 			Padding: chart.Box{Top: 20, Left: 20},
 		},
@@ -127,24 +128,32 @@ func CreateGraph(averageFitnesses, highestFitnesses []float64) chart.Chart {
 	}
 }
 
-func (maker *ChartMaker) MakeChart(filename string) {
-	averageFitnesses := maker.collector.GetAverageFitnesses()
-	highestFitnesses := maker.collector.GetHighestFitnesses()
-	graph := CreateGraph(averageFitnesses, highestFitnesses)
+func AddLegendToGraph(graph *chart.Chart) {
+	gray := drawing.Color{R: 140, G: 140, B: 140, A: 255}
+	padding := chart.Box{Top: 1, Left: 1}
+	legend := chart.LegendLeft(graph, chart.Style{
+		FontSize:    9,
+		StrokeColor: gray,
+		Padding:     padding,
+	})
+	graph.Elements = []chart.Renderable{legend}
+}
 
-	// Add legend to chart
-	graph.Elements = []chart.Renderable{
-		chart.Legend(&graph),
-	}
-
+func SaveGraphToFile(graph *chart.Chart, filename string) {
 	file, err := os.Create(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	if err := graph.Render(chart.PNG, file); err != nil {
 		log.Fatal(err)
 	}
-
 	file.Close()
+}
+
+func (maker *ChartMaker) MakeChart(filename string) {
+	averageFitnesses := maker.collector.GetAverageFitnesses()
+	highestFitnesses := maker.collector.GetHighestFitnesses()
+	graph := CreateGraph(averageFitnesses, highestFitnesses)
+	AddLegendToGraph(graph)
+	SaveGraphToFile(graph, filename)
 }
