@@ -5,18 +5,17 @@ import (
 	"sync"
 )
 
-type LimitFlag struct{}
-type LoopFunc[Value any] func(index int, value Value)
+type LoopFunc[T any] func(index int, value T)
 
-func ConcurrentLoop[Value any](items []Value, loopFunc LoopFunc[Value]) {
+func ConcurrentLoop[T any](items []T, loopFunc LoopFunc[T]) {
 	wg := sync.WaitGroup{}
-	limit := runtime.NumCPU() * 2
-	limiter := make(chan LimitFlag, limit)
+	limit := runtime.NumCPU()
+	limiter := make(chan struct{}, limit)
 
 	wg.Add(len(items))
 	for i, v := range items {
-		limiter <- LimitFlag{}
-		go func(index int, value Value) {
+		limiter <- struct{}{}
+		go func(index int, value T) {
 			loopFunc(index, value)
 			<-limiter
 			wg.Done()
