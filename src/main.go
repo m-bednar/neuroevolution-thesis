@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	. "github.com/m-bednar/neuroevolution-thesis/src/enviroment"
 	. "github.com/m-bednar/neuroevolution-thesis/src/microbe"
 	. "github.com/m-bednar/neuroevolution-thesis/src/neuralnet"
@@ -36,7 +34,7 @@ func main() {
 	mutator := NewMutator(mutationStrategy)
 
 	outputter := NewOutputter(collector, renderer)
-	executor := NewTaskExecutor(enviroment, collector, evaluator, stepsCount)
+	executor := NewTaskExecutor(enviroment, collector, stepsCount)
 
 	// Factories and generators
 	crossoverStrategy := NewArithmeticCrossoverStrategy()
@@ -44,18 +42,7 @@ func main() {
 	neuralNetworkStructure := NewNeuralNetworkStructure(neuralNetworkScheme)
 	neuralNetworkFactory := NewNeuralNetworkFactory(neuralNetworkStructure, crossoverStrategy)
 	populationFactory := NewPopulationFactory(populationSize, spawnSelector, neuralNetworkFactory, parentSelector)
-
-	Loop(maxGenerations, populationFactory, executor, mutator)
+	simulationContext := NewSimulationContext(populationFactory, executor, evaluator, collector, mutator)
+	simulationContext.Run(maxGenerations)
 	outputter.MakeOutput(outputPath)
-	fmt.Println("Done.")
-}
-
-func Loop(maxGenerations int, populationFactory *PopulationFactory, executor *TaskExecutor, mutator *Mutator) {
-	population := populationFactory.MakeRandom()
-	for generation := 0; generation <= maxGenerations; generation++ {
-		fmt.Printf("Simulating %d/%d\n", generation, maxGenerations)
-		executor.ExecuteTask(generation, population)
-		population = populationFactory.ReproduceFrom(population)
-		mutator.MutatePopulation(population)
-	}
 }

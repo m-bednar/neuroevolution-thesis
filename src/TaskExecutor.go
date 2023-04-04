@@ -10,16 +10,15 @@ import (
 type TaskExecutor struct {
 	enviroment  *Enviroment
 	collector   *DataCollector
-	evaluator   *FitnessEvaluator
 	selector    *ActionSelector
 	inputsMaker *NeuralInputsMaker
 	steps       int
 }
 
-func NewTaskExecutor(enviroment *Enviroment, collector *DataCollector, evaluator *FitnessEvaluator, steps int) *TaskExecutor {
+func NewTaskExecutor(enviroment *Enviroment, collector *DataCollector, steps int) *TaskExecutor {
 	selector := NewActionSelector()
 	inputsMaker := NewNeuralInputsMaker(enviroment)
-	return &TaskExecutor{enviroment, collector, evaluator, selector, inputsMaker, steps}
+	return &TaskExecutor{enviroment, collector, selector, inputsMaker, steps}
 }
 
 func (executor *TaskExecutor) ExecuteTask(generation int, population Population) {
@@ -27,8 +26,6 @@ func (executor *TaskExecutor) ExecuteTask(generation int, population Population)
 		executor.ExecuteStep(population)
 		executor.collector.CollectStep(i, population)
 	}
-	executor.evaluator.Evaluate(population)
-	executor.collector.CollectGeneration(generation, population)
 }
 
 func (executor *TaskExecutor) ExecuteStep(population Population) {
