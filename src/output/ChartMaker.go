@@ -15,6 +15,7 @@ const (
 	VALUE_TICKS_COUNT       = 5
 	VALUE_TICK_PRECISION    = 2
 	WINDOW_FILTER_SIZE_PERC = 0.01
+	WINDOW_FILTER_MIN_SIZE  = 4
 )
 
 type ChartMaker struct {
@@ -82,8 +83,13 @@ func CreateValueTicks() []chart.Tick {
 	return ticks
 }
 
+func GetWindowFilterSize(dataLen int) int {
+	size := int(float64(dataLen) * WINDOW_FILTER_SIZE_PERC)
+	return im.Max(WINDOW_FILTER_MIN_SIZE, size)
+}
+
 func WindowFilter(data []float64, index int) float64 {
-	size := int(float64(len(data)) * WINDOW_FILTER_SIZE_PERC)
+	size := GetWindowFilterSize(len(data))
 	half := size / 2
 	from := im.Max(0, index-half)
 	to := im.Min(len(data), index+half)
@@ -105,7 +111,9 @@ func WindowFilterAll(data []float64) []float64 {
 	return filtered
 }
 
-func CreateGraph(averageFitnesses, highestFitnesses []float64) *chart.Chart {
+func (maker *ChartMaker) CreateGraph() *chart.Chart {
+	averageFitnesses := maker.collector.GetAverageFitnesses()
+	highestFitnesses := maker.collector.GetHighestFitnesses()
 	n := len(averageFitnesses)
 	return &chart.Chart{
 		Background: chart.Style{
@@ -151,9 +159,7 @@ func SaveGraphToFile(graph *chart.Chart, filename string) {
 }
 
 func (maker *ChartMaker) MakeChart(filename string) {
-	averageFitnesses := maker.collector.GetAverageFitnesses()
-	highestFitnesses := maker.collector.GetHighestFitnesses()
-	graph := CreateGraph(averageFitnesses, highestFitnesses)
+	graph := maker.CreateGraph()
 	AddLegendToGraph(graph)
 	SaveGraphToFile(graph, filename)
 }
