@@ -4,6 +4,10 @@ import (
 	"sync"
 )
 
+/*
+Thread-safe random number generator.
+Uses mutex to prevent race conditions.
+*/
 type MutexedRand struct {
 	rng   *Rng
 	mutex sync.Mutex

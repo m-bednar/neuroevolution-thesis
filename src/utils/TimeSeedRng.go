@@ -5,6 +5,9 @@ import (
 	"time"
 )
 
+/*
+Random number generator, seeded with current time.
+*/
 type Rng struct {
 	*rand.Rand
 }

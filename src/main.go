@@ -43,6 +43,8 @@ func main() {
 	neuralNetworkFactory := NewNeuralNetworkFactory(neuralNetworkStructure, crossoverStrategy)
 	populationFactory := NewPopulationFactory(populationSize, spawnSelector, neuralNetworkFactory, parentSelector)
 	simulationContext := NewSimulationContext(populationFactory, executor, evaluator, collector, mutator)
+
+	// Run simulation
 	simulationContext.Run(maxGenerations)
 	outputter.MakeOutput(outputPath)
 }

@@ -62,7 +62,7 @@ func (maker *VideoMaker) AddGenerationSampleFrame(writter mjpeg.AviWriter, gener
 func (maker *VideoMaker) EncodeFramesAsync(generation int, sample CapturedGenerationSample) [][]byte {
 	encoded := make([][]byte, len(sample.steps))
 
-	ConcurrentLoop(sample.steps, func(index int, _ []Position) {
+	AsyncFor(sample.steps, func(index int, _ []Position) {
 		frame := maker.renderer.RenderStep(sample, index)
 		encoded[index] = maker.EncodeFrame(frame)
 	})

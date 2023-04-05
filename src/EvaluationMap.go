@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"sync"
 
 	"github.com/fzipp/astar"
@@ -17,8 +16,9 @@ type EvaluationMap struct {
 }
 
 func EvaluateDistance(distance, max int) float64 {
-	value := float64(-(distance - max)) + math.SmallestNonzeroFloat64
-	return value / float64(max)
+	value := float64(-(distance - max))
+	evaluation := value / float64(max)
+	return evaluation + (evaluation / 100.0)
 }
 
 func GetBetterPathDistance(previous int, current int) int {
@@ -40,7 +40,7 @@ func GetTilesPathDistances(enviroment *Enviroment) []int {
 	// Evaluate each passable tile by finding
 	// it's shortest path to closest safe tile
 	for _, start := range safeTiles {
-		ConcurrentLoop(passableTiles, func(_ int, end Position) {
+		AsyncFor(passableTiles, func(_ int, end Position) {
 			path := findPath(enviroment, start, end, distFunc, distFunc)
 			if path != nil {
 				index := enviroment.GetTileIndex(end)
