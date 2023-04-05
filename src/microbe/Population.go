@@ -36,3 +36,14 @@ func (population Population) CollectNormalizedGenomes() [][]int8 {
 	}
 	return genomes
 }
+
+/*
+Removes microbe at index *i* from the population.
+Does not preserve order of microbes, does not reduce the capacity of population slice.
+*/
+func (population *Population) RemoveAt(i int) {
+	size := len(*population)
+	(*population)[i] = (*population)[size-1]
+	(*population)[size-1] = nil
+	*population = (*population)[:size-1]
+}

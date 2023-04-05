@@ -10,30 +10,31 @@ type PositionSelector interface {
 }
 
 type ParentSelector interface {
-	SelectParent(population Population) *Microbe
+	Select(population Population) *Microbe
 }
 
 type PopulationFactory struct {
 	populationSize       int
 	positionSelector     PositionSelector
-	selector             ParentSelector
+	parentSelector       ParentSelector
 	neuralNetworkFactory *NeuralNetworkFactory
 }
 
-func NewPopulationFactory(populationSize int, positionSelector PositionSelector, neuralNetworkFactory *NeuralNetworkFactory, selector ParentSelector) *PopulationFactory {
+func NewPopulationFactory(populationSize int, positionSelector PositionSelector,
+	neuralNetworkFactory *NeuralNetworkFactory, selector ParentSelector) *PopulationFactory {
 	return &PopulationFactory{
 		populationSize:       populationSize,
 		positionSelector:     positionSelector,
 		neuralNetworkFactory: neuralNetworkFactory,
-		selector:             selector,
+		parentSelector:       selector,
 	}
 }
 
 func (factory *PopulationFactory) ReproduceFrom(population Population) Population {
 	new := make(Population, factory.populationSize)
 	for i := 0; i < factory.populationSize; i++ {
-		parent1 := factory.selector.SelectParent(population)
-		parent2 := factory.selector.SelectParent(population)
+		parent1 := factory.parentSelector.Select(population)
+		parent2 := factory.parentSelector.Select(population)
 		position := factory.positionSelector.GetPosition()
 		neuralNetwork1 := parent1.neuralNetwork
 		neuralNetwork2 := parent2.neuralNetwork

@@ -27,7 +27,7 @@ func main() {
 	evaluationMap := NewEvaluationMap(enviroment)
 	evaluator := NewFitnessEvaluator(enviroment, evaluationMap)
 	renderer := NewRenderer(enviroment)
-	parentSelector := NewTournamentParentSelector(tournamentSize)
+	parentSelector := NewTournamentSelector(tournamentSize)
 	gatherer := NewStatsGatherer(enviroment)
 	collector := NewDataCollector(gatherer, maxGenerations, stepsCount, captureModifier)
 	mutationStrategy := NewGaussMutationStrategy(mutationStrength)
