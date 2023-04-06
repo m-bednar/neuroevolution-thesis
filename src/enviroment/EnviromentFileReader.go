@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"strconv"
 	"unicode"
 )
 
@@ -21,7 +22,7 @@ func ReadEnviromentFile(filename string) []TileType {
 func ReadTiles(reader *bufio.Reader) []TileType {
 	tiles := make([]TileType, 0)
 	for {
-		b, err := reader.ReadByte()
+		c, _, err := reader.ReadRune()
 		if err == io.EOF {
 			break
 		}
@@ -30,14 +31,17 @@ func ReadTiles(reader *bufio.Reader) []TileType {
 		}
 
 		// Ignore non-digits
-		if !unicode.IsDigit(rune(b)) {
+		if !unicode.IsDigit(c) {
 			continue
 		}
 
 		// Convert ascii value to tile type
-		value := b - 48
-		tile := TileType(value)
+		value, err := strconv.Atoi(string(c))
+		if err != nil {
+			log.Fatal(err)
+		}
 
+		tile := TileType(value)
 		tiles = append(tiles, tile)
 	}
 	return tiles
