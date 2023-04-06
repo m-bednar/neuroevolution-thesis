@@ -8,33 +8,36 @@ import (
 )
 
 func main() {
-	args := ParseProgramArguments()
-	tiles := ReadEnviromentFile(args.enviromentFile)
+	// Inputs
+	arguments := ParseProgramArguments()
+	tiles := ReadEnviromentFile(arguments.enviromentFile)
 
 	// Arguments
-	populationSize := args.populationSize
-	tournamentSize := args.tournamentSize
-	maxGenerations := args.maxGenerations
-	stepsCount := args.stepsCount
-	captureModifier := args.captureModifier
-	mutationStrength := args.mutationStrength
-	outputPath := args.outputPath
-	nnScheme := args.neuralNetworkScheme
+	populationSize := arguments.populationSize
+	tournamentSize := arguments.tournamentSize
+	maxGenerations := arguments.maxGenerations
+	stepsCount := arguments.stepsCount
+	captureModifier := arguments.captureModifier
+	mutationStrength := arguments.mutationStrength
+	outputPath := arguments.outputPath
+	nnScheme := arguments.neuralNetworkScheme
 
-	// Setup
+	// Neuroevolution setup
 	enviroment := NewEnviroment(tiles)
 	evaluationMap := NewEvaluationMap(enviroment)
 	evaluator := NewFitnessEvaluator(enviroment, evaluationMap)
-	renderer := NewRenderer(enviroment)
 	parentSelector := NewTournamentSelector(tournamentSize)
+	neuralNetworkStructure := NewNeuralNetworkStructure(nnScheme)
+	mutation := NewGaussMutation(mutationStrength)
+	crossover := NewArithmeticCrossover()
+
+	// Task and output setup
+	spawnSelector := NewSpawnSelector(enviroment)
+	renderer := NewRenderer(enviroment)
 	gatherer := NewStatsGatherer(enviroment)
 	collector := NewDataCollector(gatherer, maxGenerations, stepsCount, captureModifier)
 	outputter := NewOutputter(collector, renderer)
 	executor := NewTaskExecutor(enviroment, collector, stepsCount)
-	spawnSelector := NewSpawnSelector(enviroment)
-	neuralNetworkStructure := NewNeuralNetworkStructure(nnScheme)
-	mutation := NewGaussMutation(mutationStrength)
-	crossover := NewArithmeticCrossover()
 
 	// Factories
 	neuralNetworkFactory := NewNeuralNetworkFactory(neuralNetworkStructure, crossover)
