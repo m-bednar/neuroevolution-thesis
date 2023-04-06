@@ -5,7 +5,6 @@ import (
 	. "github.com/m-bednar/neuroevolution-thesis/src/microbe"
 	. "github.com/m-bednar/neuroevolution-thesis/src/neuralnet"
 	. "github.com/m-bednar/neuroevolution-thesis/src/output"
-	. "github.com/m-bednar/neuroevolution-thesis/src/strategies"
 )
 
 func main() {
@@ -20,7 +19,7 @@ func main() {
 	captureModifier := args.captureModifier
 	mutationStrength := args.mutationStrength
 	outputPath := args.outputPath
-	neuralNetworkScheme := args.neuralNetworkScheme
+	nnScheme := args.neuralNetworkScheme
 
 	// Setup
 	enviroment := NewEnviroment(tiles)
@@ -30,21 +29,19 @@ func main() {
 	parentSelector := NewTournamentSelector(tournamentSize)
 	gatherer := NewStatsGatherer(enviroment)
 	collector := NewDataCollector(gatherer, maxGenerations, stepsCount, captureModifier)
-	mutationStrategy := NewGaussMutationStrategy(mutationStrength)
-	mutator := NewMutator(mutationStrategy)
-
 	outputter := NewOutputter(collector, renderer)
 	executor := NewTaskExecutor(enviroment, collector, stepsCount)
-
-	// Factories and generators
-	crossoverStrategy := NewArithmeticCrossoverStrategy()
 	spawnSelector := NewSpawnSelector(enviroment)
-	neuralNetworkStructure := NewNeuralNetworkStructure(neuralNetworkScheme)
-	neuralNetworkFactory := NewNeuralNetworkFactory(neuralNetworkStructure, crossoverStrategy)
+	neuralNetworkStructure := NewNeuralNetworkStructure(nnScheme)
+	mutation := NewGaussMutation(mutationStrength)
+	crossover := NewArithmeticCrossover()
+
+	// Factories
+	neuralNetworkFactory := NewNeuralNetworkFactory(neuralNetworkStructure, crossover)
 	populationFactory := NewPopulationFactory(populationSize, spawnSelector, neuralNetworkFactory, parentSelector)
-	simulationContext := NewSimulationContext(populationFactory, executor, evaluator, collector, mutator)
 
 	// Run simulation
+	simulationContext := NewSimulationContext(populationFactory, executor, evaluator, collector, mutation)
 	simulationContext.Run(maxGenerations)
 	outputter.MakeOutput(outputPath)
 }

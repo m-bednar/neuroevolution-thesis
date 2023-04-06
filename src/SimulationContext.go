@@ -12,12 +12,12 @@ type SimulationContext struct {
 	executor          *TaskExecutor
 	evaluator         *FitnessEvaluator
 	collector         *DataCollector
-	mutator           *Mutator
+	mutation          *GaussMutation
 }
 
 func NewSimulationContext(populationFactory *PopulationFactory, executor *TaskExecutor,
-	evaluator *FitnessEvaluator, collector *DataCollector, mutator *Mutator) *SimulationContext {
-	return &SimulationContext{populationFactory, executor, evaluator, collector, mutator}
+	evaluator *FitnessEvaluator, collector *DataCollector, mutation *GaussMutation) *SimulationContext {
+	return &SimulationContext{populationFactory, executor, evaluator, collector, mutation}
 }
 
 func (context *SimulationContext) Run(maxGenerations int) {
@@ -28,6 +28,6 @@ func (context *SimulationContext) Run(maxGenerations int) {
 		context.evaluator.Evaluate(population)
 		context.collector.CollectGeneration(generation, population)
 		population = context.populationFactory.ReproduceFrom(population)
-		context.mutator.MutatePopulation(population)
+		context.mutation.MutatePopulation(population)
 	}
 }
