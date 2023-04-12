@@ -37,6 +37,5 @@ func (maker *NeuralInputsMaker) MakeInputsFor(microbe *Microbe) []float64 {
 	wallSouth := maker.GetSignalForWallTileInDirection(position, South)
 	wallWest := maker.GetSignalForWallTileInDirection(position, West)
 	wallEast := maker.GetSignalForWallTileInDirection(position, East)
-
 	return []float64{borderDistWest, borderDistNorth, wallNorth, wallSouth, wallWest, wallEast}
 }

@@ -5,10 +5,6 @@ import (
 	. "github.com/m-bednar/neuroevolution-thesis/src/microbe"
 )
 
-const (
-	SAFEZONE_FINAL_REWARD = 1
-)
-
 type FitnessEvaluator struct {
 	enviroment    *Enviroment
 	evaluationMap *EvaluationMap

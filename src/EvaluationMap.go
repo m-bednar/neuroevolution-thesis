@@ -18,10 +18,13 @@ type EvaluationMap struct {
 	enviroment  *Enviroment
 }
 
-func EvaluateDistance(distance, max int) float64 {
+func EvaluateDistance(distance int, max int) float64 {
+	if distance == NO_EVALUATION {
+		return NO_EVALUATION
+	}
 	value := float64(-(distance - max))
-	evaluation := value / float64(max)
-	return evaluation + (evaluation / 100.0)
+	evaluation := value / float64(max-1)
+	return evaluation
 }
 
 func GetMinDistance(current int, new int) int {
@@ -52,6 +55,11 @@ func GetTilesPathDistances(enviroment *Enviroment) []int {
 	tiles := enviroment.GetAllPassableTiles()
 	distances := make([]int, size)
 
+	// Fill distances with default value
+	for i := range distances {
+		distances[i] = NO_EVALUATION
+	}
+
 	// Evaluate each passable tile by finding
 	// it's shortest path to closest safe tile
 	AsyncFor(tiles, func(_ int, tile Position) {
@@ -64,16 +72,13 @@ func GetTilesPathDistances(enviroment *Enviroment) []int {
 }
 
 func CreateEvaluations(enviroment *Enviroment) []float64 {
-	size := enviroment.GetNumberOfTiles()
 	distances := GetTilesPathDistances(enviroment)
+	evaluations := make([]float64, len(distances))
+	max := im.MaxS(distances...)
 
 	// Transform distances to evaluations
-	evaluations := make([]float64, size)
-	max := im.MaxS(distances...)
 	for i, distance := range distances {
-		if distance != 0 {
-			evaluations[i] = EvaluateDistance(distance, max)
-		}
+		evaluations[i] = EvaluateDistance(distance, max)
 	}
 
 	return evaluations
@@ -90,7 +95,7 @@ func (evaluationMap *EvaluationMap) Print() {
 	for y := 0; y < evaluationMap.enviroment.GetSize(); y++ {
 		for x := 0; x < evaluationMap.enviroment.GetSize(); x++ {
 			evaluation := evaluationMap.GetEvaluation(NewPosition(x, y))
-			if evaluation == 0.0 {
+			if evaluation == NO_EVALUATION {
 				fmt.Printf("xxxx ")
 			} else {
 				fmt.Printf("%4.2f ", evaluation)

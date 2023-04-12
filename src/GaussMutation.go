@@ -16,22 +16,22 @@ func NewGaussMutation(strength float64) *GaussMutation {
 	return &GaussMutation{rng, strength}
 }
 
-func (strategy *GaussMutation) MutateWeight(weight float64) float64 {
-	deviation := NN_WEIGHT_LIMIT * strategy.strength
-	mutation := strategy.rng.NormFloat64(deviation)
-	return weight + mutation
+func (mutation *GaussMutation) MutateWeight(weight float64) float64 {
+	deviation := NN_WEIGHT_LIMIT * mutation.strength
+	mutationWeight := mutation.rng.NormFloat64(deviation)
+	return weight + mutationWeight
 }
 
-func (strategy *GaussMutation) MutateNeuralNetwork(neuralNetwork *NeuralNetwork) {
+func (mutation *GaussMutation) MutateNeuralNetwork(neuralNetwork *NeuralNetwork) {
 	weights := neuralNetwork.GetWeights()
 	for i, weight := range weights {
-		weights[i] = ClampWeight(strategy.MutateWeight(weight))
+		weights[i] = ClampWeight(mutation.MutateWeight(weight))
 	}
 }
 
-func (strategy *GaussMutation) MutatePopulation(population Population) {
+func (mutation *GaussMutation) MutatePopulation(population Population) {
 	for _, microbe := range population {
 		neuralNetwork := microbe.GetNeuralNetwork()
-		strategy.MutateNeuralNetwork(neuralNetwork)
+		mutation.MutateNeuralNetwork(neuralNetwork)
 	}
 }
