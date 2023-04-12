@@ -11,7 +11,6 @@ import (
 	"github.com/llgcode/draw2d"
 	"github.com/llgcode/draw2d/draw2dimg"
 	. "github.com/m-bednar/neuroevolution-thesis/src/enviroment"
-	. "github.com/m-bednar/neuroevolution-thesis/src/neuralnet"
 	"golang.org/x/image/font/gofont/gomono"
 )
 
@@ -64,27 +63,10 @@ func GetTileColor(tile TileType) color.Color {
 	}
 }
 
-func GetMicrobeColor(genome []int8) color.RGBA {
-	const red, alpha = 0, 255
-
-	div := len(genome) / 2
-	rem := len(genome) % 2
-	values := []uint8{0, 0}
-	lengths := []int{div, div + rem}
-
-	start := 0
-	for i, length := range lengths {
-		sum := 0
-		for j := start; j < start+length; j++ {
-			sum += int(genome[j])
-		}
-		avg := float64(sum) / float64(length)
-		norm := avg / NN_WEIGHT_LIMIT
-		values[i] = uint8((norm * 40) + 130)
-		start += length
-	}
-
-	return color.RGBA{red, values[0], values[1], alpha}
+func GetMicrobeColor(normalized GenomeRepresentation) color.RGBA {
+	const alpha = 255
+	r, g, b := normalized.red, normalized.green, normalized.blue
+	return color.RGBA{r, g, b, alpha}
 }
 
 func PredrawTilesOnBackground(context *draw2dimg.GraphicContext, enviroment *Enviroment) {
@@ -170,12 +152,11 @@ func DrawBackground(context *draw2dimg.GraphicContext, img *image.RGBA, backgrou
 
 func DrawPopulation(context *draw2dimg.GraphicContext, step int, sample CapturedGenerationSample) {
 	context.SetLineWidth(0)
-	positions := sample.steps[step]
+	positions := sample.paths[step]
 
 	for i, position := range positions {
-		color := GetMicrobeColor(sample.genomes[i])
+		color := GetMicrobeColor(sample.representations[i])
 		context.SetFillColor(color)
-
 		x := float64(position.GetX() * TILE_DISPLAY_SIZE)
 		y := float64(position.GetY() * TILE_DISPLAY_SIZE)
 		DrawCircle(context, x, y)

@@ -8,7 +8,6 @@ import (
 	"log"
 
 	"github.com/icza/mjpeg"
-	. "github.com/m-bednar/neuroevolution-thesis/src/enviroment"
 	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
 )
 
@@ -60,9 +59,9 @@ func (maker *VideoMaker) AddGenerationSampleFrame(writter mjpeg.AviWriter, gener
 }
 
 func (maker *VideoMaker) EncodeFramesAsync(generation int, sample CapturedGenerationSample) [][]byte {
-	encoded := make([][]byte, len(sample.steps))
+	encoded := make([][]byte, len(sample.paths))
 
-	AsyncFor(sample.steps, func(index int, _ []Position) {
+	AsyncFor(sample.paths, func(index int, _ MicrobePath) {
 		frame := maker.renderer.RenderStep(sample, index)
 		encoded[index] = maker.EncodeFrame(frame)
 	})
