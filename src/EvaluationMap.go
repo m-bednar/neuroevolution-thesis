@@ -24,9 +24,9 @@ func EvaluateDistance(distance, max int) float64 {
 	return evaluation + (evaluation / 100.0)
 }
 
-func GetMinDistance(current int, next int) int {
-	if current == NO_EVALUATION || next < current {
-		return next
+func GetMinDistance(current int, new int) int {
+	if current == NO_EVALUATION || new < current {
+		return new
 	}
 	return current
 }
