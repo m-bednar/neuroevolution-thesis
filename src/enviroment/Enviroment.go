@@ -78,6 +78,10 @@ func (enviroment *Enviroment) GetTileIndex(position Position) int {
 	return (position.y * enviroment.size) + position.x
 }
 
+func (enviroment *Enviroment) GetTilePosition(index int) Position {
+	return NewPosition(index%enviroment.size, index/enviroment.size)
+}
+
 func (enviroment *Enviroment) GetTile(position Position) TileType {
 	index := enviroment.GetTileIndex(position)
 	return enviroment.tiles[index]
@@ -87,7 +91,7 @@ func (enviroment *Enviroment) GetAllTilesOfType(tileType TileType) []Position {
 	positions := make([]Position, 0, len(enviroment.tiles))
 	for i, tile := range enviroment.tiles {
 		if tile == tileType {
-			position := NewPosition(i%enviroment.size, i/enviroment.size)
+			position := enviroment.GetTilePosition(i)
 			positions = append(positions, position)
 		}
 	}
@@ -98,7 +102,7 @@ func (enviroment *Enviroment) GetAllPassableTiles() []Position {
 	positions := make([]Position, 0, len(enviroment.tiles))
 	for i, tile := range enviroment.tiles {
 		if tile.IsPassable() {
-			position := NewPosition(i%enviroment.size, i/enviroment.size)
+			position := enviroment.GetTilePosition(i)
 			positions = append(positions, position)
 		}
 	}

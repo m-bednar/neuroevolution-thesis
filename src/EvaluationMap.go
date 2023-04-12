@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"sync"
 
 	"github.com/fzipp/astar"
 	. "github.com/m-bednar/neuroevolution-thesis/src/enviroment"
@@ -28,30 +27,35 @@ func GetBetterPathDistance(previous int, current int) int {
 	return previous
 }
 
+func GetBestPathDistanceForTile(enviroment *Enviroment, tile Position) int {
+	safeTiles := enviroment.GetAllTilesOfType(Safe)
+	findPath := astar.FindPath[Position]
+	distFunc := Position.DistanceTo
+	distance := 0
+
+	for _, safeTile := range safeTiles {
+		path := findPath(enviroment, tile, safeTile, distFunc, distFunc)
+		if path != nil {
+			current := len(path)
+			distance = GetBetterPathDistance(distance, current)
+		}
+	}
+
+	return distance
+}
+
 func GetTilesPathDistances(enviroment *Enviroment) []int {
 	size := enviroment.GetNumberOfTiles()
+	tiles := enviroment.GetAllPassableTiles()
 	distances := make([]int, size)
-	safeTiles := enviroment.GetAllTilesOfType(Safe)
-	passableTiles := enviroment.GetAllPassableTiles()
-	distFunc := Position.DistanceTo
-	findPath := astar.FindPath[Position]
-	mutex := sync.Mutex{}
 
 	// Evaluate each passable tile by finding
 	// it's shortest path to closest safe tile
-	for _, start := range safeTiles {
-		AsyncFor(passableTiles, func(_ int, end Position) {
-			path := findPath(enviroment, start, end, distFunc, distFunc)
-			if path != nil {
-				index := enviroment.GetTileIndex(end)
-				curr := len(path)
-				mutex.Lock()
-				prev := distances[index]
-				distances[index] = GetBetterPathDistance(prev, curr)
-				mutex.Unlock()
-			}
-		})
-	}
+	AsyncFor(tiles, func(_ int, tile Position) {
+		distance := GetBestPathDistanceForTile(enviroment, tile)
+		index := enviroment.GetTileIndex(tile)
+		distances[index] = distance
+	})
 
 	return distances
 }
@@ -84,9 +88,9 @@ func (evaluationMap *EvaluationMap) Print() {
 		for x := 0; x < evaluationMap.enviroment.GetSize(); x++ {
 			evaluation := evaluationMap.GetEvaluation(NewPosition(x, y))
 			if evaluation == 0.0 {
-				fmt.Printf("xxxxx ")
+				fmt.Printf("xxxx ")
 			} else {
-				fmt.Printf("%5.2f ", evaluation)
+				fmt.Printf("%4.2f ", evaluation)
 			}
 		}
 		fmt.Println()
