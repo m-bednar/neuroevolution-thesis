@@ -9,6 +9,10 @@ import (
 	"github.com/myfantasy/mft/im"
 )
 
+const (
+	NO_EVALUATION = -1
+)
+
 type EvaluationMap struct {
 	evaluations []float64
 	enviroment  *Enviroment
@@ -21,7 +25,7 @@ func EvaluateDistance(distance, max int) float64 {
 }
 
 func GetMinDistance(current int, next int) int {
-	if current == 0 || next < current {
+	if current == NO_EVALUATION || next < current {
 		return next
 	}
 	return current
@@ -31,7 +35,7 @@ func GetMinPathDistanceForTile(enviroment *Enviroment, tile Position) int {
 	safeTiles := enviroment.GetAllTilesOfType(Safe)
 	findPath := astar.FindPath[Position]
 	distFunc := Position.DistanceTo
-	distance := 0
+	distance := NO_EVALUATION
 
 	for _, safeTile := range safeTiles {
 		path := findPath(enviroment, tile, safeTile, distFunc, distFunc)
