@@ -1,6 +1,8 @@
 package output
 
 import (
+	"math"
+
 	. "github.com/m-bednar/neuroevolution-thesis/src/enviroment"
 	. "github.com/m-bednar/neuroevolution-thesis/src/microbe"
 	. "github.com/m-bednar/neuroevolution-thesis/src/neuralnet"
@@ -51,31 +53,42 @@ func CopyPaths(source []MicrobePath) []MicrobePath {
 	return destination
 }
 
-func GetNormalizedGenomeColor(genome []int8) GenomeRepresentation {
+// Maps <NN_WEIGHT_LIMIT;NN_WEIGHT_LIMIT> to <0;1>
+func NormalizeWeigth(weight float64) float64 {
+	shifted := weight + NN_WEIGHT_LIMIT
+	normalized := shifted / (NN_WEIGHT_LIMIT * 2)
+	return normalized
+}
+
+func GetGenomePartRepresentation(part []float64) uint8 {
+	sum := 0.0
+	for _, weight := range part {
+		sum += weight
+	}
+	average := sum / float64(len(part))
+	normalized := NormalizeWeigth(average)
+	return uint8(normalized * math.MaxUint8)
+}
+
+func GetGenomeRepresentation(genome []float64) GenomeRepresentation {
 	div := len(genome) / 3
 	rem := len(genome) % 3
 	values := []uint8{0, 0, 0}
 	lengths := []int{div, div, div + rem}
 	start := 0
-
 	for i, length := range lengths {
-		sum := 0
-		for j := start; j < start+length; j++ {
-			sum += int(genome[j])
-		}
-		avg := float64(sum) / float64(length)
-		norm := avg / NN_WEIGHT_LIMIT
-		values[i] = uint8((norm * 20) + 100)
+		end := start + length
+		part := genome[start:end]
+		values[i] = GetGenomePartRepresentation(part)
 		start += length
 	}
-
 	return GenomeRepresentation{values[0], values[1], values[2]}
 }
 
-func GetGenomeRepresentations(genomes [][]int8) []GenomeRepresentation {
+func GetGenomeRepresentations(genomes [][]float64) []GenomeRepresentation {
 	representations := make([]GenomeRepresentation, len(genomes))
 	for i, genome := range genomes {
-		representations[i] = GetNormalizedGenomeColor(genome)
+		representations[i] = GetGenomeRepresentation(genome)
 	}
 	return representations
 }
@@ -95,7 +108,7 @@ func (collector *DataCollector) CollectGeneration(generation int, population Pop
 	sample := &collector.samples[generation]
 	captured := collector.ShouldCapture(generation)
 	if captured {
-		sample.representations = GetGenomeRepresentations(population.CollectNormalizedGenomes())
+		sample.representations = GetGenomeRepresentations(population.CollectGenomes())
 		sample.paths = CopyPaths(collector.currentPaths)
 	}
 	sample.averageFitness = collector.gatherer.GetAverageFitness(population)
