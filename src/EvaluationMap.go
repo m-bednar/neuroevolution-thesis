@@ -20,14 +20,14 @@ func EvaluateDistance(distance, max int) float64 {
 	return evaluation + (evaluation / 100.0)
 }
 
-func GetBetterPathDistance(previous int, current int) int {
-	if previous == 0 || current < previous {
-		return current
+func GetMinDistance(current int, next int) int {
+	if current == 0 || next < current {
+		return next
 	}
-	return previous
+	return current
 }
 
-func GetBestPathDistanceForTile(enviroment *Enviroment, tile Position) int {
+func GetMinPathDistanceForTile(enviroment *Enviroment, tile Position) int {
 	safeTiles := enviroment.GetAllTilesOfType(Safe)
 	findPath := astar.FindPath[Position]
 	distFunc := Position.DistanceTo
@@ -36,8 +36,7 @@ func GetBestPathDistanceForTile(enviroment *Enviroment, tile Position) int {
 	for _, safeTile := range safeTiles {
 		path := findPath(enviroment, tile, safeTile, distFunc, distFunc)
 		if path != nil {
-			current := len(path)
-			distance = GetBetterPathDistance(distance, current)
+			distance = GetMinDistance(distance, len(path))
 		}
 	}
 
@@ -52,7 +51,7 @@ func GetTilesPathDistances(enviroment *Enviroment) []int {
 	// Evaluate each passable tile by finding
 	// it's shortest path to closest safe tile
 	AsyncFor(tiles, func(_ int, tile Position) {
-		distance := GetBestPathDistanceForTile(enviroment, tile)
+		distance := GetMinPathDistanceForTile(enviroment, tile)
 		index := enviroment.GetTileIndex(tile)
 		distances[index] = distance
 	})
