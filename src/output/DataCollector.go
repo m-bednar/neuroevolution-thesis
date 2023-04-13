@@ -60,23 +60,27 @@ func NormalizeWeigth(weight float64) float64 {
 	return normalized
 }
 
-func GetGenomePartRepresentation(part []float64) uint8 {
+func WeightToUint8(weight float64) uint8 {
+	normalized := NormalizeWeigth(weight)
+	return uint8(normalized * math.MaxUint8)
+}
+
+func GetAverageGenomeValueRepresentation(genome []float64) uint8 {
 	sum := 0.0
-	for _, weight := range part {
+	for _, weight := range genome {
 		sum += weight
 	}
-	average := sum / float64(len(part))
-	normalized := NormalizeWeigth(average)
-	return uint8(normalized * math.MaxUint8)
+	average := sum / float64(len(genome))
+	return WeightToUint8(average)
 }
 
 func GetGenomeRepresentation(genome []float64) GenomeRepresentation {
 	part1 := len(genome) / 3
 	part2 := part1 * 2
-	red := GetGenomePartRepresentation(genome[:part1])
-	green := GetGenomePartRepresentation(genome[part1:part2])
-	blue := GetGenomePartRepresentation(genome[part2:])
-	return GenomeRepresentation{red, green, blue}
+	r := GetAverageGenomeValueRepresentation(genome[:part1])
+	g := GetAverageGenomeValueRepresentation(genome[part1:part2])
+	b := GetAverageGenomeValueRepresentation(genome[part2:])
+	return GenomeRepresentation{r, g, b}
 }
 
 func GetGenomeRepresentations(genomes [][]float64) []GenomeRepresentation {
