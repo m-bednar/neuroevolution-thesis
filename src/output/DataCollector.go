@@ -71,18 +71,12 @@ func GetGenomePartRepresentation(part []float64) uint8 {
 }
 
 func GetGenomeRepresentation(genome []float64) GenomeRepresentation {
-	div := len(genome) / 3
-	rem := len(genome) % 3
-	values := []uint8{0, 0, 0}
-	lengths := []int{div, div, div + rem}
-	start := 0
-	for i, length := range lengths {
-		end := start + length
-		part := genome[start:end]
-		values[i] = GetGenomePartRepresentation(part)
-		start += length
-	}
-	return GenomeRepresentation{values[0], values[1], values[2]}
+	part1 := len(genome) / 3
+	part2 := part1 * 2
+	red := GetGenomePartRepresentation(genome[:part1])
+	green := GetGenomePartRepresentation(genome[part1:part2])
+	blue := GetGenomePartRepresentation(genome[part2:])
+	return GenomeRepresentation{red, green, blue}
 }
 
 func GetGenomeRepresentations(genomes [][]float64) []GenomeRepresentation {
