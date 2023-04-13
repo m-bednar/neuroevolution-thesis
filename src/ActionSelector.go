@@ -25,17 +25,8 @@ func NewActionSelector() *ActionSelector {
 	}
 }
 
-func GetSliceMaxValue(values []float64) float64 {
-	max := -math.MaxFloat64
-	for _, value := range values {
-		max = math.Max(max, value)
-	}
-	return max
-}
-
 func SoftMax(values []float64) []float64 {
-	max := GetSliceMaxValue(values)
-
+	max := SliceMaxValue(values)
 	sum := 0.0
 	result := make([]float64, len(values))
 	for i, value := range values {
@@ -44,9 +35,6 @@ func SoftMax(values []float64) []float64 {
 		sum += x
 	}
 
-	if sum == 0 {
-		sum = math.SmallestNonzeroFloat64
-	}
 	for i, value := range result {
 		result[i] = value / sum
 	}
