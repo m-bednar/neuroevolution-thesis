@@ -71,7 +71,8 @@ func GetAverageGenomeValueRepresentation(genome []float64) uint8 {
 		sum += weight
 	}
 	average := sum / float64(len(genome))
-	return WeightToUint8(average)
+	normalized := NormalizeWeigth(average)
+	return uint8(normalized * (math.MaxUint8 - 10))
 }
 
 func GetGenomeRepresentation(genome []float64) GenomeRepresentation {
