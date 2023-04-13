@@ -10,7 +10,6 @@ import (
 env. file			string		-env
 pop size			int			-pop
 max generations		int			-maxg
-min success rate 	float		-mins
 steps				int			-steps
 mutation strength	float		-mutstr
 tournament size		int			-tsize
@@ -47,7 +46,7 @@ func ParseProgramArguments() *ProgramArguments {
 	flag.Float64Var(&arguments.mutationStrength, "mutstr", 0.0, "Gauss mutation strenght. (0.1 = 10%, 1 = 100%, etc.)")
 	flag.IntVar(&arguments.tournamentSize, "tsize", 0, "Number of microbes from whom parent is selected in tournament.")
 	flag.StringVar(&arguments.outputPath, "out", "", "Path of output directory.")
-	flag.IntVar(&arguments.captureModifier, "cmod", 1, "Generation capture modifier. Only every nth generation will be captured on video.")
+	flag.IntVar(&arguments.captureModifier, "cmod", 0, "Generation capture modifier. Only every nth generation will be captured on video.")
 	flag.StringVar(&arguments.neuralNetworkScheme, "nn", "", "Scheme of neural network hidden layers, pattern: [count]x[width].")
 	flag.Parse()
 
@@ -77,6 +76,9 @@ func ParseProgramArguments() *ProgramArguments {
 	}
 	if arguments.neuralNetworkScheme == "" {
 		log.Fatal("Neural network scheme not set.")
+	}
+	if arguments.captureModifier < 1 {
+		log.Fatal("Capture modifier cannot be less than 1")
 	}
 
 	return &arguments
