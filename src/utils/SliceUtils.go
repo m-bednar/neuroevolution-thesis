@@ -19,3 +19,9 @@ func SliceMinValue(values []float64) float64 {
 	}
 	return min
 }
+
+func Clone[T any](items []T) []T {
+	new := make([]T, len(items))
+	copy(new, items)
+	return new
+}

@@ -6,6 +6,7 @@ import (
 	. "github.com/m-bednar/neuroevolution-thesis/src/enviroment"
 	. "github.com/m-bednar/neuroevolution-thesis/src/microbe"
 	. "github.com/m-bednar/neuroevolution-thesis/src/neuralnet"
+	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
 )
 
 const (
@@ -47,8 +48,7 @@ type DataCollector struct {
 func CopyPaths(source []MicrobePath) []MicrobePath {
 	destination := make([]MicrobePath, len(source))
 	for i := range source {
-		destination[i] = make(MicrobePath, len(source[i]))
-		copy(destination[i], source[i])
+		destination[i] = Clone(source[i])
 	}
 	return destination
 }

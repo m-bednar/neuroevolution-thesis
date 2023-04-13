@@ -144,8 +144,8 @@ func DrawCircle(context *draw2dimg.GraphicContext, x float64, y float64) {
 }
 
 func DrawBackground(context *draw2dimg.GraphicContext, img *image.RGBA, background *image.RGBA) {
-	// Own re-implementation of DrawImage(renderer.background)
-	// Does the basically same in this case, but much faster.
+	// Re-implementation of DrawImage(renderer.background) -
+	// does basically the same in this case, but much faster.
 	context.Clear()
 	copy(img.Pix, background.Pix)
 }

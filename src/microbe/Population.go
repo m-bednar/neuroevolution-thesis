@@ -2,6 +2,7 @@ package microbe
 
 import (
 	. "github.com/m-bednar/neuroevolution-thesis/src/enviroment"
+	. "github.com/m-bednar/neuroevolution-thesis/src/utils"
 )
 
 type Population []*Microbe
@@ -28,8 +29,7 @@ func (population Population) CollectGenomes() [][]float64 {
 	genomes := make([][]float64, len(population))
 	for i, microbe := range population {
 		weights := microbe.neuralNetwork.GetWeights()
-		genomes[i] = make([]float64, len(weights))
-		copy(genomes[i], weights)
+		genomes[i] = Clone(weights)
 	}
 	return genomes
 }

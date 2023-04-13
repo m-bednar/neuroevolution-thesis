@@ -25,8 +25,7 @@ func (selector *TournamentSelector) SelectRandomIndex(population Population) int
 
 func (selector *TournamentSelector) Select(population Population) *Microbe {
 	selected := make(Population, selector.tournamentSize)
-	remaining := make(Population, len(population))
-	copy(remaining, population)
+	remaining := Population(Clone(population))
 
 	for i := 0; i < selector.tournamentSize; i++ {
 		index := selector.SelectRandomIndex(remaining)
