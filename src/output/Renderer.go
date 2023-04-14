@@ -21,7 +21,6 @@ const (
 )
 
 var (
-	MICROBE_COLOR    = color.RGBA{30, 120, 240, 255}
 	GRID_LINE_COLOR  = color.RGBA{190, 190, 190, 255}
 	NONE_TILE_COLOR  = color.White
 	SAFE_TILE_COLOR  = color.RGBA{160, 255, 200, 255}
