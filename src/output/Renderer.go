@@ -32,7 +32,6 @@ var (
 type Renderer struct {
 	imageSize  int
 	font       draw2d.FontData
-	enviroment *Enviroment
 	background *image.RGBA
 }
 
@@ -121,7 +120,6 @@ func NewRenderer(enviroment *Enviroment) *Renderer {
 	return &Renderer{
 		imageSize:  size,
 		font:       font,
-		enviroment: enviroment,
 		background: background,
 	}
 }
