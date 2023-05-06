@@ -1,3 +1,9 @@
+/**
+ * @project neuroevolution/neuralnet
+ * @file    NeuralWeight.go
+ * @author  Martin Bednář (xbedna77@fit.vut.cz)
+ */
+
 package neuralnet
 
 import "math"

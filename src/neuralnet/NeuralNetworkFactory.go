@@ -1,3 +1,9 @@
+/**
+ * @project neuroevolution/neuralnet
+ * @file    NeuralNetworkFactory.go
+ * @author  Martin Bednář (xbedna77@fit.vut.cz)
+ */
+
 package neuralnet
 
 import (

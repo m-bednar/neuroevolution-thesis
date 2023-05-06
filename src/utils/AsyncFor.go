@@ -1,3 +1,9 @@
+/**
+ * @project neuroevolution/utils
+ * @file    AsyncFor.go
+ * @author  Martin Bednář (xbedna77@fit.vut.cz)
+ */
+
 package utils
 
 import (

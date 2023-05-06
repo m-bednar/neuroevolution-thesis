@@ -1,3 +1,9 @@
+/**
+ * @project neuroevolution/microbe
+ * @file    Microbe.go
+ * @author  Martin Bednář (xbedna77@fit.vut.cz)
+ */
+
 package microbe
 
 import (

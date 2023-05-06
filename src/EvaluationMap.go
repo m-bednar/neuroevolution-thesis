@@ -1,3 +1,9 @@
+/**
+ * @project neuroevolution
+ * @file    EvaluationMap.go
+ * @author  Martin Bednář (xbedna77@fit.vut.cz)
+ */
+
 package main
 
 import (
@@ -13,6 +19,7 @@ const (
 	NO_EVALUATION = -1
 )
 
+// Used to store pre-computed evaluations
 type EvaluationMap struct {
 	evaluations []float64
 	enviroment  *Enviroment

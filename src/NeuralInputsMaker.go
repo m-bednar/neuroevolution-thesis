@@ -1,3 +1,9 @@
+/**
+ * @project neuroevolution
+ * @file    NeuralInputsMaker.go
+ * @author  Martin Bednář (xbedna77@fit.vut.cz)
+ */
+
 package main
 
 import (
@@ -6,7 +12,7 @@ import (
 )
 
 const (
-	WALL_SENSORY_RANGE = 4.0
+	WALL_SENSORY_RANGE = 4 // Microbe wall sensory range (in tiles)
 )
 
 type NeuralInputsMaker struct {

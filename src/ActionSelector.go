@@ -1,3 +1,9 @@
+/**
+ * @project neuroevolution
+ * @file    ActionSelector.go
+ * @author  Martin Bednář (xbedna77@fit.vut.cz)
+ */
+
 package main
 
 import (

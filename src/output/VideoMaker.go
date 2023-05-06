@@ -1,3 +1,9 @@
+/**
+ * @project neuroevolution/output
+ * @file    VideoMaker.go
+ * @author  Martin Bednář (xbedna77@fit.vut.cz)
+ */
+
 package output
 
 import (

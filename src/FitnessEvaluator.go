@@ -1,3 +1,9 @@
+/**
+ * @project neuroevolution
+ * @file    FitnessEvaluator.go
+ * @author  Martin Bednář (xbedna77@fit.vut.cz)
+ */
+
 package main
 
 import (

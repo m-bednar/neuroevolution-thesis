@@ -1,3 +1,9 @@
+/**
+ * @project neuroevolution/output
+ * @file    StatsGatherer.go
+ * @author  Martin Bednář (xbedna77@fit.vut.cz)
+ */
+
 package output
 
 import (

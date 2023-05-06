@@ -1,3 +1,9 @@
+/**
+ * @project neuroevolution/enviroment
+ * @file    Enviroment.go
+ * @author  Martin Bednář (xbedna77@fit.vut.cz)
+ */
+
 package enviroment
 
 import (

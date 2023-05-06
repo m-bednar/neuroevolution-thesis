@@ -1,8 +1,12 @@
+/**
+ * @project neuroevolution
+ * @file    ArithmeticCrossover.go
+ * @author  Martin Bednář (xbedna77@fit.vut.cz)
+ */
+
 package main
 
-/*
-Crossover strategy, that averages two weights vectors into single one.
-*/
+// Crossover strategy, that averages two weights vectors into single one.
 type ArithmeticCrossover struct {
 }
 
