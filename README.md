@@ -1,4 +1,6 @@
-# Bachelor's Thesis - VISUALIZING NEUROEVOLUTION IN NEURAL NETWORK LEARNING
+# Visualizing Neuroevolution in Neural Network Learning
+
+Bachelor's Thesis.
 
 This thesis examines options for neural network learning achieved by means of neuroevolution, 
 examines general functioning of neuroevolution, design and implementation of neuroevolution 
